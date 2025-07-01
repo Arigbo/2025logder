@@ -1,4 +1,5 @@
 "use client"
+// pages/discover.js
 import Link from 'next/link';
 import { useEffect, useState, useCallback, useRef } from 'react';
 
@@ -290,7 +291,7 @@ export default function DiscoverPage() {
            {!isMobile && ( // Show desktop filters
              <div style={styles.desktopFiltersContainer}>
                  {/* Location Filter */}
-                 <div style={styles.filterGroup}>
+                 <div style={styles}>
                      <label htmlFor="location" style={styles.filterLabel}>Location:</label>
                      <select
                          id="location"
@@ -306,7 +307,7 @@ export default function DiscoverPage() {
                  </div>
 
                  {/* Bedrooms Filter */}
-                 <div style={styles.filterGroup}>
+                 <div style={styles}>
                    <label htmlFor="bedrooms" style={styles.filterLabel}>Beds:</label>
                    <select
                      id="bedrooms"
@@ -324,7 +325,7 @@ export default function DiscoverPage() {
                  </div>
 
                  {/* Bathrooms Filter */}
-                 <div style={styles.filterGroup}>
+                 <div style={styles}>
                    <label htmlFor="bathrooms" style={styles.filterLabel}>Baths:</label>
                    <select
                      id="bathrooms"
@@ -340,7 +341,7 @@ export default function DiscoverPage() {
                  </div>
 
                  {/* Sort By */}
-                 <div style={styles.filterGroup}>
+                 <div style={styles}>
                    <label htmlFor="sortBy" style={styles.filterLabel}>Sort By:</label>
                    <select
                      id="sortBy"
@@ -828,7 +829,6 @@ const styles = {
     boxShadow: '0 6px 16px rgba(0,0,0,0.1)',
     transition: 'transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
     animation: 'fadeInUpCard 0.6s ease-out forwards',
-    opacity: 0,
     position: 'relative',
     '@keyframes fadeInUpCard': {
         'from': {
