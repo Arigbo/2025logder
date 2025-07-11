@@ -1,9 +1,8 @@
 import React from "react";
-import FrontLayout from "../../layouts/front.layout";
+
 const Profile = () => {
 	return (
 		<>
-			<FrontLayout>
 				<div className="profile_page">
 					<div className="profile_page_header">
 						<div>
@@ -69,7 +68,6 @@ const Profile = () => {
 					</div>
 					<></>
 				</div>
-			</FrontLayout>
 		</>
 	);
 };
