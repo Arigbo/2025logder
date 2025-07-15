@@ -1,6 +1,5 @@
-"use client"
+'use client'
 // pages/discover.js
-import Link from 'next/link';
 import { useEffect, useState, useCallback, useRef } from 'react';
 
 // --- Utility Function to Simulate API Call ---
@@ -10,18 +9,18 @@ async function fetchApartments() {
 
   // Return dummy apartment data with more details
   return [
-    { id: '1', name: 'Cozy Studio near University A', location: 'University Avenue', price: 150000, bedrooms: 1, bathrooms: 1, isNewListing: true, imageUrl: 'https://placehold.co/400x250/E0E0E0/333333?text=Apartment+1' },
-    { id: '2', name: 'Spacious 2-Bedroom near Tech Campus', location: 'Innovation Hub', price: 280000, bedrooms: 2, bathrooms: 2, isNewListing: false, imageUrl: 'https://placehold.co/400x250/D0D0D0/333333?text=Apartment+2' },
-    { id: '3', name: 'Modern Loft in Downtown', location: 'City Center', price: 200000, bedrooms: 1, bathrooms: 1, isNewListing: true, imageUrl: 'https://placehold.co/400x250/C0C0C0/333333?text=Apartment+3' },
-    { id: '4', name: 'Affordable Room in Shared House', location: 'Student District', price: 80000, bedrooms: 1, bathrooms: 0, isNewListing: false, imageUrl: 'https://placehold.co/400x250/B0B0B0/333333?text=Apartment+4' },
-    { id: '5', name: 'Bright 3-Bedroom Family Home', location: 'Quiet Suburb', price: 350000, bedrooms: 3, bathrooms: 2, isNewListing: false, imageUrl: 'https://placehold.co/400x250/A0A0A0/333333?text=Apartment+5' },
-    { id: '6', name: 'Compact Studio near Arts College', location: 'Bohemian Quarter', price: 120000, bedrooms: 1, bathrooms: 1, isNewListing: true, imageUrl: 'https://placehold.co/400x250/909090/333333?text=Apartment+6' },
-    { id: '7', name: 'Large 4-Bedroom House with Garden', location: 'Greenwich Estate', price: 550000, bedrooms: 4, bathrooms: 3, isNewListing: false, imageUrl: 'https://placehold.co/400x250/F0F0F0/333333?text=Apartment+7' },
-    { id: '8', name: 'Executive 2-Bedroom Apartment', location: 'Business District', price: 400000, bedrooms: 2, bathrooms: 2, isNewListing: false, imageUrl: 'https://placehold.co/400x250/E5E5E5/333333?text=Apartment+8' },
-    { id: '9', name: 'Quaint 1-Bedroom Cottage', location: 'Riverside Village', price: 100000, bedrooms: 1, bathrooms: 1, isNewListing: false, imageUrl: 'https://placehold.co/400x250/D5D5D5/333333?text=Apartment+9' },
-    { id: '10', name: 'Modern 3-Bedroom Townhouse', location: 'City Center', price: 450000, bedrooms: 3, bathrooms: 2, isNewListing: true, imageUrl: 'https://placehold.co/400x250/AEEEEE/333333?text=Apartment+10' },
-    { id: '11', name: 'Spacious 5-Bedroom Villa', location: 'Quiet Suburb', price: 800000, bedrooms: 5, bathrooms: 4, isNewListing: false, imageUrl: 'https://placehold.co/400x250/B0E0E6/333333?text=Apartment+11' },
-    { id: '12', name: 'Compact 1-Bedroom Flat', location: 'Student District', price: 95000, bedrooms: 1, bathrooms: 1, isNewListing: false, imageUrl: 'https://placehold.co/400x250/ADD8E6/333333?text=Apartment+12' },
+    { id: '1', name: 'Cozy Studio near University A', location: 'University Avenue', price: 150000, bedrooms: 1, bathrooms: 1, isNewListing: true, imageUrl: 'https://placehold.co/400x280/F0F4F8/333333?text=Apartment+1' },
+    { id: '2', name: 'Spacious 2-Bedroom near Tech Campus', location: 'Innovation Hub', price: 280000, bedrooms: 2, bathrooms: 2, isNewListing: false, imageUrl: 'https://placehold.co/400x280/E8EEF2/333333?text=Apartment+2' },
+    { id: '3', name: 'Modern Loft in Downtown', location: 'City Center', price: 200000, bedrooms: 1, bathrooms: 1, isNewListing: true, imageUrl: 'https://placehold.co/400x280/E0E7EB/333333?text=Apartment+3' },
+    { id: '4', name: 'Affordable Room in Shared House', location: 'Student District', price: 80000, bedrooms: 1, bathrooms: 0, isNewListing: false, imageUrl: 'https://placehold.co/400x280/D8E0E4/333333?text=Apartment+4' },
+    { id: '5', name: 'Bright 3-Bedroom Family Home', location: 'Quiet Suburb', price: 350000, bedrooms: 3, bathrooms: 2, isNewListing: false, imageUrl: 'https://placehold.co/400x280/D0D8DC/333333?text=Apartment+5' },
+    { id: '6', name: 'Compact Studio near Arts College', location: 'Bohemian Quarter', price: 120000, bedrooms: 1, bathrooms: 1, isNewListing: true, imageUrl: 'https://placehold.co/400x280/C8D0D4/333333?text=Apartment+6' },
+    { id: '7', name: 'Large 4-Bedroom House with Garden', location: 'Greenwich Estate', price: 550000, bedrooms: 4, bathrooms: 3, isNewListing: false, imageUrl: 'https://placehold.co/400x280/C0C8CC/333333?text=Apartment+7' },
+    { id: '8', name: 'Executive 2-Bedroom Apartment', location: 'Business District', price: 400000, bedrooms: 2, bathrooms: 2, isNewListing: false, imageUrl: 'https://placehold.co/400x280/B8C0C4/333333?text=Apartment+8' },
+    { id: '9', name: 'Quaint 1-Bedroom Cottage', location: 'Riverside Village', price: 100000, bedrooms: 1, bathrooms: 1, isNewListing: false, imageUrl: 'https://placehold.co/400x280/B0B8BC/333333?text=Apartment+9' },
+    { id: '10', name: 'Modern 3-Bedroom Townhouse', location: 'City Center', price: 450000, bedrooms: 3, bathrooms: 2, isNewListing: true, imageUrl: 'https://placehold.co/400x280/A8B0B4/333333?text=Apartment+10' },
+    { id: '11', name: 'Spacious 5-Bedroom Villa', location: 'Quiet Suburb', price: 800000, bedrooms: 5, bathrooms: 4, isNewListing: false, imageUrl: 'https://placehold.co/400x280/A0A8AC/333333?text=Apartment+11' },
+    { id: '12', name: 'Compact 1-Bedroom Flat', location: 'Student District', price: 95000, bedrooms: 1, bathrooms: 1, isNewListing: false, imageUrl: 'https://placehold.co/400x280/98A0A4/333333?text=Apartment+12' },
   ];
 }
 
@@ -43,12 +42,19 @@ export default function DiscoverPage() {
   const [locationFilter, setLocationFilter] = useState('any');
   const [sortBy, setSortBy] = useState('name_asc');
   const [showFiltersModal, setShowFiltersModal] = useState(false); // New state for modal visibility
+  const [showMobileMenu, setShowMobileMenu] = useState(false); // State for mobile navigation menu
+  const [showUserDropdown, setShowUserDropdown] = useState(false); // State for user dropdown
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // New state for sidebar collapse
+  const [theme, setTheme] = useState('light'); // New state for theme
+
 
   // User Status State (simulated)
   const [userStatus, setUserStatus] = useState('Guest'); // Default to Guest
+  const [userAvatar, setUserAvatar] = useState('https://placehold.co/40x40/cccccc/ffffff?text=U'); // Placeholder avatar
 
   // Price Slider specific states and refs
   const priceRangeRef = useRef(null);
+  const userDropdownRef = useRef(null); // Ref for user dropdown
   const [minPriceSlider, setMinPriceSlider] = useState(80000);
   const [maxPriceSlider, setMaxPriceSlider] = useState(800000);
   const priceMinRange = 80000;
@@ -83,8 +89,30 @@ export default function DiscoverPage() {
     };
   }, []);
 
+  // Effect to close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+        setShowUserDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [userDropdownRef]);
+
+  // Effect to apply theme class to body
+  useEffect(() => {
+    document.body.className = theme === 'dark' ? 'dark-theme' : '';
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
+
   const isMobile = windowWidth <= 480;
-  const isTablet = windowWidth <= 768;
+  const isTablet = windowWidth <= 768; // Used for showing filter button on tablets too
 
 
   useEffect(() => {
@@ -247,179 +275,1109 @@ export default function DiscoverPage() {
 
   if (loading) {
     return (
-      <div style={styles.container}>
-        <p style={styles.loadingText}>Loading apartments...</p>
+      <div className="app-container">
+        <p className="loading-text">Loading apartments...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div style={styles.container}>
-        <p style={styles.errorText}>Error: {error}</p>
+      <div className="app-container">
+        <p className="error-text">Error: {error}</p>
       </div>
     );
   }
 
   return (
-    <div style={styles.container}>
-      {/* Header with User Status */}
-      <div style={styles.header}>
-        <h1 style={styles.heading(isTablet, isMobile)}>Discover Your Perfect Apartment</h1>
-        <div style={styles.userStatus}>Welcome, {userStatus}!</div>
-      </div>
-      <p style={styles.subheading(isMobile)}>Browse a curated selection of student-friendly accommodations.</p>
+    <div className={`app-container ${isSidebarCollapsed ? 'sidebar-collapsed-mode' : ''}`}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-      {/* Filter and Sort Controls */}
-      <div style={styles.controlsSection}>
-        <div style={styles.searchBarContainer(isMobile)}>
-          <input
-            type="text"
-            placeholder="Search by name or location..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={styles.searchInput(isMobile)}
-          />
-          {isMobile && (
-            <button
-              style={styles.filterToggleButton}
-              onClick={() => setShowFiltersModal(true)} // Open modal on click
-            >
-              Show Filters
+        /* Universal box-sizing for consistent layout */
+        * {
+          box-sizing: border-box;
+        }
+
+        :root {
+          --primary-color: #4CAF50; /* Green */
+          --primary-dark: #388E3C;
+          --secondary-color: #2196F3; /* Blue */
+          --text-dark: #333;
+          --text-medium: #555;
+          --text-light: #777;
+          --bg-main: #f9f9f9;
+          --bg-element: #ffffff;
+          --border-light: #eee;
+          --shadow-subtle: rgba(0, 0, 0, 0.05);
+          --shadow-medium: rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-theme {
+          --primary-color: #66BB6A; /* Lighter green for dark mode */
+          --primary-dark: #4CAF50;
+          --secondary-color: #64B5F6; /* Lighter blue for dark mode */
+          --text-dark: #E0E0E0; /* Light gray text */
+          --text-medium: #B0B0B0;
+          --text-light: #888888;
+          --bg-main: #2C2C2C; /* Dark background */
+          --bg-element: #1E1E1E; /* Darker background for elements */
+          --border-light: #444444;
+          --shadow-subtle: rgba(0, 0, 0, 0.2);
+          --shadow-medium: rgba(0, 0, 0, 0.4);
+        }
+
+        body, html, #__next {
+          height: 100%;
+          margin: 0;
+          font-family: 'Inter', sans-serif;
+          background-color: var(--bg-main);
+          color: var(--text-dark);
+          line-height: 1.6;
+        }
+
+        .app-container {
+          display: grid;
+          grid-template-columns: 1fr; /* Default to single column for mobile */
+          grid-template-rows: auto 1fr; /* Header row, then content row */
+          height: 100vh;
+          max-width: 100%;
+          margin: 0 auto;
+          overflow: hidden;
+          background-color: var(--bg-main);
+        }
+
+        /* Responsive Header (Top Bar) */
+        .responsive-header {
+          grid-column: 1 / -1; /* Spans all columns */
+          grid-row: 1;
+          background-color: var(--bg-element);
+          padding: 15px 20px;
+          box-shadow: 0 2px 8px var(--shadow-subtle);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          z-index: 1000;
+          flex-shrink: 0;
+          border-bottom: 1px solid var(--border-light);
+        }
+
+        /* Mobile specific header elements */
+        .responsive-header .mobile-only {
+          display: flex; /* Show mobile elements by default */
+        }
+        .responsive-header .app-header-title {
+          font-size: 1.4em;
+          font-weight: 700;
+          color: var(--primary-color);
+          margin: 0;
+          flex-grow: 1;
+          text-align: center;
+        }
+        .responsive-header .hamburger-menu {
+          flex-direction: column;
+          gap: 5px;
+          cursor: pointer;
+          padding: 5px;
+          border-radius: var(--border-radius-sm);
+          transition: background-color 0.2s ease;
+          margin-right: 15px;
+        }
+        .responsive-header .hamburger-menu:hover {
+          background-color: var(--border-light);
+        }
+        .responsive-header .hamburger-menu .bar {
+          width: 25px;
+          height: 3px;
+          background-color: var(--text-dark);
+          border-radius: 2px;
+          transition: all 0.3s ease;
+        }
+
+        /* Desktop specific header elements (hidden by default, shown via media query) */
+        .responsive-header .desktop-header-content {
+          display: none; /* Hidden by default */
+        }
+
+        /* Common user status styling */
+        .nav-user-status {
+          background-color: var(--bg-main); /* Adjusted for theme */
+          padding: 6px 12px;
+          border-radius: var(--border-radius-md);
+          font-size: 0.85em;
+          font-weight: 600;
+          color: var(--primary-dark);
+          box-shadow: 0 1px 3px var(--shadow-subtle);
+          white-space: nowrap;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+          position: relative;
+          margin-left: auto;
+        }
+        .nav-user-status img {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+        .user-dropdown {
+          position: absolute;
+          top: calc(100% + 10px);
+          right: 0;
+          background-color: var(--bg-element); /* Adjusted for theme */
+          border-radius: var(--border-radius-md);
+          box-shadow: 0 4px 15px var(--shadow-medium);
+          min-width: 150px;
+          z-index: 1001;
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-10px);
+          transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+        }
+        .user-dropdown.show {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+        .user-dropdown-item {
+          display: block;
+          padding: 10px 15px;
+          text-decoration: none;
+          color: var(--text-dark);
+          font-size: 0.95em;
+          font-weight: 500;
+          transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .user-dropdown-item:first-child {
+          border-top-left-radius: var(--border-radius-md);
+          border-top-right-radius: var(--border-radius-md);
+        }
+        .user-dropdown-item:last-child {
+          border-bottom-left-radius: var(--border-radius-md);
+          border-bottom-right-radius: var(--border-radius-md);
+        }
+        .user-dropdown-item:hover {
+          background-color: var(--bg-main); /* Adjusted for theme */
+          color: var(--primary-color);
+        }
+        .user-dropdown-item.theme-toggle-button {
+          background: none;
+          border: none;
+          text-align: left;
+          width: 100%;
+          cursor: pointer;
+        }
+        .user-dropdown-item.theme-toggle-button:hover {
+          background-color: var(--bg-main); /* Adjusted for theme */
+        }
+
+
+        /* Sidebar Navigation */
+        .app-sidebar {
+          grid-column: 1;
+          grid-row: 1 / -1; /* Spans from header to end of content */
+          background-color: var(--bg-element); /* Adjusted for theme */
+          width: 250px; /* Fixed width for sidebar */
+          padding: 20px;
+          box-shadow: 2px 0 8px var(--shadow-subtle);
+          display: none; /* Hidden by default for mobile, shown on desktop */
+          flex-direction: column;
+          gap: 30px;
+          flex-shrink: 0;
+          border-right: 1px solid var(--border-light);
+          overflow-y: auto; /* Enable scrolling for long sidebars */
+          transition: width 0.3s ease, padding 0.3s ease; /* Smooth transition for sidebar itself */
+          position: relative; /* For positioning toggle button */
+        }
+        .app-sidebar .navbar-brand {
+          font-size: 1.8em;
+          font-weight: 800;
+          color: var(--primary-color);
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 20px; /* Space below brand */
+          white-space: nowrap;
+          overflow: hidden; /* Hide overflow during transition */
+          transition: all 0.3s ease;
+          justify-content: flex-start; /* Default alignment */
+        }
+        .app-sidebar .navbar-brand .logo-icon {
+          font-size: 1.2em;
+        }
+        .app-sidebar .nav-links {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+        .app-sidebar .nav-link {
+          text-decoration: none;
+          color: var(--text-medium);
+          font-weight: 500;
+          font-size: 1.1em;
+          padding: 10px 0;
+          transition: color 0.2s ease, transform 0.2s ease;
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          white-space: nowrap;
+          overflow: hidden; /* Hide overflow during transition */
+        }
+        .app-sidebar .nav-link:hover {
+          color: var(--primary-color);
+          transform: translateX(5px);
+        }
+        .app-sidebar .nav-link::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          bottom: -5px;
+          width: 0;
+          height: 2px;
+          background-color: var(--primary-color);
+          transition: width 0.3s ease;
+        }
+        .app-sidebar .nav-link:hover::after {
+          width: 100%;
+        }
+        .app-sidebar .nav-link .link-text { /* Added for explicit control over text */
+            transition: opacity 0.3s ease, width 0.3s ease;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+
+        /* Sidebar Toggle Button */
+        .sidebar-toggle-button {
+          position: absolute;
+          bottom: 20px; /* Moved to bottom */
+          right: 10px; /* Position inside sidebar */
+          background-color: transparent; /* Removed background */
+          color: var(--text-medium); /* Changed color to blend */
+          border: none;
+          border-radius: 50%;
+          width: 30px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: none; /* Removed shadow */
+          transition: all 0.3s ease;
+          z-index: 10;
+        }
+        .sidebar-toggle-button:hover {
+          background-color: var(--border-light); /* Subtle hover effect */
+          color: var(--primary-color);
+          transform: scale(1.1); /* Slightly larger scale on hover */
+        }
+        .sidebar-toggle-button .icon {
+          font-size: 1.2em;
+          transition: transform 0.3s ease;
+        }
+
+
+        /* Main Content Area */
+        .main-content {
+          grid-column: 1; /* Default to single column for mobile */
+          grid-row: 2; /* Below the header for mobile */
+          flex-grow: 1;
+          overflow-y: auto;
+          padding: 20px;
+          background-color: var(--bg-main);
+        }
+
+        /* Controls Section */
+        .controls-section {
+          background-color: var(--bg-element); /* Adjusted for theme */
+          padding: 20px;
+          border-radius: var(--border-radius-lg);
+          box-shadow: 0 4px 15px var(--shadow-medium);
+          margin-bottom: 20px;
+          border: 1px solid var(--border-light);
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+        .search-bar-container {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          flex-wrap: nowrap;
+        }
+        .search-input {
+          flex: 1;
+          padding: 10px 15px;
+          border-radius: var(--border-radius-md);
+          border: 1px solid var(--input-border); /* Adjusted for theme */
+          font-size: 1em;
+          font-family: 'Inter', sans-serif;
+          transition: all 0.2s ease;
+          min-width: unset;
+          box-shadow: inset 0 1px 3px var(--shadow-subtle);
+          background-color: var(--input-bg); /* Adjusted for theme */
+          color: var(--text-dark); /* Adjusted for theme */
+        }
+        .search-input:focus {
+          border-color: var(--primary-color);
+          box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+          outline: none;
+        }
+        .filter-toggle-button {
+          background-color: var(--secondary-color);
+          color: white;
+          padding: 10px 15px;
+          border-radius: var(--border-radius-md);
+          border: none;
+          cursor: pointer;
+          font-size: 0.95em;
+          font-weight: 600;
+          transition: all 0.2s ease;
+          white-space: nowrap;
+          box-shadow: 0 2px 5px var(--shadow-subtle);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .filter-toggle-button .filter-icon {
+          width: 20px;
+          height: 20px;
+          fill: currentColor;
+        }
+        .filter-toggle-button:hover {
+          background-color: #1976D2;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px var(--shadow-medium);
+        }
+        .desktop-filters-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 15px;
+          flex: 2;
+          justify-content: flex-end;
+        }
+        .filter-group {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+        }
+        .filter-label {
+          font-weight: 500;
+          color: var(--text-medium);
+          font-size: 0.9em;
+        }
+        .filter-select {
+          padding: 8px 12px;
+          border-radius: var(--border-radius-sm);
+          border: 1px solid var(--input-border); /* Adjusted for theme */
+          font-size: 0.9em;
+          font-family: 'Inter', sans-serif;
+          background-color: var(--input-bg); /* Adjusted for theme */
+          color: var(--text-dark); /* Adjusted for theme */
+          cursor: pointer;
+          transition: all 0.2s ease;
+          appearance: none;
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23495057'%3e%3cpath d='M7 7l3-3 3 3m0 6l-3 3-3-3' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+          background-repeat: no-repeat;
+          background-position: right 0.6rem center;
+          background-size: 1em;
+          box-shadow: inset 0 1px 3px var(--shadow-subtle);
+        }
+        .filter-select:focus {
+          border-color: var(--primary-color);
+          box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+          outline: none;
+        }
+        .filter-checkbox {
+          width: 16px;
+          height: 16px;
+          cursor: pointer;
+          accent-color: var(--primary-color);
+          border-radius: 3px;
+        }
+
+        /* Price Slider */
+        .price-range-group {
+          width: 100%;
+          margin-top: 10px;
+        }
+        .price-slider-wrapper {
+          position: relative;
+          height: 30px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        .price-slider-track {
+          position: relative;
+          width: 100%;
+          height: 4px;
+          background-color: var(--border-light); /* Adjusted for theme */
+          border-radius: 2px;
+          cursor: pointer;
+        }
+        .price-slider-range {
+          position: absolute;
+          height: 100%;
+          background-color: var(--primary-color);
+          border-radius: 2px;
+        }
+        .price-slider-thumb {
+          position: absolute;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background-color: var(--primary-color);
+          border: 2px solid var(--bg-element); /* Adjusted for theme */
+          box-shadow: 0 1px 4px var(--shadow-medium);
+          top: 50%;
+          transform: translate(-50%, -50%);
+          cursor: grab;
+          transition: all 0.1s ease;
+          z-index: 2;
+        }
+        .price-slider-thumb:hover {
+          background-color: var(--primary-dark);
+          box-shadow: 0 2px 6px var(--shadow-medium);
+          transform: translate(-50%, -50%) scale(1.05);
+        }
+        .price-slider-thumb:active {
+          cursor: grabbing;
+        }
+        .price-value-display {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 8px;
+          font-weight: 500;
+          color: var(--text-dark);
+          font-size: 0.85em;
+        }
+
+        /* Grid */
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 25px;
+        }
+
+        /* Card */
+        .card {
+          display: flex;
+          flex-direction: column;
+          border: 1px solid var(--card-border); /* Adjusted for theme */
+          border-radius: var(--border-radius-lg);
+          overflow: hidden;
+          text-decoration: none;
+          color: inherit;
+          background-color: var(--bg-element); /* Adjusted for theme */
+          cursor: pointer;
+          box-shadow: 0 4px 12px var(--shadow-subtle);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          position: relative;
+          opacity: 0;
+          transform: translateY(15px);
+          animation: fadeInUp 0.5s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 20px var(--shadow-medium);
+        }
+        .new-listing-badge {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background-color: var(--primary-color);
+          color: white;
+          padding: 4px 8px;
+          border-radius: var(--border-radius-sm);
+          font-size: 0.75em;
+          font-weight: bold;
+          z-index: 10;
+          box-shadow: 0 1px 3px var(--shadow-subtle);
+        }
+        .image {
+          width: 100%;
+          height: 180px;
+          object-fit: cover;
+          border-bottom: 1px solid var(--card-border); /* Adjusted for theme */
+          border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+        }
+        .card-content {
+          padding: 15px;
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+        .card-title {
+          font-size: 1.2em;
+          font-weight: 700;
+          margin-bottom: 5px;
+          color: var(--text-dark);
+          line-height: 1.3;
+        }
+        .card-location {
+          color: var(--text-light);
+          font-size: 0.85em;
+          margin-bottom: 10px;
+        }
+        .card-info-grid {
+          display: flex;
+          gap: 10px;
+          margin-bottom: 12px;
+          flex-wrap: wrap;
+        }
+        .card-info-item {
+          display: flex;
+          align-items: center;
+          font-size: 0.8em;
+          color: var(--text-medium);
+          font-weight: 500;
+        }
+        .icon {
+          margin-right: 5px;
+          font-size: 1em;
+        }
+        .card-price {
+          font-size: 1em;
+          font-weight: 600;
+          color: var(--text-dark);
+          margin-bottom: 15px;
+        }
+        .price-highlight {
+          font-size: 1.1em;
+          font-weight: 700;
+          color: var(--primary-color);
+        }
+        .view-details-button {
+          background-color: var(--primary-color);
+          color: white;
+          padding: 9px 15px;
+          border-radius: var(--border-radius-md);
+          border: none;
+          cursor: pointer;
+          font-size: 0.9em;
+          font-weight: 600;
+          transition: all 0.2s ease;
+          width: 100%;
+          box-shadow: 0 1px 3px var(--shadow-subtle);
+        }
+        .view-details-button:hover {
+          background-color: var(--primary-dark);
+          transform: translateY(-1px);
+          box-shadow: 0 2px 5px var(--shadow-medium);
+        }
+
+        /* Empty State */
+        .empty-state {
+          text-align: center;
+          font-size: 1em;
+          color: var(--text-light);
+          padding: 50px 20px;
+          background-color: var(--bg-element); /* Adjusted for theme */
+          border-radius: var(--border-radius-lg);
+          box-shadow: 0 4px 12px var(--shadow-subtle);
+          margin-top: 40px;
+        }
+
+        /* Filter Modal */
+        .filter-modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 2000;
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .filter-modal-overlay.show {
+          opacity: 1;
+          visibility: visible;
+        }
+        .filter-modal-content {
+          background-color: var(--bg-element); /* Adjusted for theme */
+          border-radius: var(--border-radius-lg);
+          padding: 25px;
+          width: 90%;
+          max-width: 400px;
+          box-shadow: 0 10px 30px var(--shadow-medium);
+          transform: translateY(20px);
+          opacity: 0;
+          transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          position: relative;
+        }
+        .filter-modal-overlay.show .filter-modal-content {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        .filter-modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid var(--border-light);
+        }
+        .filter-modal-header h3 {
+          margin: 0;
+          font-size: 1.3em;
+          color: var(--text-dark);
+        }
+        .filter-modal-close-button {
+          background: none;
+          border: none;
+          font-size: 1.5em;
+          color: var(--text-light);
+          cursor: pointer;
+          padding: 5px;
+          border-radius: 50%;
+          transition: all 0.2s ease;
+        }
+        .filter-modal-close-button:hover {
+          background-color: var(--bg-main); /* Adjusted for theme */
+          color: var(--text-dark);
+        }
+        .filter-modal-body {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+        .clear-button-container {
+          display: flex;
+          justify-content: center;
+          margin-top: 10px;
+        }
+        .clear-filters-button, .apply-filters-button {
+          padding: 10px 18px;
+          border-radius: var(--border-radius-md);
+          border: none;
+          cursor: pointer;
+          font-size: 0.95em;
+          font-weight: 600;
+          transition: all 0.2s ease;
+          width: 100%;
+          box-shadow: 0 1px 3px var(--shadow-subtle);
+        }
+        .clear-filters-button {
+          background-color: #f44336; /* Red */
+          color: white;
+        }
+        .clear-filters-button:hover {
+          background-color: #d32f2f;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 5px var(--shadow-medium);
+        }
+        .apply-filters-button {
+          background-color: var(--primary-color);
+          color: white;
+          margin-top: 10px;
+        }
+        .apply-filters-button:hover {
+          background-color: var(--primary-dark);
+          transform: translateY(-1px);
+          box-shadow: 0 2px 5px var(--shadow-medium);
+        }
+
+        /* Mobile Navigation Menu (Overlay) */
+        .mobile-menu-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.7);
+          display: flex;
+          justify-content: flex-start; /* Align to left for sidebar effect */
+          align-items: flex-start;
+          z-index: 2000;
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .mobile-menu-overlay.show {
+          opacity: 1;
+          visibility: visible;
+        }
+        .mobile-menu-content {
+          background-color: var(--bg-element); /* Adjusted for theme */
+          padding: 30px;
+          border-radius: var(--border-radius-lg); /* Maintain rounded corners */
+          width: 80%;
+          max-width: 300px; /* Max width for mobile sidebar */
+          height: 100%; /* Full height */
+          box-shadow: 0 10px 30px var(--shadow-medium);
+          transform: translateX(-100%); /* Start off-screen */
+          opacity: 0;
+          transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          position: relative;
+        }
+        .mobile-menu-overlay.show .mobile-menu-content {
+          transform: translateX(0); /* Slide in */
+          opacity: 1;
+        }
+        .mobile-menu-close-button {
+          position: absolute;
+          top: 15px;
+          right: 15px;
+          background: none;
+          border: none;
+          font-size: 1.8em;
+          color: var(--text-light);
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .mobile-menu-close-button:hover {
+          color: var(--text-dark);
+          transform: rotate(90deg);
+        }
+        .mobile-nav-links {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          margin-top: 20px;
+        }
+        .mobile-nav-link {
+          text-decoration: none;
+          color: var(--text-dark);
+          font-weight: 600;
+          font-size: 1.1em;
+          padding: 10px 0;
+          border-bottom: 1px solid var(--border-light);
+          transition: color 0.2s ease, background-color 0.2s ease;
+        }
+        .mobile-nav-link:hover {
+          color: var(--primary-color);
+          background-color: var(--bg-main); /* Adjusted for theme */
+        }
+        .mobile-nav-user-status {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-weight: 600;
+          color: var(--primary-dark);
+          background-color: var(--bg-main); /* Adjusted for theme */
+          padding: 10px 15px;
+          border-radius: var(--border-radius-md);
+          margin-top: 15px;
+          box-shadow: 0 1px 3px var(--shadow-subtle);
+        }
+        .mobile-nav-user-status img {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+
+        /* Responsive adjustments */
+        @media (min-width: 769px) {
+          .app-container {
+            grid-template-columns: 250px 1fr; /* Sidebar width + main content */
+            transition: grid-template-columns 0.3s ease; /* Smooth transition for grid */
+          }
+          .app-container.sidebar-collapsed-mode { /* New class for collapsed state */
+            grid-template-columns: 60px 1fr; /* Desktop collapsed */
+          }
+
+          .responsive-header {
+            grid-column: 2 / -1; /* Header spans main content area */
+            justify-content: flex-end; /* Push title/user status to right */
+          }
+          .responsive-header .mobile-only {
+            display: none; /* Hide mobile elements on desktop */
+          }
+          .responsive-header .desktop-header-content {
+            display: flex; /* Show desktop header content */
+            flex-grow: 1; /* Allow title to take space */
+            justify-content: center; /* Center title */
+          }
+          .responsive-header .app-header-title {
+            text-align: center; /* Center title in desktop header */
+            margin-left: 0; /* Reset margin */
+          }
+          .responsive-header .nav-user-status {
+            margin-left: auto; /* Push to the right */
+          }
+
+          .app-sidebar {
+            display: flex; /* Show sidebar on desktop */
+          }
+          .app-container.sidebar-collapsed-mode .app-sidebar {
+            width: 60px;
+            padding: 20px 10px; /* Adjust padding for collapsed state */
+          }
+          .app-container.sidebar-collapsed-mode .app-sidebar .navbar-brand {
+            justify-content: center; /* Ensure centered when collapsed */
+            width: 40px; /* Limit width */
+            margin: 0 auto 20px auto; /* Center and keep margin */
+          }
+          .app-container.sidebar-collapsed-mode .app-sidebar .navbar-brand span:not(.logo-icon) {
+            opacity: 0; /* Fade out text */
+            width: 0; /* Collapse width to hide text */
+            overflow: hidden; /* Ensure text doesn't wrap */
+            transition: opacity 0.3s ease, width 0.3s ease;
+          }
+          .app-container.sidebar-collapsed-mode .app-sidebar .nav-link {
+            justify-content: center; /* Center icon when collapsed */
+            padding: 10px 0; /* Adjust padding */
+          }
+          .app-container.sidebar-collapsed-mode .app-sidebar .nav-link .link-text {
+            opacity: 0;
+            width: 0; /* Collapse width to hide text */
+            overflow: hidden; /* Ensure text doesn't wrap */
+            transition: opacity 0.3s ease, width 0.3s ease;
+          }
+          .app-container.sidebar-collapsed-mode .sidebar-toggle-button .icon {
+            transform: rotate(180deg); /* Rotate arrow when collapsed */
+          }
+
+
+          .main-content {
+            grid-column: 2; /* Main content is in the second column */
+            grid-row: 2; /* Below the header */
+          }
+
+          .filter-toggle-button {
+            display: none; /* Hide filter button on desktop */
+          }
+          .desktop-filters-container {
+            display: flex; /* Show desktop filters */
+          }
+          .search-bar-container {
+            flex-direction: row;
+            justify-content: space-between;
+          }
+        }
+      `}</style>
+
+      {/* Responsive Header (Top Bar) */}
+      <header className="responsive-header">
+        {/* Mobile-only elements */}
+        <div className="hamburger-menu mobile-only" onClick={() => setShowMobileMenu(!showMobileMenu)}>
+          <div className="bar"></div>
+          <div className="bar"></div>
+          <div className="bar"></div>
+        </div>
+        <h1 className="app-header-title mobile-only">Discover Apartments</h1>
+
+        {/* Desktop-only header content (e.g., centered title) */}
+        <div className="desktop-header-content">
+          <h1 className="app-header-title">Discover Apartments</h1>
+        </div>
+
+        {/* User status (always present, but its container's flex behavior changes) */}
+        <div className="nav-user-status" onClick={() => setShowUserDropdown(!showUserDropdown)} ref={userDropdownRef}>
+          <img src={userAvatar} alt="User Avatar" />
+          <span>{userStatus}</span>
+          <div className={`user-dropdown ${showUserDropdown ? 'show' : ''}`}>
+            <a href="#" className="user-dropdown-item">Profile</a>
+            <a href="#" className="user-dropdown-item">Settings</a>
+            <button className="user-dropdown-item theme-toggle-button" onClick={toggleTheme}>
+              {theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
             </button>
-          )}
-           {!isMobile && ( // Show desktop filters
-             <div style={styles.desktopFiltersContainer}>
-                 {/* Location Filter */}
-                 <div style={styles}>
-                     <label htmlFor="location" style={styles.filterLabel}>Location:</label>
-                     <select
-                         id="location"
-                         value={locationFilter}
-                         onChange={(e) => setLocationFilter(e.target.value)}
-                         style={styles.filterSelect}
-                     >
-                         <option value="any">Any</option>
-                         {uniqueLocations.map(loc => (
-                             <option key={loc} value={loc}>{loc}</option>
-                         ))}
-                     </select>
-                 </div>
-
-                 {/* Bedrooms Filter */}
-                 <div style={styles}>
-                   <label htmlFor="bedrooms" style={styles.filterLabel}>Beds:</label>
-                   <select
-                     id="bedrooms"
-                     value={bedroomsFilter}
-                     onChange={(e) => setBedroomsFilter(e.target.value)}
-                     style={styles.filterSelect}
-                   >
-                     <option value="any">Any</option>
-                     <option value="0">0 (Studio)</option>
-                     <option value="1">1</option>
-                     <option value="2">2</option>
-                     <option value="3">3</option>
-                     <option value="4+">4+</option>
-                   </select>
-                 </div>
-
-                 {/* Bathrooms Filter */}
-                 <div style={styles}>
-                   <label htmlFor="bathrooms" style={styles.filterLabel}>Baths:</label>
-                   <select
-                     id="bathrooms"
-                     value={bathroomsFilter}
-                     onChange={(e) => setBathroomsFilter(e.target.value)}
-                     style={styles.filterSelect}
-                   >
-                     <option value="any">Any</option>
-                     <option value="1">1</option>
-                     <option value="2+">2+</option>
-                     <option value="3+">3+</option>
-                   </select>
-                 </div>
-
-                 {/* Sort By */}
-                 <div style={styles}>
-                   <label htmlFor="sortBy" style={styles.filterLabel}>Sort By:</label>
-                   <select
-                     id="sortBy"
-                     value={sortBy}
-                     onChange={(e) => setSortBy(e.target.value)}
-                     style={styles.filterSelect}
-                   >
-                     <option value="name_asc">Name (A-Z)</option>
-                     <option value="name_desc">Name (Z-A)</option>
-                     <option value="price_asc">Price (Low to High)</option>
-                     <option value="price_desc">Price (High to Low)</option>
-                     <option value="location_asc">Location (A-Z)</option>
-                     <option value="location_desc">Location (Z-A)</option>
-                   </select>
-                 </div>
-             </div>
-           )}
+            <a href="#" className="user-dropdown-item">Logout</a>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {filteredApartments.length === 0 && !loading && !error ? (
-        <div style={styles.emptyState}>
-          <p>No apartments match your current filter criteria.</p>
-          <p>Try adjusting your filters or search terms.</p>
+      {/* Sidebar Navigation */}
+      <aside className="app-sidebar">
+        <a href="#" className="navbar-brand">
+          <span className="logo-icon">🏠</span> <span className="link-text">Lodger</span>
+        </a>
+        <div className="nav-links">
+          <a href="#" className="nav-link">
+            <span className="icon">🏠</span> <span className="link-text">Home</span>
+          </a>
+          <a href="#" className="nav-link">
+            <span className="icon">🔍</span> <span className="link-text">Discover</span>
+          </a>
+          <a href="#" className="nav-link">
+            <span className="icon">ℹ️</span> <span className="link-text">About Us</span>
+          </a>
+          <a href="#" className="nav-link">
+            <span className="icon">📞</span> <span className="link-text">Contact</span>
+          </a>
         </div>
-      ) : (
-        <div style={styles.grid}>
-          {filteredApartments.map((apartment, index) => (
-            <Link key={apartment.id} href={`/apartments/${apartment.id}`} passHref legacyBehavior>
-              <a style={{ ...styles.card, animationDelay: `${index * 0.1}s` }}>
-                {apartment.isNewListing && <div style={styles.newListingBadge}>✨ New Listing</div>}
-                <img
-                  src={apartment.imageUrl}
-                  alt={apartment.name}
-                  style={styles.image}
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://placehold.co/400x250/CCCCCC/666666?text=Image+Not+Found';
-                  }}
-                />
-                <div style={styles.cardContent}>
-                  <h2 style={styles.cardTitle}>{apartment.name}</h2>
-                  <p style={styles.cardLocation}>{apartment.location}</p>
-                  <div style={styles.cardInfoGrid}>
-                    <span style={styles.cardInfoItem}>
-                      <span style={styles.icon}>🛏️</span> {apartment.bedrooms} Bed
-                    </span>
-                    <span style={styles.cardInfoItem}>
-                      <span style={styles.icon}>🛁</span> {apartment.bathrooms} Bath
-                    </span>
-                  </div>
-                  <p style={styles.cardPrice}>Starting from <span style={styles.priceHighlight}>₦{apartment.price.toLocaleString()}/month</span></p>
-                  <button style={styles.viewDetailsButton}>View Details</button>
+        <button className="sidebar-toggle-button" onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}>
+          <svg className="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+      </aside>
+
+      {/* Main Content Area */}
+      <main className="main-content">
+        {/* Filter and Search Controls */}
+        <div className="controls-section">
+          <div className="search-bar-container">
+            <input
+              type="text"
+              placeholder="Search by name or location..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+            {isTablet && (
+              <button
+                className="filter-toggle-button"
+                onClick={() => setShowFiltersModal(true)}
+              >
+                <svg className="filter-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 18H14V16H10V18ZM3 6V8H21V6H3ZM6 13H18V11H6V13Z" fill="currentColor"/>
+                </svg>
+              </button>
+            )}
+            {!isTablet && (
+              <div className="desktop-filters-container">
+                <div className="filter-group">
+                  <label htmlFor="location" className="filter-label">Location:</label>
+                  <select
+                    id="location"
+                    value={locationFilter}
+                    onChange={(e) => setLocationFilter(e.target.value)}
+                    className="filter-select"
+                  >
+                    <option value="any">Any</option>
+                    {uniqueLocations.map(loc => (
+                      <option key={loc} value={loc}>{loc}</option>
+                    ))}
+                  </select>
                 </div>
-              </a>
-            </Link>
-          ))}
+
+                <div className="filter-group">
+                  <label htmlFor="bedrooms" className="filter-label">Beds:</label>
+                  <select
+                    id="bedrooms"
+                    value={bedroomsFilter}
+                    onChange={(e) => setBedroomsFilter(e.target.value)}
+                    className="filter-select"
+                  >
+                    <option value="any">Any</option>
+                    <option value="0">0 (Studio)</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4+">4+</option>
+                  </select>
+                </div>
+
+                <div className="filter-group">
+                  <label htmlFor="bathrooms" className="filter-label">Baths:</label>
+                  <select
+                    id="bathrooms"
+                    value={bathroomsFilter}
+                    onChange={(e) => setBathroomsFilter(e.target.value)}
+                    className="filter-select"
+                  >
+                    <option value="any">Any</option>
+                    <option value="1">1</option>
+                    <option value="2+">2+</option>
+                    <option value="3+">3+</option>
+                  </select>
+                </div>
+
+                <div className="filter-group">
+                  <label htmlFor="sortBy" className="filter-label">Sort By:</label>
+                  <select
+                    id="sortBy"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="filter-select"
+                  >
+                    <option value="name_asc">Name (A-Z)</option>
+                    <option value="name_desc">Name (Z-A)</option>
+                    <option value="price_asc">Price (Low to High)</option>
+                    <option value="price_desc">Price (High to Low)</option>
+                    <option value="location_asc">Location (A-Z)</option>
+                    <option value="location_desc">Location (Z-A)</option>
+                  </select>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+
+        {filteredApartments.length === 0 && !loading && !error ? (
+          <div className="empty-state">
+            <p>No apartments match your current filter criteria.</p>
+            <p>Try adjusting your filters or search terms.</p>
+          </div>
+        ) : (
+          <div className="grid">
+            {filteredApartments.map((apartment, index) => (
+              <a key={apartment.id} href={`/discover/${apartment.id}`} className="card" style={{ animationDelay: `${index * 0.1}s` }}>
+                  {apartment.isNewListing && <div className="new-listing-badge">✨ New Listing</div>}
+                  <img
+                    src={apartment.imageUrl}
+                    alt={apartment.name}
+                    className="image"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://placehold.co/400x280/CCCCCC/666666?text=Image+Not+Found';
+                    }}
+                  />
+                  <div className="card-content">
+                    <h2 className="card-title">{apartment.name}</h2>
+                    <p className="card-location">{apartment.location}</p>
+                    <div className="card-info-grid">
+                      <span className="card-info-item">
+                        <span className="icon">🛏️</span> {apartment.bedrooms} Bed
+                      </span>
+                      <span className="card-info-item">
+                        <span className="icon">🛁</span> {apartment.bathrooms} Bath
+                      </span>
+                    </div>
+                    <p className="card-price">₦{apartment.price.toLocaleString()}/month</p>
+                    <button className="view-details-button">View Details</button>
+                  </div>
+                </a>
+            ))}
+          </div>
+        )}
+      </main>
 
       {/* Filter Modal */}
-      <div style={styles.filterModalOverlay(showFiltersModal)} onClick={() => setShowFiltersModal(false)}>
-        <div style={styles.filterModalContent(showFiltersModal)} onClick={(e) => e.stopPropagation()}>
-          <div style={styles.filterModalHeader}>
+      <div className={`filter-modal-overlay ${showFiltersModal ? 'show' : ''}`} onClick={() => setShowFiltersModal(false)}>
+        <div className={`filter-modal-content ${showFiltersModal ? 'show' : ''}`} onClick={(e) => e.stopPropagation()}>
+          <div className="filter-modal-header">
             <h3>Filter Options</h3>
-            <button style={styles.filterModalCloseButton} onClick={() => setShowFiltersModal(false)}>
+            <button className="filter-modal-close-button" onClick={() => setShowFiltersModal(false)}>
               &#x2715;
             </button>
           </div>
-          <div style={styles.filterModalBody}>
+          <div className="filter-modal-body">
             {/* Location Filter */}
-            <div style={styles.filterGroup(true)}>
-                <label htmlFor="modalLocation" style={styles.filterLabel}>Location:</label>
+            <div className="filter-group">
+                <label htmlFor="modalLocation" className="filter-label">Location:</label>
                 <select
                     id="modalLocation"
                     value={locationFilter}
                     onChange={(e) => setLocationFilter(e.target.value)}
-                    style={styles.filterSelect}
+                    className="filter-select"
                 >
                     <option value="any">Any</option>
                     {uniqueLocations.map(loc => (
@@ -429,27 +1387,29 @@ export default function DiscoverPage() {
             </div>
 
             {/* Price Range Slider */}
-            <div style={{ ...styles.filterGroup(true), ...styles.priceRangeGroup }}>
-              <label style={styles.filterLabel}>Price Range (₦):</label>
-              <div style={styles.priceSliderWrapper}>
-                <div style={styles.priceSliderTrack} ref={priceRangeRef}>
+            <div className="filter-group price-range-group">
+              <label className="filter-label">Price Range (₦):</label>
+              <div className="price-slider-wrapper">
+                <div className="price-slider-track" ref={priceRangeRef}>
                   <div
+                    className="price-slider-range"
                     style={{
-                      ...styles.priceSliderRange,
                       left: `${getPercentage(minPriceSlider)}%`,
                       width: `${getPercentage(maxPriceSlider) - getPercentage(minPriceSlider)}%`,
                     }}
                   ></div>
                   <div
-                    style={{ ...styles.priceSliderThumb, left: `${getPercentage(minPriceSlider)}%` }}
+                    className="price-slider-thumb"
+                    style={{ left: `${getPercentage(minPriceSlider)}%` }}
                     onMouseDown={(e) => handleMouseDown(e, 'min')}
                   ></div>
                   <div
-                    style={{ ...styles.priceSliderThumb, left: `${getPercentage(maxPriceSlider)}%` }}
+                    className="price-slider-thumb"
+                    style={{ left: `${getPercentage(maxPriceSlider)}%` }}
                     onMouseDown={(e) => handleMouseDown(e, 'max')}
                   ></div>
                 </div>
-                <div style={styles.priceValueDisplay}>
+                <div className="price-value-display">
                   <span>₦{minPriceSlider.toLocaleString()}</span>
                   <span>₦{maxPriceSlider.toLocaleString()}</span>
                 </div>
@@ -457,13 +1417,13 @@ export default function DiscoverPage() {
             </div>
 
             {/* Bedrooms Filter */}
-            <div style={styles.filterGroup(true)}>
-              <label htmlFor="modalBedrooms" style={styles.filterLabel}>Bedrooms:</label>
+            <div className="filter-group">
+              <label htmlFor="modalBedrooms" className="filter-label">Bedrooms:</label>
               <select
                 id="modalBedrooms"
                 value={bedroomsFilter}
                 onChange={(e) => setBedroomsFilter(e.target.value)}
-                style={styles.filterSelect}
+                className="filter-select"
               >
                 <option value="any">Any</option>
                 <option value="0">0 (Studio)</option>
@@ -475,13 +1435,13 @@ export default function DiscoverPage() {
             </div>
 
             {/* Bathrooms Filter */}
-            <div style={styles.filterGroup(true)}>
-              <label htmlFor="modalBathrooms" style={styles.filterLabel}>Bathrooms:</label>
+            <div className="filter-group">
+              <label htmlFor="modalBathrooms" className="filter-label">Bathrooms:</label>
               <select
                 id="modalBathrooms"
                 value={bathroomsFilter}
                 onChange={(e) => setBathroomsFilter(e.target.value)}
-                style={styles.filterSelect}
+                className="filter-select"
               >
                 <option value="any">Any</option>
                 <option value="1">1</option>
@@ -491,25 +1451,25 @@ export default function DiscoverPage() {
             </div>
 
             {/* New Listing Filter */}
-            <div style={styles.filterGroupCheckbox}>
+            <div className="filter-group-checkbox">
                 <input
                     type="checkbox"
                     id="modalNewListing"
                     checked={isNewListingFilter}
                     onChange={(e) => setIsNewListingFilter(e.target.checked)}
-                    style={styles.filterCheckbox}
+                    className="filter-checkbox"
                 />
-                <label htmlFor="modalNewListing" style={styles.filterLabel}>New Listings Only</label>
+                <label htmlFor="modalNewListing" className="filter-label">New Listings Only</label>
             </div>
 
             {/* Sort By */}
-            <div style={styles.filterGroup(true)}>
-              <label htmlFor="modalSortBy" style={styles.filterLabel}>Sort By:</label>
+            <div className="filter-group">
+              <label htmlFor="modalSortBy" className="filter-label">Sort By:</label>
               <select
                 id="modalSortBy"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                style={styles.filterSelect}
+                className="filter-select"
               >
                 <option value="name_asc">Name (A-Z)</option>
                 <option value="name_desc">Name (Z-A)</option>
@@ -521,476 +1481,36 @@ export default function DiscoverPage() {
             </div>
 
             {/* Clear Filters Button */}
-            <div style={styles.clearButtonContainer(true)}>
-                <button onClick={clearFilters} style={styles.clearFiltersButton}>
+            <div className="clear-button-container">
+                <button onClick={clearFilters} className="clear-filters-button">
                     Clear Filters
                 </button>
             </div>
-            <button style={styles.applyFiltersButton} onClick={() => setShowFiltersModal(false)}>
+            <button className="apply-filters-button" onClick={() => setShowFiltersModal(false)}>
               Apply Filters
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Navigation Menu (Overlay) */}
+      <div className={`mobile-menu-overlay ${showMobileMenu ? 'show' : ''}`} onClick={() => setShowMobileMenu(false)}>
+        <div className={`mobile-menu-content ${showMobileMenu ? 'show' : ''}`} onClick={(e) => e.stopPropagation()}>
+          <button className="mobile-menu-close-button" onClick={() => setShowMobileMenu(false)}>
+            &#x2715;
+          </button>
+          <div className="mobile-nav-links">
+            <a href="#" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>Home</a>
+            <a href="#" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>Discover</a>
+            <a href="#" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>About Us</a>
+            <a href="#" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>Contact</a>
+            <div className="mobile-nav-user-status">
+              <img src={userAvatar} alt="User Avatar" />
+              <span>{userStatus}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-// --- Inline Styles ---
-const styles = {
-  container: {
-    fontFamily: '"Inter", sans-serif',
-    padding: '40px 20px',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    backgroundColor: '#f8f9fa',
-    minHeight: '100vh',
-    color: '#343a40',
-    boxSizing: 'border-box',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '20px',
-    flexWrap: 'wrap', // Allow wrapping on smaller screens
-    gap: '10px', // Space between elements when wrapped
-  },
-  userStatus: {
-    backgroundColor: '#e9ecef',
-    padding: '8px 15px',
-    borderRadius: '20px',
-    fontSize: '0.9em',
-    fontWeight: '600',
-    color: '#495057',
-  },
-  heading: (isTablet, isMobile) => ({
-    textAlign: isMobile ? 'center' : 'left', // Align left on larger screens
-    marginBottom: isMobile ? '15px' : '0',
-    color: '#1a202c',
-    fontSize: isMobile ? '2.2em' : (isTablet ? '2.8em' : '3.2em'),
-    fontWeight: '800',
-    textShadow: '0 2px 5px rgba(0,0,0,0.05)',
-    flexGrow: 1, // Allow heading to take space
-  }),
-  subheading: (isMobile) => ({
-    textAlign: 'center',
-    marginBottom: '50px',
-    color: '#4a5568',
-    fontSize: isMobile ? '1em' : '1.2em',
-    lineHeight: '1.6',
-    maxWidth: '700px',
-    margin: '0 auto 50px auto',
-  }),
-  loadingText: {
-    textAlign: 'center',
-    fontSize: '1.4em',
-    color: '#6c757d',
-    paddingTop: '80px',
-  },
-  errorText: {
-    textAlign: 'center',
-    fontSize: '1.4em',
-    color: '#dc3545',
-    paddingTop: '80px',
-  },
-  controlsSection: {
-    backgroundColor: '#ffffff',
-    padding: '25px',
-    borderRadius: '12px',
-    boxShadow: '0 8px 20px rgba(0,0,0,0.08)',
-    marginBottom: '50px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-  },
-  searchBarContainer: (isMobile) => ({
-    display: 'flex',
-    gap: '15px',
-    flexDirection: isMobile ? 'column' : 'row',
-    alignItems: isMobile ? 'stretch' : 'center',
-  }),
-  searchInput: (isMobile) => ({
-    flexGrow: 1,
-    padding: '12px 18px',
-    borderRadius: '8px',
-    border: '1px solid #cbd5e0',
-    fontSize: '1em',
-    fontFamily: '"Inter", sans-serif',
-    transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-    width: isMobile ? '100%' : 'auto',
-    '&:focus': {
-      borderColor: '#4299e1',
-      boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.2)',
-      outline: 'none',
-    },
-  }),
-  filterToggleButton: {
-    backgroundColor: '#607d8b',
-    color: 'white',
-    padding: '12px 20px',
-    borderRadius: '8px',
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: '1em',
-    fontWeight: '600',
-    transition: 'background-color 0.2s ease, transform 0.1s ease',
-    '&:hover': {
-      backgroundColor: '#4a6572',
-      transform: 'translateY(-2px)',
-    },
-  },
-  desktopFiltersContainer: {
-    display: 'flex',
-    flexWrap: 'wrap', // Allow wrapping on larger screens too if needed
-    gap: '15px',
-    flexGrow: 2, // Allow desktop filters to take up more space
-    justifyContent: 'flex-end', // Align filters to the right
-  },
-  filtersAndSortContainer: (isMobile) => ({
-    display: 'grid',
-    gridTemplateColumns: '1fr', // Always 1 column in modal for simplicity
-    gap: '20px',
-    paddingTop: isMobile ? '0' : '20px', // No top padding if it's the modal
-    borderTop: isMobile ? 'none' : '1px solid #edf2f7',
-  }),
-  filterGroup: (isMobile) => ({
-    display: 'flex',
-    flexDirection: isMobile ? 'column' : 'row',
-    alignItems: isMobile ? 'stretch' : 'center',
-    gap: '10px',
-  }),
-  priceRangeGroup: {
-    gridColumn: '1 / -1',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px',
-    alignItems: 'stretch',
-    padding: '10px 0',
-  },
-  priceSliderWrapper: {
-    position: 'relative',
-    height: '40px',
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  priceSliderTrack: {
-    position: 'relative',
-    width: '100%',
-    height: '8px',
-    backgroundColor: '#e0e0e0',
-    borderRadius: '5px',
-    cursor: 'pointer',
-  },
-  priceSliderRange: {
-    position: 'absolute',
-    height: '100%',
-    backgroundColor: '#007bff',
-    borderRadius: '5px',
-  },
-  priceSliderThumb: {
-    position: 'absolute',
-    width: '20px',
-    height: '20px',
-    borderRadius: '50%',
-    backgroundColor: '#007bff',
-    border: '2px solid #ffffff',
-    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
-    cursor: 'grab',
-    transition: 'background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease',
-    zIndex: 2,
-    '&:hover': {
-      backgroundColor: '#0056b3',
-      boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
-      transform: 'translate(-50%, -50%) scale(1.1)',
-    },
-    '&:active': {
-      cursor: 'grabbing',
-    }
-  },
-  priceValueDisplay: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '10px',
-    fontWeight: 'bold',
-    color: '#343a40',
-    fontSize: '0.9em',
-  },
-  filterGroupCheckbox: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-  },
-  filterLabel: {
-    fontWeight: '600',
-    color: '#4a5568',
-    fontSize: '0.95em',
-    minWidth: '70px',
-  },
-  filterInput: {
-    padding: '10px 15px',
-    borderRadius: '8px',
-    border: '1px solid #cbd5e0',
-    fontSize: '0.95em',
-    fontFamily: '"Inter", sans-serif',
-    flexGrow: 1,
-    minWidth: '80px',
-    transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-    '&:focus': {
-      borderColor: '#4299e1',
-      boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.2)',
-      outline: 'none',
-    },
-  },
-  filterSelect: {
-    padding: '10px 15px',
-    borderRadius: '8px',
-    border: '1px solid #cbd5e0',
-    fontSize: '0.95em',
-    fontFamily: '"Inter", sans-serif',
-    backgroundColor: 'white',
-    cursor: 'pointer',
-    flexGrow: 1,
-    transition: 'border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease',
-    '&:focus': {
-      borderColor: '#4299e1',
-      boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.2)',
-      outline: 'none',
-    },
-    '&:hover': {
-      transform: 'translateY(-2px)',
-      boxShadow: '0 4px 10px rgba(0,0,0,0.05)',
-    },
-  },
-  filterCheckbox: {
-    width: '20px',
-    height: '20px',
-    cursor: 'pointer',
-    accentColor: '#007bff',
-  },
-  clearButtonContainer: (isMobile) => ({
-    gridColumn: '1 / -1', // Span full width in modal too
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: isMobile ? '10px' : '0',
-  }),
-  clearFiltersButton: {
-    backgroundColor: '#dc3545',
-    color: 'white',
-    padding: '12px 25px',
-    borderRadius: '8px',
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: '1em',
-    fontWeight: '600',
-    transition: 'background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease',
-    '&:hover': {
-      backgroundColor: '#c82333',
-      transform: 'translateY(-2px)',
-      boxShadow: '0 4px 10px rgba(220,53,69,0.3)',
-    },
-  },
-  applyFiltersButton: {
-    backgroundColor: '#28a745',
-    color: 'white',
-    padding: '12px 25px',
-    borderRadius: '8px',
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: '1em',
-    fontWeight: '600',
-    marginTop: '20px', // Space from other filters
-    transition: 'background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease',
-    '&:hover': {
-        backgroundColor: '#218838',
-        transform: 'translateY(-2px)',
-        boxShadow: '0 4px 10px rgba(40,167,69,0.3)',
-    },
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gap: '30px',
-  },
-  card: {
-    display: 'flex',
-    flexDirection: 'column',
-    border: '1px solid #e2e8f0',
-    borderRadius: '12px',
-    overflow: 'hidden',
-    textDecoration: 'none',
-    color: 'inherit',
-    backgroundColor: '#ffffff',
-    cursor: 'pointer',
-    boxShadow: '0 6px 16px rgba(0,0,0,0.1)',
-    transition: 'transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
-    animation: 'fadeInUpCard 0.6s ease-out forwards',
-    position: 'relative',
-    '@keyframes fadeInUpCard': {
-        'from': {
-            opacity: 0,
-            transform: 'translateY(30px)',
-        },
-        'to': {
-            opacity: 1,
-            transform: 'translateY(0)',
-        },
-    },
-    '&:hover': {
-      transform: 'translateY(-10px) rotateZ(1deg)',
-      boxShadow: '0 15px 35px rgba(0,0,0,0.25)',
-    },
-  },
-  newListingBadge: {
-    position: 'absolute',
-    top: '15px',
-    right: '15px',
-    backgroundColor: '#28a745',
-    color: 'white',
-    padding: '5px 10px',
-    borderRadius: '5px',
-    fontSize: '0.8em',
-    fontWeight: 'bold',
-    zIndex: 10,
-    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-  },
-  image: {
-    width: '100%',
-    height: '220px',
-    objectFit: 'cover',
-    borderBottom: '1px solid #edf2f7',
-    borderRadius: '12px 12px 0 0',
-  },
-  cardContent: {
-    padding: '20px',
-    flexGrow: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-  cardTitle: {
-    fontSize: '1.6em',
-    margin: '0 0 10px 0',
-    color: '#2d3748',
-    fontWeight: '700',
-  },
-  cardLocation: {
-    fontSize: '1em',
-    margin: '0 0 12px 0',
-    color: '#718096',
-  },
-  cardInfoGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '10px',
-    marginBottom: '15px',
-    fontSize: '0.95em',
-    color: '#4a5568',
-  },
-  cardInfoItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '5px',
-  },
-  icon: {
-    fontSize: '1.2em',
-    lineHeight: '1',
-  },
-  cardPrice: {
-    fontSize: '1.3em',
-    fontWeight: 'bold',
-    margin: '0 0 20px 0',
-    color: '#4a5568',
-  },
-  priceHighlight: {
-    color: '#007bff',
-    textShadow: '0 1px 2px rgba(0,123,255,0.1)',
-  },
-  viewDetailsButton: {
-    backgroundColor: '#007bff',
-    color: 'white',
-    padding: '12px 25px',
-    borderRadius: '8px',
-    border: 'none',
-    cursor: 'pointer',
-    fontSize: '1.05em',
-    fontWeight: '600',
-    transition: 'background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease',
-    alignSelf: 'flex-start',
-    boxShadow: '0 4px 10px rgba(0,123,255,0.3)',
-    '&:hover': {
-      backgroundColor: '#0056b3',
-      transform: 'translateY(-3px) scale(1.02)',
-      boxShadow: '0 8px 15px rgba(0,123,255,0.4)',
-    },
-  },
-  emptyState: {
-    textAlign: 'center',
-    fontSize: '1.2em',
-    color: '#7f8c8d',
-    padding: '50px 20px',
-    backgroundColor: '#ffffff',
-    borderRadius: '12px',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
-    border: '1px solid #e9e9e9',
-    marginTop: '30px',
-  },
-  // --- Filter Modal Styles ---
-  filterModalOverlay: (isOpen) => ({
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: isOpen ? 'block' : 'none', // Control display with isOpen
-    zIndex: 999,
-    transition: 'opacity 0.3s ease-in-out',
-    opacity: isOpen ? 1 : 0,
-  }),
-  filterModalContent: (isOpen) => ({
-    position: 'fixed',
-    top: 0,
-    right: isOpen ? '0' : '-350px', // Slide in from right
-    width: '300px', // Fixed width for the modal
-    maxWidth: '90%',
-    height: '100%',
-    backgroundColor: '#ffffff',
-    boxShadow: '-4px 0 15px rgba(0,0,0,0.2)',
-    zIndex: 1000,
-    transition: 'right 0.3s ease-in-out', // Slide animation
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '25px',
-    boxSizing: 'border-box',
-    overflowY: 'auto', // Enable scrolling if content overflows
-  }),
-  filterModalHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '20px',
-    borderBottom: '1px solid #eee',
-    paddingBottom: '15px',
-  },
-  filterModalCloseButton: {
-    background: 'none',
-    border: 'none',
-    fontSize: '1.8em', // Larger close button
-    cursor: 'pointer',
-    color: '#90a4ae',
-    transition: 'color 0.2s ease',
-    '&:hover': {
-      color: '#607d8b',
-    },
-  },
-  filterModalBody: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-  },
-};

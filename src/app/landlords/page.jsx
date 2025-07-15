@@ -371,7 +371,7 @@ export default function LandlordDashboard() {
                   </div>
                   <div style={statusStyle}>{effectiveStatus}</div>
 
-                  <Link href={`/landlords/apartments/${apt.id}`} passHref legacyBehavior>
+                  <Link href={`./${apt.id}`} passHref legacyBehavior>
                     <a style={styles.viewDetailsButton}>View & Manage</a>
                   </Link>
                 </div>

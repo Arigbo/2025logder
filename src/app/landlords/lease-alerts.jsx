@@ -1,4 +1,5 @@
 // pages/landlords/lease-alerts.js
+
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
