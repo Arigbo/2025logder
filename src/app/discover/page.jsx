@@ -58,7 +58,7 @@ async function fetchApartments() {
       ],
       agentName: 'Eve Brown', agentPhone: '+2348045678901', agentImage: 'https://placehold.co/60x60/616161/ffffff?text=EB',
       propertyType: 'House', amenities: ['Garden', 'Parking'], datePosted: new Date('2025-06-25T09:00:00Z'),
-      description: "This bright and spacious three-bedroom family home is nestled in a quiet, family-friendly suburb. Featuring two modern bathrooms, a generous garden perfect for outdoor activities, and ample parking space. The interior boasts large living areas and a contemporary kitchen. Enjoy peaceful living with easy access to schools and parks."
+      description: "This bright and spacious three-bedroom family home is nestled in a quiet, family-friendly suburb. Featuring two generous bathrooms, a large garden perfect for outdoor activities, and ample parking space. The interior boasts large living areas and a contemporary kitchen. Enjoy peaceful living with easy access to schools and parks."
     },
     { id: '6', name: 'Compact Studio near Arts College', location: 'Bohemian Quarter', price: 120000, bedrooms: 1, bathrooms: 1, isNewListing: true,
       images: [
@@ -151,6 +151,63 @@ const MapView = ({ onBackToListings }) => {
     </div>
   );
 };
+
+// --- BookmarksPage Component ---
+const BookmarksPage = ({ bookmarkedApartmentIds, allApartments, onBackToListings, onApartmentClick, onToggleBookmark, bookmarkedApartments }) => {
+    const bookmarkedApartmentsData = allApartments.filter(apt => bookmarkedApartmentIds.includes(apt.id));
+
+    return (
+        <div className="bookmarks-page-container">
+            <button className="bookmarks-back-button" onClick={onBackToListings}>
+                &larr; Back to Discover
+            </button>
+            <h2 className="bookmarks-page-title">Your Bookmarked Apartments</h2>
+            {bookmarkedApartmentsData.length === 0 ? (
+                <div className="empty-state">
+                    <p>You haven't bookmarked any apartments yet.</p>
+                    <p>Start exploring and save your favorites!</p>
+                </div>
+            ) : (
+                <div className="grid">
+                    {bookmarkedApartmentsData.map((apartment, index) => (
+                        <div
+                            key={apartment.id}
+                            className="card"
+                            style={{ animationDelay: `${index * 0.1}s` }}
+                            onClick={() => onApartmentClick(apartment)}
+                        >
+                            {apartment.isNewListing && <div className="new-listing-badge">✨ New Listing</div>}
+                            <img
+                                src={apartment.images[0] || 'https://placehold.co/400x280/CCCCCC/666666?text=Image+Not+Found'}
+                                alt={apartment.name}
+                                className="image"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = 'https://placehold.co/400x280/FF0000/FFFFFF?text=IMAGE+LOAD+FAILED';
+                                }}
+                            />
+                            <div className="card-content">
+                                <h2 className="card-title">{apartment.name}</h2>
+                                <p className="card-location">{apartment.location}</p>
+                                <div className="card-info-grid">
+                                    <span className="card-info-item">
+                                        <span className="icon">🛏️</span> {apartment.bedrooms} Bed
+                                    </span>
+                                    <span className="card-info-item">
+                                        <span className="icon">🛁</span> {apartment.bathrooms} Bath
+                                    </span>
+                                </div>
+                                <p className="card-price">₦{apartment.price.toLocaleString()}/month</p>
+                                <button className="view-details-button">View Details</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
 
 // --- LoginModal Component (Simulated) ---
 const LoginModal = ({ onClose, onLoginSuccess }) => {
@@ -266,7 +323,7 @@ const LoginModal = ({ onClose, onLoginSuccess }) => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 className="form-input"
-              />
+            />
             </div>
           )}
           {error && <p className="login-error-message">{error}</p>}
@@ -309,10 +366,9 @@ export default function DiscoverPage() {
 
   // New states for Apartment Details Modal/Page
   const [selectedApartment, setSelectedApartment] = useState(null); // Stores the apartment object for details view
-  const [currentPage, setCurrentPage] = useState('list'); // 'list', 'details', 'map'
+  const [currentPage, setCurrentPage] = useState('list'); // 'list', 'details', 'map', 'bookmarks'
   const [showContactModal, setShowContactModal] = useState(false); // State for contact modal visibility
   const [showShareModal, setShowShareModal] = useState(false); // State for share modal visibility
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false); // New state for favorites filter
   const [bookmarkedApartments, setBookmarkedApartments] = useState([]); // Stores IDs of bookmarked apartments
 
   // User Status State (simulated)
@@ -465,92 +521,97 @@ export default function DiscoverPage() {
   const applyFiltersAndSort = useCallback((apartmentsToFilter = allApartments, currentMinPrice = minPrice, currentMaxPrice = maxPrice) => {
     let updatedApartments = [...apartmentsToFilter];
 
-    // 0. Apply Favorites Filter (if enabled)
-    if (showFavoritesOnly) {
-      updatedApartments = updatedApartments.filter(apt => bookmarkedApartments.includes(apt.id));
-    }
-
-    // 1. Apply Search Term Filter
-    if (searchTerm) {
-      updatedApartments = updatedApartments.filter(apt =>
-        apt.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        apt.location.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // 2. Apply Price Filter using the currentMinPrice and currentMaxPrice
-    updatedApartments = updatedApartments.filter(apt =>
-      apt.price >= currentMinPrice && apt.price <= currentMaxPrice
-    );
-
-    // 3. Apply Bedrooms Filter
-    if (bedroomsFilter !== 'any') {
-      updatedApartments = updatedApartments.filter(apt => {
-        if (bedroomsFilter === '3+') {
-          return apt.bedrooms >= 3;
-        } else if (bedroomsFilter === '4+') {
-          return apt.bedrooms >= 4;
-        } else if (bedroomsFilter === '5+') {
-          return apt.bedrooms >= 5;
+    // If on bookmarks page, filter by bookmarked apartments first
+    if (currentPage === 'bookmarks') {
+        updatedApartments = updatedApartments.filter(apt => bookmarkedApartments.includes(apt.id));
+        // No further filters (search, price, etc.) applied on bookmarks page for simplicity
+        // If needed, add them here:
+        // if (searchTerm) { ... }
+        // if (currentMinPrice !== actualMinPriceRange || currentMaxPrice !== actualMaxPriceRange) { ... }
+    } else {
+        // Apply Search Term Filter only on 'list' page
+        if (searchTerm) {
+            updatedApartments = updatedApartments.filter(apt =>
+                apt.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                apt.location.toLowerCase().includes(searchTerm.toLowerCase())
+            );
         }
-        return apt.bedrooms === parseInt(bedroomsFilter, 10);
-      });
-    }
 
-    // 4. Apply Bathrooms Filter
-    if (bathroomsFilter !== 'any') {
-      updatedApartments = updatedApartments.filter(apt => {
-        if (bathroomsFilter === '2+') {
-          return apt.bathrooms >= 2;
-        } else if (bathroomsFilter === '3+') {
-          return apt.bathrooms >= 3;
-        }
-        return apt.bathrooms === parseInt(bathroomsFilter, 10);
-      });
-    }
-
-    // 5. Apply New Listing Filter
-    if (isNewListingFilter) {
-        updatedApartments = updatedApartments.filter(apt => apt.isNewListing);
-    }
-
-    // 6. Apply Location Filter
-    if (locationFilter !== 'any') {
-        updatedApartments = updatedApartments.filter(apt => apt.location === locationFilter);
-    }
-
-    // 7. Apply Property Type Filter
-    if (propertyTypeFilter !== 'any') {
-        updatedApartments = updatedApartments.filter(apt => apt.propertyType === propertyTypeFilter);
-    }
-
-    // 8. Apply Amenities Filter
-    if (amenitiesFilter.length > 0) {
+        // Apply Price Filter using the currentMinPrice and currentMaxPrice only on 'list' page
         updatedApartments = updatedApartments.filter(apt =>
-            amenitiesFilter.every(amenity => apt.amenities && apt.amenities.includes(amenity))
+            apt.price >= currentMinPrice && apt.price <= currentMaxPrice
         );
+
+        // Apply Bedrooms Filter
+        if (bedroomsFilter !== 'any') {
+            updatedApartments = updatedApartments.filter(apt => {
+                if (bedroomsFilter === '3+') {
+                    return apt.bedrooms >= 3;
+                } else if (bedroomsFilter === '4+') {
+                    return apt.bedrooms >= 4;
+                } else if (bedroomsFilter === '5+') {
+                    return apt.bedrooms >= 5;
+                }
+                return apt.bedrooms === parseInt(bedroomsFilter, 10);
+            });
+        }
+
+        // Apply Bathrooms Filter
+        if (bathroomsFilter !== 'any') {
+            updatedApartments = updatedApartments.filter(apt => {
+                if (bathroomsFilter === '2+') {
+                    return apt.bathrooms >= 2;
+                } else if (bathroomsFilter === '3+') {
+                    return apt.bathrooms >= 3;
+                }
+                return apt.bathrooms === parseInt(bathroomsFilter, 10);
+            });
+        }
+
+        // Apply New Listing Filter
+        if (isNewListingFilter) {
+            updatedApartments = updatedApartments.filter(apt => apt.isNewListing);
+        }
+
+        // Apply Location Filter
+        if (locationFilter !== 'any') {
+            updatedApartments = updatedApartments.filter(apt => apt.location === locationFilter);
+        }
+
+        // Apply Property Type Filter
+        if (propertyTypeFilter !== 'any') {
+            updatedApartments = updatedApartments.filter(apt => apt.propertyType === propertyTypeFilter);
+        }
+
+        // Apply Amenities Filter
+        if (amenitiesFilter.length > 0) {
+            updatedApartments = updatedApartments.filter(apt =>
+                amenitiesFilter.every(amenity => apt.amenities && apt.amenities.includes(amenity))
+            );
+        }
+
+        // Apply Date Posted Filter
+        if (datePostedFilter !== 'any') {
+            const now = new Date();
+            updatedApartments = updatedApartments.filter(apt => {
+                const postedDate = new Date(apt.datePosted);
+                const diffTime = Math.abs(now.getTime() - postedDate.getTime());
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Difference in days
+
+                if (datePostedFilter === '24h') {
+                    return diffDays <= 1;
+                } else if (datePostedFilter === '7d') {
+                    return diffDays <= 7;
+                } else if (datePostedFilter === '30d') {
+                    return diffDays <= 30;
+                }
+                return true;
+            });
+        }
     }
 
-    // 9. Apply Date Posted Filter
-    if (datePostedFilter !== 'any') {
-        const now = new Date();
-        updatedApartments = updatedApartments.filter(apt => {
-            const postedDate = new Date(apt.datePosted);
-            const diffTime = Math.abs(now.getTime() - postedDate.getTime());
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Difference in days
 
-            if (datePostedFilter === '24h') {
-                return diffDays <= 1;
-            } else if (datePostedFilter === '7d') {
-                return diffDays <= 7;
-            } else if (datePostedFilter === '30d') {
-                return diffDays <= 30;
-            }
-            return true;
-        });
-    }
-
-    // 10. Apply Sorting
+    // Apply Sorting
     updatedApartments.sort((a, b) => {
       if (sortBy === 'name_asc') {
         return a.name.localeCompare(b.name);
@@ -573,13 +634,13 @@ export default function DiscoverPage() {
     });
 
     setFilteredApartments(updatedApartments);
-  }, [allApartments, searchTerm, minPrice, maxPrice, bedroomsFilter, bathroomsFilter, isNewListingFilter, locationFilter, propertyTypeFilter, amenitiesFilter, datePostedFilter, sortBy, showFavoritesOnly, bookmarkedApartments]);
+  }, [allApartments, searchTerm, minPrice, maxPrice, bedroomsFilter, bathroomsFilter, isNewListingFilter, locationFilter, propertyTypeFilter, amenitiesFilter, datePostedFilter, sortBy, bookmarkedApartments, currentPage]);
 
 
   // Effect to re-apply filters and sort when filter/sort states change
   useEffect(() => {
     applyFiltersAndSort();
-  }, [applyFiltersAndSort, searchTerm, minPrice, maxPrice, bedroomsFilter, bathroomsFilter, isNewListingFilter, locationFilter, propertyTypeFilter, amenitiesFilter, datePostedFilter, sortBy, showFavoritesOnly, bookmarkedApartments]);
+  }, [applyFiltersAndSort, searchTerm, minPrice, maxPrice, bedroomsFilter, bathroomsFilter, isNewListingFilter, locationFilter, propertyTypeFilter, amenitiesFilter, datePostedFilter, sortBy, bookmarkedApartments, currentPage]);
 
 
   const clearFilters = () => {
@@ -596,7 +657,6 @@ export default function DiscoverPage() {
     setAmenitiesFilter([]); // Reset new filter
     setDatePostedFilter('any'); // Reset new filter
     setSortBy('name_asc');
-    setShowFavoritesOnly(false); // Clear favorites filter
   };
 
   const uniqueLocations = Array.from(new Set(allApartments.map(apt => apt.location)));
@@ -1031,7 +1091,7 @@ export default function DiscoverPage() {
   return (
     <>
       {/* Render the main app container if not on a mobile details page or map view */}
-      {!(currentPage === 'details' && isMobile) && currentPage !== 'map' && (
+      {!(currentPage === 'details' && isMobile) && currentPage !== 'map' && currentPage !== 'bookmarks' && (
         <div className={`app-container ${isSidebarCollapsed ? 'sidebar-collapsed-mode' : ''}`}>
           <style>{`
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -1177,6 +1237,7 @@ export default function DiscoverPage() {
               border-bottom: 1px solid var(--border-light);
             }
 
+            /* Hamburger menu and title always visible on smaller screens */
             .responsive-header .mobile-only {
               display: flex;
             }
@@ -1209,7 +1270,7 @@ export default function DiscoverPage() {
             }
 
             .responsive-header .desktop-header-content {
-              display: none;
+              display: none; /* Hidden by default on mobile/tablet */
             }
 
             /* --- User Status & Dropdown --- */
@@ -1876,11 +1937,11 @@ export default function DiscoverPage() {
             .mobile-menu-content {
               background-color: var(--bg-element);
               padding: 30px;
-              border-radius: var(--border-radius-lg);
+              border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0; /* Rounded on right side */
               width: 80%;
               max-width: 300px;
               height: 100%;
-              box-shadow: 0 10px 30px var(--shadow-medium);
+              box-shadow: 5px 0 15px var(--shadow-medium); /* Shadow on right */
               transform: translateX(-100%);
               opacity: 0;
               transition: transform 0.3s ease-out, opacity 0.3s ease-out;
@@ -1909,10 +1970,21 @@ export default function DiscoverPage() {
               color: var(--text-dark);
               transform: rotate(90deg);
             }
+            .mobile-nav-brand {
+                font-size: 1.8em;
+                font-weight: 800;
+                color: var(--primary-color);
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 20px;
+                white-space: nowrap;
+            }
             .mobile-nav-links {
               display: flex;
               flex-direction: column;
-              gap: 15px;
+              gap: 10px; /* Reduced gap for cleaner look */
               margin-top: 20px;
             }
             .mobile-nav-link {
@@ -1920,9 +1992,12 @@ export default function DiscoverPage() {
               color: var(--text-dark);
               font-weight: 600;
               font-size: 1.1em;
-              padding: 10px 0;
-              border-bottom: 1px solid var(--border-light);
+              padding: 12px 15px; /* Increased padding */
+              border-radius: var(--border-radius-md); /* Rounded corners */
               transition: color 0.2s ease, background-color 0.2s ease;
+              display: flex; /* For icon and text alignment */
+              align-items: center;
+              gap: 12px; /* Space between icon and text */
             }
             .mobile-nav-link:hover {
               color: var(--primary-color);
@@ -1931,7 +2006,16 @@ export default function DiscoverPage() {
             .mobile-nav-link.active {
                 color: var(--primary-color);
                 font-weight: 700;
+                background-color: var(--bg-main); /* Highlight active link */
             }
+            .mobile-nav-link .icon {
+                font-size: 1.2em; /* Size for icons */
+                color: var(--text-medium); /* Default icon color */
+            }
+            .mobile-nav-link.active .icon {
+                color: var(--primary-color); /* Active icon color */
+            }
+
             .mobile-nav-user-status {
               display: flex;
               align-items: center;
@@ -1941,8 +2025,9 @@ export default function DiscoverPage() {
               background-color: var(--bg-main);
               padding: 10px 15px;
               border-radius: var(--border-radius-md);
-              margin-top: 15px;
+              margin-top: 20px; /* More space from links */
               box-shadow: 0 1px 3px var(--shadow-subtle);
+              cursor: pointer;
             }
             .mobile-nav-user-status img {
               width: 30px;
@@ -1950,6 +2035,32 @@ export default function DiscoverPage() {
               border-radius: 50%;
               object-fit: cover;
             }
+            .mobile-nav-user-actions {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
+                padding-top: 15px;
+                border-top: 1px solid var(--border-light);
+            }
+            .mobile-nav-user-actions button {
+                background: none;
+                border: none;
+                text-align: left;
+                width: 100%;
+                padding: 10px 15px;
+                font-size: 1.1em;
+                font-weight: 600;
+                color: var(--text-dark);
+                cursor: pointer;
+                border-radius: var(--border-radius-md);
+                transition: background-color 0.2s ease, color 0.2s ease;
+            }
+            .mobile-nav-user-actions button:hover {
+                background-color: var(--bg-main);
+                color: var(--primary-color);
+            }
+
 
             /* --- Apartment Details Modal (Desktop) & Page (Mobile) Styling --- */
             .apartment-details-modal-overlay {
@@ -2573,6 +2684,7 @@ export default function DiscoverPage() {
                 align-items: center;
                 gap: 20px;
                 text-align: center;
+                min-height: calc(100vh - 40px); /* Ensure it takes up most of the screen */
             }
             .map-view-back-button {
                 background-color: transparent;
@@ -2612,6 +2724,39 @@ export default function DiscoverPage() {
                 font-style: italic;
                 color: var(--text-light);
                 margin-top: 10px;
+            }
+
+            /* --- Bookmarks Page Specific Styles --- */
+            .bookmarks-page-container {
+                background-color: var(--bg-main);
+                padding: 20px;
+                min-height: 100vh;
+            }
+            .bookmarks-back-button {
+                background-color: transparent;
+                border: none;
+                color: var(--primary-color);
+                font-size: 1.1em;
+                font-weight: 600;
+                padding: 10px 0;
+                cursor: pointer;
+                text-align: left;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: color 0.2s ease, transform 0.2s ease;
+            }
+            .bookmarks-back-button:hover {
+                color: var(--primary-dark);
+                transform: translateX(-5px);
+            }
+            .bookmarks-page-title {
+                font-size: 2em;
+                font-weight: 700;
+                color: var(--text-dark);
+                margin-bottom: 30px;
+                text-align: center;
             }
 
             /* --- Login Modal Specific Styles --- */
@@ -3028,6 +3173,19 @@ export default function DiscoverPage() {
                     padding: 10px 15px;
                     font-size: 1em;
                 }
+
+                /* Bookmarks Page on Mobile */
+                .bookmarks-page-container {
+                    padding: 15px;
+                }
+                .bookmarks-back-button {
+                    font-size: 1em;
+                    margin-bottom: 15px;
+                }
+                .bookmarks-page-title {
+                    font-size: 1.5em;
+                    margin-bottom: 20px;
+                }
             }
 
             /* Tablet (641px to 1024px) */
@@ -3035,13 +3193,12 @@ export default function DiscoverPage() {
               .app-container {
                 grid-template-columns: 1fr; /* Still single column layout */
               }
+              /* Hamburger menu and title are visible on tablet */
               .responsive-header .mobile-only {
-                display: none;
+                display: flex;
               }
               .responsive-header .desktop-header-content {
-                display: flex; /* Show desktop header elements */
-                flex-grow: 1;
-                justify-content: center;
+                display: none; /* Hide desktop header elements on tablet */
               }
               .app-sidebar {
                 display: none; /* Sidebar still hidden on tablet by default */
@@ -3074,6 +3231,23 @@ export default function DiscoverPage() {
               .apartment-details-price {
                 font-size: 1.3em;
               }
+
+              /* Tablet specific adjustments for mobile menu */
+              .mobile-menu-content {
+                max-width: 350px; /* Slightly wider for tablets */
+                padding: 40px; /* More padding */
+              }
+              .mobile-nav-link {
+                font-size: 1.2em; /* Slightly larger text */
+                padding: 15px 20px;
+              }
+              .mobile-nav-user-status {
+                padding: 12px 18px;
+              }
+              .mobile-nav-user-actions button {
+                font-size: 1.1em;
+                padding: 12px 18px;
+              }
             }
 
             /* Desktop (1025px and up) */
@@ -3091,10 +3265,10 @@ export default function DiscoverPage() {
                 justify-content: flex-end;
               }
               .responsive-header .mobile-only {
-                display: none;
+                display: none; /* Hide mobile elements on desktop */
               }
               .responsive-header .desktop-header-content {
-                display: flex;
+                display: flex; /* Show desktop elements */
                 flex-grow: 1;
                 justify-content: center;
               }
@@ -3162,7 +3336,7 @@ export default function DiscoverPage() {
 
           {/* Responsive Header (Top Bar) */}
           <header className="responsive-header">
-            {/* Mobile-only elements */}
+            {/* Mobile-only elements (visible on mobile and tablet) */}
             <div className="hamburger-menu mobile-only" onClick={() => setShowMobileMenu(!showMobileMenu)}>
               <div className="bar"></div>
               <div className="bar"></div>
@@ -3226,15 +3400,13 @@ export default function DiscoverPage() {
               <span className="logo-icon">🏠</span> <span className="link-text">Lodger</span>
             </a>
             <div className="nav-links">
-              <a href="#" className={`nav-link ${currentPage === 'list' && !showFavoritesOnly ? 'active' : ''}`} onClick={() => {
+              <a href="#" className={`nav-link ${currentPage === 'list' ? 'active' : ''}`} onClick={() => {
                 setCurrentPage('list');
-                setShowFavoritesOnly(false);
               }}>
                 <span className="icon">🔍</span> <span className="link-text">Discover</span>
               </a>
-              <a href="#" className={`nav-link ${showFavoritesOnly ? 'active' : ''}`} onClick={() => {
-                setCurrentPage('list'); // Stay on list view but filter
-                setShowFavoritesOnly(prev => !prev); // Toggle favorites filter
+              <a href="#" className={`nav-link ${currentPage === 'bookmarks' ? 'active' : ''}`} onClick={() => {
+                setCurrentPage('bookmarks');
               }}>
                 <span className="icon">⭐</span> <span className="link-text">Bookmarks</span>
               </a>
@@ -3536,38 +3708,55 @@ export default function DiscoverPage() {
               <button className="mobile-menu-close-button" onClick={() => setShowMobileMenu(false)}>
                 &#x2715;
               </button>
+              <a href="#" className="mobile-nav-brand">
+                <span className="logo-icon">🏠</span> Lodger
+              </a>
               <div className="mobile-nav-links">
-                <a href="#" className={`mobile-nav-link ${currentPage === 'list' && !showFavoritesOnly ? 'active' : ''}`} onClick={() => {
+                <a href="#" className={`mobile-nav-link ${currentPage === 'list' ? 'active' : ''}`} onClick={() => {
                   setShowMobileMenu(false);
                   setCurrentPage('list');
-                  setShowFavoritesOnly(false);
-                }}>Discover</a>
-                <a href="#" className={`mobile-nav-link ${showFavoritesOnly ? 'active' : ''}`} onClick={() => {
+                }}>
+                  <span className="icon">🔍</span> Discover
+                </a>
+                <a href="#" className={`mobile-nav-link ${currentPage === 'bookmarks' ? 'active' : ''}`} onClick={() => {
                   setShowMobileMenu(false);
-                  setCurrentPage('list');
-                  setShowFavoritesOnly(prev => !prev);
-                }}>Bookmarks</a>
-                <a href="#" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>About Us</a>
-                <a href="#" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>Contact</a>
-                <div className="mobile-nav-user-status">
-                  <img src={userAvatar} alt="User Avatar" />
-                  <span>{userStatus}</span>
-                </div>
-                {!isLoggedIn && (
-                  <button className="mobile-nav-link" onClick={() => {
+                  setCurrentPage('bookmarks');
+                }}>
+                  <span className="icon">⭐</span> Bookmarks
+                </a>
+                <a href="#" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
+                  <span className="icon">ℹ️</span> About Us
+                </a>
+                <a href="#" className="mobile-nav-link" onClick={() => setShowMobileMenu(false)}>
+                  <span className="icon">📞</span> Contact
+                </a>
+              </div>
+              <div className="mobile-nav-user-status" onClick={() => setShowUserDropdown(!showUserDropdown)}>
+                <img src={userAvatar} alt="User Avatar" />
+                <span>{userStatus}</span>
+              </div>
+              <div className="mobile-nav-user-actions">
+                {isLoggedIn ? (
+                  <>
+                    <button onClick={() => { setShowMobileMenu(false); /* Navigate to profile */ }}>Profile</button>
+                    <button onClick={() => { setShowMobileMenu(false); /* Navigate to settings */ }}>Settings</button>
+                    <button onClick={toggleTheme}>
+                      {theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+                    </button>
+                    <button onClick={() => {
+                      setIsLoggedIn(false);
+                      setLoggedInUser(null);
+                      setUserStatus('Guest');
+                      setUserAvatar('https://placehold.co/40x40/cccccc/ffffff?text=U');
+                      localStorage.removeItem('lodgerLoggedInUser');
+                      setShowMobileMenu(false);
+                    }}>Logout</button>
+                  </>
+                ) : (
+                  <button onClick={() => {
                     setShowMobileMenu(false);
                     setShowLoginModal(true);
                   }}>Login / Sign Up</button>
-                )}
-                {isLoggedIn && (
-                  <button className="mobile-nav-link" onClick={() => {
-                    setIsLoggedIn(false);
-                    setLoggedInUser(null);
-                    setUserStatus('Guest');
-                    setUserAvatar('https://placehold.co/40x40/cccccc/ffffff?text=U');
-                    localStorage.removeItem('lodgerLoggedInUser');
-                    setShowMobileMenu(false);
-                  }}>Logout</button>
                 )}
               </div>
             </div>
@@ -3578,6 +3767,21 @@ export default function DiscoverPage() {
       {/* Map View */}
       {currentPage === 'map' && (
         <MapView onBackToListings={() => setCurrentPage('list')} />
+      )}
+
+      {/* Bookmarks Page */}
+      {currentPage === 'bookmarks' && (
+        <BookmarksPage
+            bookmarkedApartmentIds={bookmarkedApartments}
+            allApartments={allApartments}
+            onBackToListings={() => setCurrentPage('list')}
+            onApartmentClick={(apartment) => {
+                setSelectedApartment(apartment);
+                setCurrentPage('details');
+            }}
+            onToggleBookmark={toggleBookmark}
+            bookmarkedApartments={bookmarkedApartments}
+        />
       )}
 
       {/* Apartment Details View (Modal for Desktop, Full Page for Mobile) */}

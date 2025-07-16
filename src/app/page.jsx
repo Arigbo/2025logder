@@ -269,8 +269,8 @@ export default function App() { // Changed from Page to App for default export
 
     // Updated navigation links to include Discover and Landlord pages
     const navLinks = [
-        { name: 'Discover Apartments', href: '#discover-apartments' }, // New link
-        { name: 'Become a Landlord', href: './landlords/' }, // New link
+        { name: 'Discover Apartments', href: '/discover/' }, // New link
+        { name: 'Become a Landlord', href: '/landlords/' }, // New link
         { name: 'Features', href: '#features' },
         // Removed AI Description link
         { name: 'Pricing', href: '#pricing' },
@@ -1208,7 +1208,7 @@ export default function App() { // Changed from Page to App for default export
                     <div className="container">
                         <h2>Find Your Perfect Space, Instantly.</h2>
                         <p>Discover a wide range of apartments, rooms, and shared spaces tailored to your needs. Effortless booking, seamless living.</p>
-                        <a href="#discover-apartments" className="book-btn">Book Your Space Now</a>
+                        <a href="/discover/" className="book-btn">Book Your Space Now</a>
                     </div>
                 </Section>
 
@@ -1228,7 +1228,7 @@ export default function App() { // Changed from Page to App for default export
                             <div className="text-content-left-md"> {/* Custom class for text alignment */}
                                 <h4 className="section-sub-title">Your Dream Apartment Awaits</h4>
                                 <p className="section-description">From cozy studios to spacious family homes, we have options for every lifestyle and budget. Start browsing today!</p>
-                                <a href="#" className="button-indigo">View Listings</a>
+                                <a href="/discover/" className="button-indigo">View Listings</a>
                             </div>
                         </div>
                     </div>
@@ -1250,7 +1250,7 @@ export default function App() { // Changed from Page to App for default export
                             <div className="text-content-right-md"> {/* Custom class for text alignment */}
                                 <h4 className="section-sub-title">Effortless Property Management</h4>
                                 <p className="section-description">Gain access to powerful tools for listing, tenant screening, and communication. Maximize your occupancy with minimal hassle.</p>
-                                <a href="./landlords/" className="button-purple">Learn More for Landlords</a>
+                                <a href="/landlords/" className="button-purple">Learn More for Landlords</a>
                             </div>
                         </div>
                     </div>
