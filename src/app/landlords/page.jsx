@@ -1,777 +1,1040 @@
-// pages/landlords/dashboard.js
 "use client"
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect, useRef } from 'react';
 
-// --- Utility Function to Simulate Fetching All Apartments for Landlord ---
-async function fetchAllLandlordApartments() {
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 800));
+// --- Utility Functions for Local Storage (Simulated API) ---
+const LOCAL_STORAGE_KEY = 'landlordProperties';
 
-  // Dummy data for landlord's managed apartments with new fields for termination request
-  const allManagedApartments = [
-    {
-      id: 'L1',
-      name: 'Luxury Apartment, Uni Estate',
-      location: 'University Road, Block 10, Port Harcourt',
-      price: '300000',
-      bedrooms: 3,
-      bathrooms: 2,
-      description: 'A luxurious and spacious apartment perfect for discerning students or faculty. Features modern fittings, 24/7 power, and high-speed internet. Located within a secure estate close to the university.',
-      status: 'Occupied',
-      tenantName: 'John Doe',
-      tenantContact: 'john.doe@example.com',
-      leaseEndDate: '2025-07-31',
-      maintenanceStartDate: null,
-      lastRentPaidDate: '2025-06-01',
-      maintenanceLog: [
-        { id: 'M1', date: '2025-06-10', description: 'Leaky faucet in kitchen', status: 'Completed', completedDate: '2025-06-12' },
-      ],
-      images: [
-        'https://placehold.co/800x500/AEC6CF/333333?text=Apt+1+Pic+1',
-        'https://placehold.co/800x500/98B2C4/333333?text=Apt+1+Pic+2',
-      ],
-      amenities: ['24/7 Power', 'High-Speed Internet', 'Swimming Pool', 'Gym'],
-      pendingRequests: [],
-      isTerminationRequested: false,
-      terminationRequestDate: null,
-    },
-    {
-      id: 'L2',
-      name: 'Student Hostel Room B',
-      location: 'Campus Gate Avenue, Hostel Block C, Port Harcourt',
-      price: '90000',
-      bedrooms: 1,
-      bathrooms: 0,
-      description: 'An affordable and convenient room in a male-only student hostel. Shared facilities include kitchen, lounge, and bathrooms. Located directly opposite the main campus entrance.',
-      status: 'Available',
-      tenantName: null,
-      tenantContact: null,
-      leaseEndDate: null,
-      maintenanceStartDate: null,
-      lastRentPaidDate: null,
-      maintenanceLog: [],
-      images: [
-        'https://placehold.co/800x500/FFDDC1/333333?text=Apt+2+Pic+1',
-      ],
-      amenities: ['Shared Kitchen', 'Shared Lounge', 'Study Area'],
-      pendingRequests: [
-        { id: 'APP1', tenantName: 'Alice Johnson', tenantContact: 'alice@example.com', requestDate: '2025-06-20', status: 'Applied' },
-      ],
-      isTerminationRequested: false,
-      terminationRequestDate: null,
-    },
-    {
-      id: 'L3',
-      name: 'Spacious Family Flat',
-      location: 'Garden City, Palm Estate, Port Harcourt',
-      price: '450000',
-      bedrooms: 4,
-      bathrooms: 3,
-      description: 'Large family-friendly flat with ample space, private balcony, and secure parking. Ideal for faculty families or groups of students. Located in a serene environment, a short drive from schools.',
-      status: 'Occupied',
-      tenantName: 'Jane Smith',
-      tenantContact: 'jane.smith@example.com',
-      leaseEndDate: '2025-08-15',
-      maintenanceStartDate: null,
-      lastRentPaidDate: '2025-05-28',
-      maintenanceLog: [],
-      images: [
-        'https://placehold.co/800x500/C8A2C8/333333?text=Apt+3+Pic+1',
-      ],
-      amenities: ['Private Balcony', 'Secure Parking', 'Kid-Friendly Area'],
-      pendingRequests: [],
-      isTerminationRequested: false,
-      terminationRequestDate: null,
-    },
-    {
-      id: 'L7',
-      name: 'Riverside Retreat (Termination Pending)',
-      location: 'Old Port Road, Choba, Port Harcourt',
-      price: '250000',
-      bedrooms: 2,
-      bathrooms: 2,
-      description: 'Charming riverside apartment, tenant moving out soon. Lease termination pending admin approval.',
-      status: 'Occupied',
-      tenantName: 'David Nwachukwu',
-      tenantContact: 'david.n@example.com',
-      leaseEndDate: '2025-07-10',
-      maintenanceStartDate: null,
-      lastRentPaidDate: '2025-06-05',
-      maintenanceLog: [],
-      reminders: [],
-      images: [
-        'https://placehold.co/800x500/ADD8E6/000000?text=River+Apt+1',
-      ],
-      amenities: ['River View', 'Quiet Area', 'Good Security'],
-      pendingRequests: [],
-      isTerminationRequested: true, // This apartment has a pending termination
-      terminationRequestDate: '2025-06-27',
-    },
-     {
-      id: 'L4',
-      name: 'Cozy Studio Downtown',
-      location: 'City Center, Main Street, Port Harcourt',
-      price: '180000',
-      bedrooms: 1,
-      bathrooms: 1,
-      description: 'A compact and modern studio apartment in the heart of the city. Ideal for a single student or professional. Close to amenities, public transport, and entertainment.',
-      status: 'Available',
-      tenantName: null,
-      tenantContact: null,
-      leaseEndDate: null,
-      maintenanceStartDate: null,
-      lastRentPaidDate: null,
-      maintenanceLog: [],
-      images: [
-        'https://placehold.co/800x500/E0BBE4/333333?text=Apt+4+Pic+1',
-      ],
-      amenities: ['Furnished (basic)', 'Central Location', 'Good Security', 'Elevator Access'],
-      pendingRequests: [],
-      isTerminationRequested: false,
-      terminationRequestDate: null,
-    },
-  ];
-  return allManagedApartments;
+const getPropertiesFromLocalStorage = () => {
+  try {
+    const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch (e) {
+    console.error("Error reading from localStorage:", e);
+    return [];
+  }
+};
+
+const savePropertiesToLocalStorage = (properties) => {
+  try {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(properties));
+  } catch (e) {
+    console.error("Error writing to localStorage:", e);
+  }
+};
+
+// --- Message Box Component (for notifications) ---
+function MessageBox({ message, type }) {
+  if (!message) return null;
+  return (
+    <div className={`message-box ${type}`}>
+      {message}
+    </div>
+  );
 }
 
-// --- Generic Modal Component ---
-const Modal = ({ isOpen, onClose, title, children, showCloseButton = true }) => {
+// --- Property Form Modal Component (Add/Edit) ---
+function PropertyFormModal({ isOpen, onClose, onSubmit, initialData = {} }) {
+  const [formData, setFormData] = useState(() => ({
+    // Safely access properties from initialData, providing defaults
+    name: initialData?.name || '',
+    location: initialData?.location || '',
+    price: initialData?.price !== undefined ? String(initialData.price) : '', // Ensure it's a string for input
+    bedrooms: initialData?.bedrooms !== undefined ? String(initialData.bedrooms) : '', // Ensure it's a string for input
+    bathrooms: initialData?.bathrooms !== undefined ? String(initialData.bathrooms) : '', // Ensure it's a string for input
+    description: initialData?.description || '',
+    imageUrl: initialData?.imageUrl || '',
+    amenities: Array.isArray(initialData?.amenities) ? initialData.amenities.join(', ') : (initialData?.amenities || ''), // Ensure string
+    contact: initialData?.contact || '',
+    phone: initialData?.phone || '',
+  }));
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    // Reset form data when modal opens or initialData changes
+    if (isOpen) {
+      setFormData({
+        // Safely access properties from initialData, providing defaults
+        name: initialData?.name || '',
+        location: initialData?.location || '',
+        price: initialData?.price !== undefined ? String(initialData.price) : '',
+        bedrooms: initialData?.bedrooms !== undefined ? String(initialData.bedrooms) : '',
+        bathrooms: initialData?.bathrooms !== undefined ? String(initialData.bathrooms) : '',
+        description: initialData?.description || '',
+        imageUrl: initialData?.imageUrl || '',
+        amenities: Array.isArray(initialData?.amenities) ? initialData.amenities.join(', ') : (initialData?.amenities || ''),
+        contact: initialData?.contact || '',
+        phone: initialData?.phone || '',
+      });
+      setErrors({});
+    }
+  }, [isOpen, initialData]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Property name is required.';
+    if (!formData.location.trim()) newErrors.location = 'Location is required.';
+    if (!formData.price || isNaN(parseFloat(formData.price)) || parseFloat(formData.price) <= 0) {
+      newErrors.price = 'Valid price is required.';
+    }
+    if (formData.bedrooms === '' || isNaN(parseInt(formData.bedrooms)) || parseInt(formData.bedrooms) < 0) {
+      newErrors.bedrooms = 'Valid number of bedrooms is required.';
+    }
+    if (formData.bathrooms === '' || isNaN(parseInt(formData.bathrooms)) || parseInt(formData.bathrooms) < 0) {
+      newErrors.bathrooms = 'Valid number of bathrooms is required.';
+    }
+    if (!formData.description.trim()) newErrors.description = 'Description is required.';
+    if (!formData.imageUrl.trim()) newErrors.imageUrl = 'Image URL is required.';
+    if (!formData.contact.trim()) newErrors.contact = 'Contact email is required.';
+    if (!/^\S+@\S+\.\S+$/.test(formData.contact)) newErrors.contact = 'Valid email is required.';
+    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required.';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      const processedData = {
+        ...formData,
+        price: parseFloat(formData.price),
+        bedrooms: parseInt(formData.bedrooms),
+        bathrooms: parseInt(formData.bathrooms),
+        amenities: formData.amenities.split(',').map(a => a.trim()).filter(a => a !== ''),
+      };
+      onSubmit(processedData);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div style={modalStyles.overlay}>
-      <div style={modalStyles.modalContainer}>
-        <div style={modalStyles.modalHeader}>
-          <h3 style={modalStyles.modalTitle}>{title}</h3>
-          {showCloseButton && (
-            <button style={modalStyles.closeButton} onClick={onClose}>
-              &#x2715; {/* X icon */}
-            </button>
-          )}
-        </div>
-        <div style={modalStyles.modalContent}>
-          {children}
-        </div>
+    <div className="modal-overlay show">
+      <div className="modal-content">
+        <h3 className="modal-title">{initialData?.id ? 'Edit Property' : 'Add New Property'}</h3>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="name">Property Name</label>
+            <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} />
+            {errors.name && <p className="error-text-small">{errors.name}</p>}
+          </div>
+          <div className="form-group">
+            <label htmlFor="location">Location</label>
+            <input type="text" id="location" name="location" value={formData.location} onChange={handleChange} />
+            {errors.location && <p className="error-text-small">{errors.location}</p>}
+          </div>
+          <div className="form-group">
+            <label htmlFor="price">Price (₦/month)</label>
+            <input type="number" id="price" name="price" value={formData.price} onChange={handleChange} />
+            {errors.price && <p className="error-text-small">{errors.price}</p>}
+          </div>
+          <div className="form-group-row">
+            <div className="form-group">
+              <label htmlFor="bedrooms">Bedrooms</label>
+              <input type="number" id="bedrooms" name="bedrooms" value={formData.bedrooms} onChange={handleChange} />
+              {errors.bedrooms && <p className="error-text-small">{errors.bedrooms}</p>}
+            </div>
+            <div className="form-group">
+              <label htmlFor="bathrooms">Bathrooms</label>
+              <input type="number" id="bathrooms" name="bathrooms" value={formData.bathrooms} onChange={handleChange} />
+              {errors.bathrooms && <p className="error-text-small">{errors.bathrooms}</p>}
+            </div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="description">Description</label>
+            <textarea id="description" name="description" value={formData.description} onChange={handleChange}></textarea>
+            {errors.description && <p className="error-text-small">{errors.description}</p>}
+          </div>
+          <div className="form-group">
+            <label htmlFor="imageUrl">Image URL</label>
+            <input type="text" id="imageUrl" name="imageUrl" value={formData.imageUrl} onChange={handleChange} />
+            {errors.imageUrl && <p className="error-text-small">{errors.imageUrl}</p>}
+          </div>
+          <div className="form-group">
+            <label htmlFor="amenities">Amenities (comma-separated)</label>
+            <input type="text" id="amenities" name="amenities" value={formData.amenities} onChange={handleChange} placeholder="e.g., Wi-Fi, Furnished, Gym" />
+          </div>
+          <div className="form-group">
+            <label htmlFor="contact">Contact Email</label>
+            <input type="email" id="contact" name="contact" value={formData.contact} onChange={handleChange} />
+            {errors.contact && <p className="error-text-small">{errors.contact}</p>}
+          </div>
+          <div className="form-group">
+            <label htmlFor="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} />
+            {errors.phone && <p className="error-text-small">{errors.phone}</p>}
+          </div>
+          <div className="modal-actions">
+            <button type="button" onClick={onClose} className="button-secondary">Cancel</button>
+            <button type="submit" className="button-primary">{initialData?.id ? 'Save Changes' : 'Add Property'}</button>
+          </div>
+        </form>
       </div>
-    </div>
-  );
-};
-
-
-// --- LandlordDashboard Component ---
-export default function LandlordDashboard() {
-  const [apartments, setApartments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('All'); // 'All', 'Available', 'Occupied', 'Maintenance', 'Termination Requested'
-  const [sortBy, setSortBy] = useState('name'); // 'name', 'price', 'status'
-  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
-
-  const [showAlertModal, setShowAlertModal] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-
-  useEffect(() => {
-    const getApartments = async () => {
-      try {
-        const data = await fetchAllLandlordApartments();
-        setApartments(data);
-      } catch (err) {
-        setError('Failed to load apartment data.');
-        console.error('Error fetching landlord apartments:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getApartments();
-  }, []);
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  // Function to calculate effective status based on maintenance dates and log
-  const getCalculatedStatus = (data) => {
-      // Prioritize termination request status
-      if (data.isTerminationRequested) {
-          return 'Termination Requested';
-      }
-
-      // Check for an explicit maintenance start date on the apartment object (if still used)
-      if (data.maintenanceStartDate) {
-          const maintStart = new Date(data.maintenanceStartDate);
-          maintStart.setHours(0, 0, 0, 0); // Normalize
-          const tomorrow = new Date(today);
-          tomorrow.setDate(today.getDate() + 1);
-          tomorrow.setHours(0, 0, 0, 0);
-          // If maintenance is ongoing (today or in the past) or starting tomorrow
-          if (maintStart <= today || (maintStart.toDateString() === tomorrow.toDateString())) {
-              return 'Maintenance';
-          }
-      }
-
-      // Check for pending maintenance log entries that are ongoing or imminent
-      if (data.maintenanceLog && data.maintenanceLog.length > 0) {
-          const hasImminentOrOngoingMaintenance = data.maintenanceLog.some(entry => {
-              if (entry.status === 'Pending' && entry.date) {
-                  const entryDate = new Date(entry.date);
-                  entryDate.setHours(0, 0, 0, 0); // Normalize
-                  const tomorrow = new Date(today);
-                  tomorrow.setDate(today.getDate() + 1);
-                  tomorrow.setHours(0, 0, 0, 0);
-                  return entryDate <= today || (entryDate.toDateString() === tomorrow.toDateString());
-              }
-              return false;
-          });
-          if (hasImminentOrOngoingMaintenance) {
-              return 'Maintenance';
-          }
-      }
-
-      // If no active or imminent maintenance or termination, return the original status
-      return data.status;
-  };
-
-
-  const filteredApartments = apartments.filter(apt => {
-    const matchesSearch = apt.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          apt.location.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const effectiveStatus = getCalculatedStatus(apt);
-
-    const matchesStatus = filterStatus === 'All' || effectiveStatus === filterStatus;
-
-    return matchesSearch && matchesStatus;
-  }).sort((a, b) => {
-    let valA, valB;
-
-    if (sortBy === 'name') {
-      valA = a.name.toLowerCase();
-      valB = b.name.toLowerCase();
-      return sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-    } else if (sortBy === 'price') {
-      valA = parseInt(a.price, 10);
-      valB = parseInt(b.price, 10);
-      return sortOrder === 'asc' ? valA - valB : valB - valA;
-    } else if (sortBy === 'status') {
-      // Custom sort order for status to prioritize urgent items
-      const statusOrder = { 'Termination Requested': 0, 'Maintenance': 1, 'Occupied': 2, 'Available': 3 };
-      valA = statusOrder[getCalculatedStatus(a)];
-      valB = statusOrder[getCalculatedStatus(b)];
-      return sortOrder === 'asc' ? valA - valB : valB - valA;
-    }
-    return 0; // Default no sort
-  });
-
-  if (loading) {
-    return (
-      <div style={styles.container}>
-        <p style={styles.loadingText}>Loading your properties...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div style={styles.container}>
-        <p style={styles.errorText}>Error: {error}</p>
-        <Link href="/" passHref legacyBehavior>
-          <a style={styles.backLink}>&larr; Go to Home</a>
-        </Link>
-      </div>
-    );
-  }
-
-  return (
-    <div style={styles.container}>
-      <h1 style={styles.heading}>Your Managed Apartments</h1>
-      <p style={styles.subheading}>Overview of all your properties and their current status.</p>
-
-      <div style={styles.topControls}>
-        <input
-          type="text"
-          placeholder="Search by name or location..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={styles.searchInput}
-        />
-        <div style={styles.filterSortGroup}>
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            style={styles.selectControl}
-          >
-            <option value="All">All Statuses</option>
-            <option value="Available">Available</option>
-            <option value="Occupied">Occupied</option>
-            <option value="Maintenance">Maintenance</option>
-            <option value="Termination Requested">Termination Requested</option>
-          </select>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            style={styles.selectControl}
-          >
-            <option value="name">Sort by Name</option>
-            <option value="price">Sort by Price</option>
-            <option value="status">Sort by Status</option>
-          </select>
-          <button
-            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-            style={styles.sortButton}
-          >
-            {sortOrder === 'asc' ? 'Asc ↑' : 'Desc ↓'}
-          </button>
-        </div>
-        <div style={styles.actionButtons}>
-            <Link href="/landlords/lease-alerts" passHref legacyBehavior>
-                <a style={{...styles.baseButton, ...styles.secondaryButton}}>View Lease Alerts</a>
-            </Link>
-            {/* You might add an "Add New Apartment" button here */}
-        </div>
-      </div>
-
-
-      {filteredApartments.length === 0 ? (
-        <div style={styles.emptyState}>
-          <p>No apartments match your criteria.</p>
-          <p>Try adjusting your filters or adding new properties.</p>
-        </div>
-      ) : (
-        <div style={styles.apartmentsGrid}>
-          {filteredApartments.map(apt => {
-            const effectiveStatus = getCalculatedStatus(apt);
-            let statusStyle = styles.statusBadgeNormal;
-            if (effectiveStatus === 'Available') {
-                statusStyle = styles.statusBadgeAvailable;
-            } else if (effectiveStatus === 'Occupied') {
-                statusStyle = styles.statusBadgeOccupied;
-            } else if (effectiveStatus === 'Maintenance') {
-                statusStyle = styles.statusBadgeMaintenance;
-            } else if (effectiveStatus === 'Termination Requested') {
-                statusStyle = styles.statusBadgeTerminationRequested;
-            }
-
-
-            return (
-              <div key={apt.id} style={styles.apartmentCard}>
-                <img
-                  src={apt.images && apt.images.length > 0 ? apt.images[0] : 'https://placehold.co/400x250/E0E0E0/666666?text=No+Image'}
-                  alt={apt.name}
-                  style={styles.apartmentImage}
-                  onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/400x250/E0E0E0/666666?text=No+Image'; }}
-                />
-                <div style={styles.cardContent}>
-                  <h2 style={styles.cardTitle}>{apt.name}</h2>
-                  <p style={styles.cardLocation}>{apt.location}</p>
-                  <div style={styles.cardDetails}>
-                    <span>₦{apt.price}/month</span>
-                    <span>{apt.bedrooms} Bed</span>
-                    <span>{apt.bathrooms} Bath</span>
-                  </div>
-                  <div style={statusStyle}>{effectiveStatus}</div>
-
-                  <Link href={`./${apt.id}`} passHref legacyBehavior>
-                    <a style={styles.viewDetailsButton}>View & Manage</a>
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Alert Modal */}
-      <Modal
-        isOpen={showAlertModal}
-        onClose={() => setShowAlertModal(false)}
-        title="Notification"
-      >
-        <p>{alertMessage}</p>
-        <div style={modalStyles.modalButtonGroup}>
-          <button
-            style={{ ...modalStyles.modalButton, ...modalStyles.modalPrimaryButton }}
-            onClick={() => setShowAlertModal(false)}
-          >
-            OK
-          </button>
-        </div>
-      </Modal>
     </div>
   );
 }
 
-// --- Inline Styles ---
-const styles = {
-  container: {
-    fontFamily: '"Inter", sans-serif',
-    padding: '40px 20px',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    backgroundColor: '#f8f8f8',
-    minHeight: '100vh',
-    color: '#333d47',
-    borderRadius: '12px',
-    boxShadow: '0 8px 30px rgba(0,0,0,0.05)',
-    boxSizing: 'border-box',
-  },
-  heading: {
-    textAlign: 'center',
-    marginBottom: '15px',
-    color: '#333d47',
-    fontSize: '2.8em',
-    fontWeight: '800',
-    textShadow: '0 1px 2px rgba(0,0,0,0.05)',
-  },
-  subheading: {
-    textAlign: 'center',
-    color: '#607d8b',
-    fontSize: '1.2em',
-    marginBottom: '40px',
-    maxWidth: '800px',
-    margin: '0 auto 40px auto',
-    lineHeight: '1.5',
-  },
-  loadingText: {
-    textAlign: 'center',
-    fontSize: '1.4em',
-    color: '#90a4ae',
-    paddingTop: '80px',
-  },
-  errorText: {
-    textAlign: 'center',
-    fontSize: '1.4em',
-    color: '#dc3545',
-    paddingTop: '80px',
-  },
-  topControls: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: '20px',
-    marginBottom: '40px',
-    padding: '20px',
-    backgroundColor: '#ffffff',
-    borderRadius: '12px',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
-  },
-  searchInput: {
-    flexGrow: 1,
-    padding: '12px 18px',
-    borderRadius: '8px',
-    border: '1px solid #ced4da',
-    fontSize: '1em',
-    fontFamily: '"Inter", sans-serif',
-    maxWidth: '350px',
-    boxSizing: 'border-box',
-    transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-    '&:focus': {
-      borderColor: '#D5DB89',
-      boxShadow: '0 0 0 3px rgba(213, 219, 137, 0.2)',
-      outline: 'none',
-    },
-  },
-  filterSortGroup: {
-    display: 'flex',
-    gap: '10px',
-    flexWrap: 'wrap',
-  },
-  selectControl: {
-    padding: '12px 18px',
-    borderRadius: '8px',
-    border: '1px solid #ced4da',
-    fontSize: '1em',
-    fontFamily: '"Inter", sans-serif',
-    backgroundColor: '#ffffff',
-    cursor: 'pointer',
-    transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-    '&:focus': {
-      borderColor: '#D5DB89',
-      boxShadow: '0 0 0 3px rgba(213, 219, 137, 0.2)',
-      outline: 'none',
-    },
-  },
-  sortButton: {
-    padding: '12px 18px',
-    borderRadius: '8px',
-    border: '1px solid #ced4da',
-    backgroundColor: '#e0e0e0',
-    color: '#333d47',
-    fontSize: '1em',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease, transform 0.1s ease',
-    '&:hover': {
-      backgroundColor: '#cccccc',
-      transform: 'translateY(-1px)',
-    },
-  },
-  actionButtons: {
-    display: 'flex',
-    gap: '15px',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-end',
-    flexGrow: 1, // Allow it to take up available space
-  },
-  baseButton: {
-    padding: '12px 22px',
-    borderRadius: '8px',
-    border: 'none',
-    fontSize: '1em',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease',
-    textDecoration: 'none', // For Link components
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  primaryButton: {
-    backgroundColor: '#607d8b',
-    color: 'white',
-    boxShadow: '0 4px 10px rgba(96,125,139,0.3)',
-    '&:hover': {
-      backgroundColor: '#4a6572',
-      transform: 'translateY(-2px)',
-      boxShadow: '0 6px 12px rgba(96,125,139,0.4)',
-    },
-  },
-  secondaryButton: {
-    backgroundColor: '#cbd5e0',
-    color: '#333d47',
-    boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-    '&:hover': {
-      backgroundColor: '#a0aec0',
-      transform: 'translateY(-1px)',
-    },
-  },
-  apartmentsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: '25px',
-    padding: '20px 0',
-  },
-  apartmentCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: '12px',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
-    overflow: 'hidden',
-    border: '1px solid #e9e9e9',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-    display: 'flex',
-    flexDirection: 'column',
-    '&:hover': {
-      transform: 'translateY(-5px)',
-      boxShadow: '0 6px 20px rgba(0,0,0,0.08)',
-    },
-  },
-  apartmentImage: {
-    width: '100%',
-    height: '200px', // Fixed height for consistent image size
-    objectFit: 'cover',
-    borderBottom: '1px solid #f0f0f0',
-  },
-  cardContent: {
-    padding: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-  },
-  cardTitle: {
-    fontSize: '1.6em',
-    fontWeight: '700',
-    marginBottom: '8px',
-    color: '#333d47',
-    lineHeight: '1.2',
-  },
-  cardLocation: {
-    fontSize: '0.95em',
-    color: '#607d8b',
-    marginBottom: '15px',
-  },
-  cardDetails: {
-    display: 'flex',
-    gap: '15px',
-    fontSize: '0.9em',
-    color: '#4a5568',
-    marginBottom: '15px',
-    flexWrap: 'wrap',
-  },
-  statusBadgeNormal: {
-    backgroundColor: '#f0f4f7',
-    color: '#607d8b',
-    padding: '6px 12px',
-    borderRadius: '20px',
-    fontSize: '0.85em',
-    fontWeight: '600',
-    alignSelf: 'flex-start',
-    marginBottom: '15px',
-  },
-  statusBadgeAvailable: {
-    backgroundColor: '#e6ebcc',
-    color: '#5b611e',
-    padding: '6px 12px',
-    borderRadius: '20px',
-    fontSize: '0.85em',
-    fontWeight: '600',
-    alignSelf: 'flex-start',
-    marginBottom: '15px',
-  },
-  statusBadgeOccupied: {
-    backgroundColor: '#fbe9e7',
-    color: '#c0392b',
-    padding: '6px 12px',
-    borderRadius: '20px',
-    fontSize: '0.85em',
-    fontWeight: '600',
-    alignSelf: 'flex-start',
-    marginBottom: '15px',
-  },
-  statusBadgeMaintenance: {
-    backgroundColor: '#fff3e0', // Light orange
-    color: '#ef6c00', // Darker orange
-    padding: '6px 12px',
-    borderRadius: '20px',
-    fontSize: '0.85em',
-    fontWeight: '600',
-    alignSelf: 'flex-start',
-    marginBottom: '15px',
-  },
-  statusBadgeTerminationRequested: { // New style
-    backgroundColor: '#ffebee', // Light red for alert
-    color: '#d32f2f', // Red text
-    padding: '6px 12px',
-    borderRadius: '20px',
-    fontSize: '0.85em',
-    fontWeight: '600',
-    alignSelf: 'flex-start',
-    marginBottom: '15px',
-    border: '1px solid #d32f2f',
-  },
-  viewDetailsButton: {
-    display: 'block',
-    width: '100%',
-    padding: '12px 0',
-    backgroundColor: '#607d8b',
-    color: 'white',
-    textAlign: 'center',
-    textDecoration: 'none',
-    borderRadius: '8px',
-    fontWeight: '600',
-    marginTop: 'auto', // Push to bottom of card
-    transition: 'background-color 0.2s ease, transform 0.1s ease',
-    '&:hover': {
-      backgroundColor: '#4a6572',
-      transform: 'translateY(-2px)',
-    },
-  },
-  emptyState: {
-    textAlign: 'center',
-    fontSize: '1.2em',
-    color: '#7f8c8d',
-    padding: '50px 20px',
-    backgroundColor: '#ffffff',
-    borderRadius: '12px',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
-    border: '1px solid #e9e9e9',
-    marginTop: '30px',
-  },
+// --- Confirm Delete Modal Component ---
+function ConfirmDeleteModal({ isOpen, onClose, onConfirm, propertyName }) {
+  if (!isOpen) return null;
+  return (
+    <div className="modal-overlay show">
+      <div className="modal-content">
+        <h3 className="modal-title">Confirm Deletion</h3>
+        <p>Are you sure you want to delete the property "<strong>{propertyName}</strong>"? This action cannot be undone.</p>
+        <div className="modal-actions">
+          <button type="button" onClick={onClose} className="button-secondary">Cancel</button>
+          <button type="button" onClick={onConfirm} className="button-danger">Delete</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Property Card Component (for rendering properties) ---
+const PropertyCard = ({ property, onEdit, onDelete }) => {
+  if (!property) return null; // Handle cases where property might be undefined
+
+  return (
+    <div className="apartment-card">
+      <img
+        src={property.imageUrl}
+        alt={property.name}
+        className="apartment-card-image"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = 'https://placehold.co/400x250/CCCCCC/666666?text=Image+Not+Found';
+        }}
+      />
+      <div className="apartment-card-content">
+        <h2 className="apartment-card-title">{property.name}</h2>
+        <p className="apartment-card-location">{property.location}</p>
+        <div className="apartment-card-details">
+          <span className="apartment-card-price">₦{property.price.toLocaleString()}/month</span>
+          <span className="apartment-card-specs">
+            {property.bedrooms} Bed{property.bedrooms !== 1 ? 's' : ''} |{' '}
+            {property.bathrooms > 0 ? `${property.bathrooms} Bath` : 'Shared Bath'}
+          </span>
+        </div>
+        <div className="apartment-card-amenities">
+          {property.amenities && property.amenities.length > 0 ? (
+            property.amenities.map((amenity, idx) => (
+              <span key={idx} className="amenity-tag">{amenity}</span>
+            ))
+          ) : (
+            <span className="amenity-tag">No amenities listed</span>
+          )}
+        </div>
+      </div>
+      <div className="property-card-actions">
+        <button onClick={() => onEdit(property)} className="button-edit">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+          Edit
+        </button>
+        <button onClick={() => onDelete(property.id, property.name)} className="button-delete">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+          </svg>
+          Delete
+        </button>
+      </div>
+    </div>
+  );
 };
 
-// --- Styles for the Modals (reused for consistency) ---
-const modalStyles = {
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000,
-  },
-  modalContainer: {
-    backgroundColor: 'white',
-    padding: '25px',
-    borderRadius: '12px',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
-    width: '90%',
-    maxWidth: '500px',
-    position: 'relative',
-    fontFamily: '"Inter", sans-serif',
-    color: '#333d47',
-    boxSizing: 'border-box',
-  },
-  modalHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '20px',
-    borderBottom: '1px solid #eee',
-    paddingBottom: '15px',
-  },
-  modalTitle: {
-    fontSize: '1.5em',
-    fontWeight: '700',
-    margin: 0,
-    color: '#333d47',
-  },
-  closeButton: {
-    background: 'none',
-    border: 'none',
-    fontSize: '1.5em',
-    cursor: 'pointer',
-    color: '#90a4ae',
-    transition: 'color 0.2s ease',
-    '&:hover': {
-      color: '#607d8b',
-    },
-  },
-  modalContent: {
-    fontSize: '1em',
-    lineHeight: '1.6',
-    marginBottom: '20px',
-  },
-  modalButtonGroup: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: '10px',
-    marginTop: '20px',
-  },
-  modalButton: {
-    padding: '10px 20px',
-    borderRadius: '8px',
-    border: 'none',
-    fontSize: '0.95em',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease, transform 0.1s ease',
-  },
-  modalPrimaryButton: {
-    backgroundColor: '#607d8b',
-    color: 'white',
-    '&:hover': {
-      backgroundColor: '#4a6572',
-      transform: 'translateY(-1px)',
-    },
-  },
-  modalSecondaryButton: {
-    backgroundColor: '#e0e0e0',
-    color: '#333d47',
-    '&:hover': {
-      backgroundColor: '#cccccc',
-      transform: 'translateY(-1px)',
-    },
-  },
-  modalDangerButton: {
-    backgroundColor: '#dc3545',
-    color: 'white',
-    '&:hover': {
-      backgroundColor: '#c82333',
-      transform: 'translateY(-1px)',
-    },
-  },
-};
+
+// --- Landlord Dashboard Main Component ---
+export default function LandlordDashboard() {
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('success');
+
+  const [isAddEditModalOpen, setIsAddEditModalOpen] = useState(false);
+  const [currentProperty, setCurrentProperty] = useState(null); // Used for editing
+
+  const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
+  const [propertyToDelete, setPropertyToDelete] = useState({ id: null, name: '' });
+
+  // Load properties on initial mount
+  useEffect(() => {
+    setLoading(true);
+    const storedProperties = getPropertiesFromLocalStorage();
+    setProperties(storedProperties);
+    setLoading(false);
+  }, []);
+
+  // Show message function
+  const showMessage = (msg, type = 'success') => {
+    setMessage(msg);
+    setMessageType(type);
+    setTimeout(() => {
+      setMessage('');
+    }, 3000);
+  };
+
+  // --- CRUD Operations ---
+  const handleAddProperty = (newProperty) => {
+    const propertyWithId = { ...newProperty, id: Date.now().toString() }; // Simple ID generation
+    const updatedProperties = [...properties, propertyWithId];
+    setProperties(updatedProperties);
+    savePropertiesToLocalStorage(updatedProperties);
+    setIsAddEditModalOpen(false);
+    showMessage('Property added successfully!', 'success');
+  };
+
+  const handleEditProperty = (updatedProperty) => {
+    const updatedProperties = properties.map(prop =>
+      prop.id === updatedProperty.id ? updatedProperty : prop
+    );
+    setProperties(updatedProperties);
+    savePropertiesToLocalStorage(updatedProperties);
+    setIsAddEditModalOpen(false);
+    setCurrentProperty(null);
+    showMessage('Property updated successfully!', 'success');
+  };
+
+  const handleDeleteProperty = () => {
+    const updatedProperties = properties.filter(prop => prop.id !== propertyToDelete.id);
+    setProperties(updatedProperties);
+    savePropertiesToLocalStorage(updatedProperties);
+    setIsConfirmDeleteModalOpen(false);
+    setPropertyToDelete({ id: null, name: '' });
+    showMessage('Property deleted successfully!', 'success');
+  };
+
+  // --- Modal Handlers ---
+  const openAddModal = () => {
+    setCurrentProperty(null);
+    setIsAddEditModalOpen(true);
+  };
+
+  const openEditModal = (property) => {
+    setCurrentProperty(property);
+    setIsAddEditModalOpen(true);
+  };
+
+  const openConfirmDeleteModal = (id, name) => {
+    setPropertyToDelete({ id, name });
+    setIsConfirmDeleteModalOpen(true);
+  };
+
+  const closeModals = () => {
+    setIsAddEditModalOpen(false);
+    setIsConfirmDeleteModalOpen(false);
+    setCurrentProperty(null);
+    setPropertyToDelete({ id: null, name: '' });
+  };
+
+  // --- Dashboard Metrics ---
+  const totalProperties = properties.length;
+  const averagePrice = totalProperties > 0
+    ? (properties.reduce((sum, prop) => sum + prop.price, 0) / totalProperties).toLocaleString(undefined, { maximumFractionDigits: 0 })
+    : 'N/A';
+  const sharedBathroomProperties = properties.filter(prop => prop.bathrooms === 0).length;
+
+  return (
+    <>
+      <style>
+        {`
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: #f0f2f5;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .dashboard-container {
+            padding: 20px; /* Adjusted padding for smaller screens */
+            max-width: 1280px;
+            margin: 20px auto; /* Adjusted margin for smaller screens */
+            background-color: #ffffff;
+            min-height: calc(100vh - 40px); /* Adjusted min-height */
+            border-radius: 16px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Adjusted gap */
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .dashboard-container {
+                padding: 30px;
+                margin: 30px auto;
+                gap: 30px;
+            }
+        }
+
+        .header {
+            display: flex;
+            flex-direction: column; /* Stack on small screens */
+            align-items: flex-start; /* Align items to start on small screens */
+            gap: 15px; /* Gap between title and button on small screens */
+            padding-bottom: 15px; /* Adjusted padding */
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .header {
+                flex-direction: row; /* Row on larger screens */
+                justify-content: space-between;
+                align-items: center;
+                padding-bottom: 20px;
+            }
+        }
+
+        .dashboard-title {
+            font-size: 2rem; /* Adjusted font size for smaller screens */
+            font-weight: 800;
+            color: #2c3e50;
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .dashboard-title {
+                font-size: 2.8rem;
+            }
+        }
+
+        .button-primary {
+            background-color: #6c5ce7; /* Vibrant purple */
+            color: white;
+            padding: 10px 20px; /* Adjusted padding */
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem; /* Adjusted font size */
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
+            display: flex; /* For icon alignment */
+            align-items: center;
+            gap: 6px; /* Adjusted gap */
+        }
+        .button-primary:hover {
+            background-color: #5a4acb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(108, 92, 231, 0.4);
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .button-primary {
+                padding: 12px 25px;
+                font-size: 1rem;
+                gap: 8px;
+            }
+        }
+
+        .button-secondary {
+            background-color: #e9ecef;
+            color: #555;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .button-secondary:hover {
+            background-color: #dee2e6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .button-danger {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 15px; /* Adjusted padding */
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem; /* Adjusted font size */
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .button-danger:hover {
+            background-color: #c82333;
+            transform: translateY(-1px);
+        }
+
+        .button-edit, .button-delete {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex; /* For icon alignment */
+            align-items: center;
+            gap: 5px; /* Space between icon and text */
+        }
+
+        .button-edit {
+            background-color: #007bff;
+            color: white;
+        }
+        .button-edit:hover {
+            background-color: #0056b3;
+        }
+
+        .button-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+        .button-delete:hover {
+            background-color: #c82333;
+        }
+
+        /* Dashboard Overview */
+        .dashboard-overview {
+            display: grid;
+            grid-template-columns: 1fr; /* Stack on small screens */
+            gap: 20px; /* Adjusted gap */
+            margin-bottom: 20px; /* Adjusted margin */
+        }
+
+        @media (min-width: 640px) { /* Small screens */
+            .dashboard-overview {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Two columns on small screens */
+            }
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .dashboard-overview {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Three columns on medium screens */
+                gap: 25px;
+                margin-bottom: 30px;
+            }
+        }
+
+        .metric-card {
+            background-color: #f8faff;
+            padding: 20px; /* Adjusted padding */
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .metric-card h3 {
+            font-size: 1.1rem; /* Adjusted font size */
+            color: #4a69bd;
+            margin-bottom: 8px; /* Adjusted margin */
+            font-weight: 600;
+        }
+
+        .metric-card p {
+            font-size: 2rem; /* Adjusted font size */
+            font-weight: 800;
+            color: #2c3e50;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .metric-card h3 {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+            .metric-card p {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Properties Section */
+        .properties-section {
+            background-color: #ffffff;
+            padding: 20px; /* Adjusted padding */
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Adjusted gap */
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .properties-section {
+                padding: 30px;
+                gap: 25px;
+            }
+        }
+
+        .section-title {
+            font-size: 1.8rem; /* Adjusted font size */
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px; /* Adjusted margin */
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px; /* Adjusted padding */
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+            }
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Single column on small screens */
+            gap: 20px; /* Adjusted gap */
+        }
+
+        @media (min-width: 640px) { /* Small screens */
+            .property-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Two columns on small screens */
+            }
+        }
+
+        @media (min-width: 1024px) { /* Large screens */
+            .property-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Three columns on large screens */
+                gap: 25px;
+            }
+        }
+
+        .apartment-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 1px solid #f0f0f0;
+        }
+
+        .apartment-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .apartment-card-image {
+            width: 100%;
+            height: 180px; /* Adjusted image height for responsiveness */
+            object-fit: cover;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .apartment-card-image {
+                height: 200px;
+            }
+        }
+
+        .apartment-card-content {
+            padding: 15px; /* Adjusted padding */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .apartment-card-content {
+                padding: 20px;
+            }
+        }
+
+        .apartment-card-title {
+            font-size: 1.3rem; /* Adjusted font size */
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 6px; /* Adjusted margin */
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .apartment-card-title {
+                font-size: 1.4rem;
+                margin-bottom: 8px;
+            }
+        }
+
+        .apartment-card-location {
+            font-size: 0.9rem; /* Adjusted font size */
+            color: #666;
+            margin-bottom: 10px; /* Adjusted margin */
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .apartment-card-location {
+                font-size: 0.95rem;
+                margin-bottom: 12px;
+            }
+        }
+
+        .apartment-card-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px; /* Adjusted margin */
+            flex-wrap: wrap;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .apartment-card-details {
+                margin-bottom: 15px;
+            }
+        }
+
+        .apartment-card-price {
+            font-size: 1.1rem; /* Adjusted font size */
+            font-weight: 800;
+            color: #28a745;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .apartment-card-price {
+                font-size: 1.25rem;
+            }
+        }
+
+        .apartment-card-specs {
+            font-size: 0.85rem; /* Adjusted font size */
+            color: #777;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .apartment-card-specs {
+                font-size: 0.9rem;
+            }
+        }
+
+        .apartment-card-amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px; /* Adjusted gap */
+            margin-top: auto;
+            padding-top: 12px; /* Adjusted padding */
+            border-top: 1px solid #f0f0f0;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .apartment-card-amenities {
+                gap: 8px;
+                padding-top: 15px;
+            }
+        }
+
+        .amenity-tag {
+            background-color: #e6e6fa;
+            color: #6a5acd;
+            padding: 5px 9px; /* Adjusted padding */
+            border-radius: 15px;
+            font-size: 0.75rem; /* Adjusted font size */
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .amenity-tag {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+        }
+
+        .property-card-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 15px; /* Adjusted padding */
+            background-color: #f8faff;
+            border-top: 1px solid #e0e0e0;
+            gap: 8px; /* Adjusted gap */
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .property-card-actions {
+                padding: 15px 20px;
+                gap: 10px;
+            }
+        }
+
+        .loading-text, .error-text {
+            text-align: center;
+            font-size: 1.1em; /* Adjusted font size */
+            color: #6c757d;
+            padding-top: 40px; /* Adjusted padding */
+        }
+        .error-text {
+            color: #dc3545;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .loading-text, .error-text {
+                font-size: 1.3em;
+                padding-top: 60px;
+            }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px; /* Adjusted padding */
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 90%; /* Increased max-width for small screens */
+            width: 90%;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        @media (min-width: 600px) { /* Adjust for larger modals on tablets/desktops */
+            .modal-content {
+                max-width: 600px;
+                padding: 30px;
+            }
+        }
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-title {
+            font-size: 1.8rem; /* Adjusted font size */
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px; /* Adjusted margin */
+            text-align: center;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .modal-title {
+                font-size: 2rem;
+                margin-bottom: 25px;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 15px; /* Adjusted margin */
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.9rem; /* Adjusted font size */
+            font-weight: 600;
+            color: #4a69bd;
+            margin-bottom: 6px; /* Adjusted margin */
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group textarea {
+            width: calc(100% - 20px); /* Adjusted width for padding */
+            padding: 10px; /* Adjusted padding */
+            border: 1px solid #c9d6e4;
+            border-radius: 8px;
+            font-size: 0.95rem; /* Adjusted font size */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-group textarea {
+            min-height: 70px; /* Adjusted min-height */
+            resize: vertical;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .form-group {
+                margin-bottom: 18px;
+            }
+            .form-group label {
+                font-size: 0.95rem;
+                margin-bottom: 8px;
+            }
+            .form-group input[type="text"],
+            .form-group input[type="number"],
+            .form-group input[type="email"],
+            .form-group input[type="tel"],
+            .form-group textarea {
+                width: calc(100% - 24px);
+                padding: 12px;
+                font-size: 1rem;
+            }
+            .form-group textarea {
+                min-height: 80px;
+            }
+        }
+
+        .form-group-row {
+            flex-direction: column; /* Stack on small screens */
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        @media (min-width: 600px) { /* Two columns on wider modal screens */
+            .form-group-row {
+                flex-direction: row;
+                margin-bottom: 18px;
+            }
+        }
+        .form-group-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .error-text-small {
+            color: #dc3545;
+            font-size: 0.8rem; /* Adjusted font size */
+            margin-top: 3px; /* Adjusted margin */
+        }
+        @media (min-width: 768px) { /* Medium screens */
+            .error-text-small {
+                font-size: 0.85rem;
+                margin-top: 5px;
+            }
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px; /* Adjusted gap */
+            margin-top: 20px; /* Adjusted margin */
+        }
+        @media (min-width: 768px) { /* Medium screens */
+            .modal-actions {
+                gap: 15px;
+                margin-top: 30px;
+            }
+        }
+
+        /* Message Box specific styles */
+        .message-box {
+            position: fixed;
+            bottom: 15px; /* Adjusted position */
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px; /* Adjusted padding */
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1001;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 0.9rem; /* Adjusted font size */
+        }
+        .message-box.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .message-box.success {
+            background-color: #28a745; /* green */
+        }
+        .message-box.error {
+            background-color: #dc3545; /* red */
+        }
+        @media (min-width: 768px) { /* Medium screens */
+            .message-box {
+                bottom: 20px;
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+        }
+        `}
+      </style>
+
+      <div className="dashboard-container">
+        <div className="header">
+          <h1 className="dashboard-title">Landlord Dashboard</h1>
+          <button onClick={openAddModal} className="button-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14"/><path d="M12 5v14"/>
+            </svg>
+            Add New Property
+          </button>
+        </div>
+
+        <div className="dashboard-overview">
+          <div className="metric-card">
+            <h3>Total Properties</h3>
+            <p>{totalProperties}</p>
+          </div>
+          <div className="metric-card">
+            <h3>Average Price</h3>
+            <p>₦{averagePrice}</p>
+          </div>
+          <div className="metric-card">
+            <h3>Properties with Shared Bath</h3>
+            <p>{sharedBathroomProperties}</p>
+          </div>
+        </div>
+
+        <div className="properties-section">
+            <h2 className="section-title">Your Property Listings</h2>
+            {loading ? (
+            <p className="loading-text">Loading your properties...</p>
+            ) : properties.length === 0 ? (
+            <p className="loading-text">You have no properties listed yet. Click "Add New Property" to get started!</p>
+            ) : (
+            <div className="property-grid">
+                {properties.map(property => (
+                <PropertyCard
+                    key={property.id}
+                    property={property}
+                    onEdit={openEditModal}
+                    onDelete={openConfirmDeleteModal}
+                />
+                ))}
+            </div>
+            )}
+        </div>
+      </div>
+
+      <PropertyFormModal
+        isOpen={isAddEditModalOpen}
+        onClose={closeModals}
+        onSubmit={currentProperty ? handleEditProperty : handleAddProperty}
+        initialData={currentProperty}
+      />
+
+      <ConfirmDeleteModal
+        isOpen={isConfirmDeleteModalOpen}
+        onClose={closeModals}
+        onConfirm={handleDeleteProperty}
+        propertyName={propertyToDelete.name}
+      />
+
+      <MessageBox message={message} type={messageType} />
+    </>
+  );
+}
