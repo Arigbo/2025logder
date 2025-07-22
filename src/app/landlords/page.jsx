@@ -4,7 +4,9 @@
 // All components and styling are defined within this single file, using pure CSS.
 "use client"; // This directive marks the component as a Client Component
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Chart from 'chart.js/auto'; // Import Chart.js
+
 // Note: In a full Next.js application, you would import useRouter like this:
 // import { useRouter } from 'next/navigation';
 // For this single-file Canvas environment, we'll simulate navigation using window.location.href.
@@ -191,6 +193,9 @@ export default function App() {
     const [hasNewNotifications, setHasNewNotifications] = useState(true); // Simulate new notifications
     const [notificationsCount, setNotificationsCount] = useState(3); // Simulate 3 unread notifications
 
+    const chartInstances = useRef({}); // Ref to store Chart.js instances
+    const [chartPeriod, setChartPeriod] = useState('monthly'); // 'monthly', 'daily', 'yearly'
+
     // Mock notification data
     const [notifications, setNotifications] = useState([
         { id: 'notif1', message: 'Rent payment received from Alice Smith for Grand House.', date: '2025-07-20', read: false },
@@ -198,6 +203,8 @@ export default function App() {
         { id: 'notif3', message: 'Lease for Student Annex expires in 5 days.', date: '2025-07-20', read: false },
         { id: 'notif4', message: 'Property inspection scheduled for Garden Villa on 2025-07-25.', date: '2025-07-19', read: true },
         { id: 'notif5', message: 'Tenant Bob Johnson updated contact info.', date: '2025-07-18', read: true },
+        { id: 'notif6', message: 'Rent of ₦65,000 is overdue for Charlie Brown (City Lodge, Room 1).', date: '2025-07-01', read: false }, // Overdue rent notification
+        { id: 'notif7', message: 'Rent of ₦75,000 is overdue for Frank White (Garden Villa, Room 3).', date: '2025-07-01', read: false }, // Overdue rent notification
     ]);
 
 
@@ -232,17 +239,22 @@ export default function App() {
         monthlyExpenses: 450000, // Mock fixed expenses
     });
 
-    // Mock recent activity feed
-    const [recentActivities, setRecentActivities] = useState([
-        { id: 'a1', type: 'rent_paid', description: 'Alice Smith paid rent for Grand House (Room 101).', date: '2025-07-20' },
-        { id: 'a2', type: 'maintenance', description: 'New maintenance request for Student Annex (Room 5 - Broken window).', date: '2025-07-20' },
-        { id: 'a3', type: 'lease_renewal', description: 'Lease for Student Annex (Property p3) expiring soon.', date: '2025-07-19' },
-        { id: 'a4', type: 'rent_overdue', description: 'Rent overdue for Charlie Brown (City Lodge, Room 1).', date: '2025-07-18' },
-        { id: 'a5', type: 'maintenance_completed', description: 'Maintenance completed for Garden Villa (Bathroom - Light fixture).', date: '2025-07-15' },
-        { id: 'a6', type: 'rent_paid', description: 'Bob Johnson paid rent for Grand House (Room 102).', date: '2025-07-14' },
-        { id: 'a7', type: 'maintenance', description: 'AC not cooling in City Lodge (Room 1) is in progress.', date: '2025-07-12' },
-        { id: 'a8', type: 'rent_overdue', description: 'Rent overdue for Frank White (Garden Villa, Room 3).', date: '2025-07-11' },
+    // Mock Financial Transactions (payments, transfers, income, expenses)
+    const [financialTransactions, setFinancialTransactions] = useState([
+        { id: 'ft1', type: 'rent_paid', description: 'Alice Smith paid rent for Grand House (Room 101).', date: '2025-07-20', amount: 50000, property: 'Grand House', tenant: 'Alice Smith' },
+        { id: 'ft2', type: 'maintenance_expense', description: 'Paid for AC repair in City Lodge.', date: '2025-07-20', amount: -15000, property: 'City Lodge', tenant: 'N/A' },
+        { id: 'ft3', type: 'lease_renewal_fee', description: 'Lease renewal fee received for Student Annex.', date: '2025-07-19', amount: 5000, property: 'Student Annex', tenant: 'Diana Prince' },
+        { id: 'ft4', type: 'rent_paid', description: 'Bob Johnson paid rent for Grand House (Room 102).', date: '2025-07-14', amount: 50000, property: 'Grand House', tenant: 'Bob Johnson' },
+        { id: 'ft5', type: 'utility_bill', description: 'Electricity bill paid for common areas.', date: '2025-07-12', amount: -10000, property: 'N/A', tenant: 'N/A' },
     ]);
+
+    // Mock Recent Activities (User & System Actions - non-financial completed activities)
+    const [recentActivities, setRecentActivities] = useState([
+        { id: 'ca1', type: 'maintenance_completed', description: 'Maintenance completed for Garden Villa (Light fixture).', date: '2025-07-15', property: 'Garden Villa', tenant: 'Eve Adams' },
+        { id: 'ca2', type: 'tenant_contact_updated', description: 'Tenant Bob Johnson updated contact info.', date: '2025-07-18', property: 'Grand House', tenant: 'Bob Johnson' },
+        { id: 'ca3', type: 'property_inspection', description: 'Property inspection completed for Grand House.', date: '2025-07-10', property: 'Grand House', tenant: 'N/A' },
+    ]);
+
 
     // Mock communication log
     const [communicationLog, setCommunicationLog] = useState([
@@ -250,15 +262,6 @@ export default function App() {
         { id: 'c2', tenant: 'Charlie Brown', subject: 'Overdue Rent Reminder', date: '2025-07-18', snippet: 'Sent automated reminder for overdue rent.' },
         { id: 'c3', tenant: 'Diana Prince', subject: 'Maintenance Update', date: '2025-07-20', snippet: 'Acknowledged broken window request.' },
         { id: 'c4', tenant: 'Eve Adams', subject: 'Lease Renewal Inquiry', date: '2025-07-10', snippet: 'Received inquiry about lease renewal terms.' },
-    ]);
-
-    // Mock property performance data (simplified for demonstration)
-    const [propertyPerformance, setPropertyPerformance] = useState([
-        { id: 'pp1', propertyName: 'Grand House', occupancy: '100%', maintenanceCost: '₦5,000', rating: 4.8 },
-        { id: 'pp2', propertyName: 'City Lodge', occupancy: '66%', maintenanceCost: '₦15,000', rating: 3.5 },
-        { id: 'pp3', propertyName: 'Garden Villa', occupancy: '75%', maintenanceCost: '₦2,000', rating: 4.5 },
-        { id: 'pp4', propertyName: 'Riverside Duplex', occupancy: '0%', maintenanceCost: '₦0', rating: 0 },
-        { id: 'pp5', propertyName: 'Student Annex', occupancy: '87%', maintenanceCost: '₦8,000', rating: 4.0 },
     ]);
 
     // Function to display messages (like a toast)
@@ -319,56 +322,64 @@ export default function App() {
     const projectedMonthlyIncome = tenants.reduce((sum, tenant) => sum + tenant.rentDue, 0);
     const netOperatingIncome = projectedMonthlyIncome - financials.monthlyExpenses;
 
-    // Key Metrics for the new first section
-    const keyMetrics = [
-        { id: 'totalProperties', title: 'Total Properties', value: totalProperties, type: 'info', icon: (<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>) },
-        { id: 'occupancyRate', title: 'Occupancy Rate', value: `${occupancyRate}%`, type: 'info', icon: (<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8L11 2m9 10a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>) },
-        { id: 'projectedIncome', title: 'Projected Income', value: `₦${projectedMonthlyIncome.toLocaleString(undefined, { maximumFractionDigits: 0 })}`, type: 'success', icon: (<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V4m0 12v4m-6-2h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>) },
-        { id: 'vacantRooms', title: 'Vacant Rooms', value: vacantRooms, type: 'warning', icon: (<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m7 0V5a2 2 0 012-2h2a2 2 0 012 2v6m-6 0V5a2 2 0 00-2-2H9a2 2 0 00-2 2v6"></path></svg>) },
+    // --- New Metrics for Transaction Overview ---
+    const totalIncome = financialTransactions.reduce((sum, activity) => sum + (activity.amount > 0 ? activity.amount : 0), 0);
+    const totalExpenses = financialTransactions.reduce((sum, activity) => sum + (activity.amount < 0 ? Math.abs(activity.amount) : 0), 0);
+    const totalRentedProperties = tenants.length; // Proxy for "Total Sold" properties
+    const totalViews = 1250; // Mock data for "Total Views"
+
+    // Mock previous month's income for percentage calculation
+    const previousMonthIncome = totalIncome * 0.9; // Simulate a 10% increase from previous month
+    const incomePercentageChange = totalIncome && previousMonthIncome
+        ? (((totalIncome - previousMonthIncome) / previousMonthIncome) * 100).toFixed(1)
+        : '0.0';
+    const isIncomeIncreasing = parseFloat(incomePercentageChange) >= 0;
+
+
+    // Key Metrics for the Property Statistics section
+    const propertyStatisticsMetrics = [ // Renamed from salesOverviewMetrics
+        { id: 'totalProperties', title: 'Total Properties', value: totalProperties, icon: (<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>) },
+        { id: 'totalUnits', title: 'Total Units', value: totalRoomsAvailable, icon: (<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m7 0V5a2 2 0 012-2h2a2 2 0 012 2v6m-6 0V5a2 2 0 00-2-2H9a2 2 0 00-2 2v6"></path></svg>) },
+        { id: 'unitsRented', title: 'Units Rented', value: occupiedRooms, icon: (<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8L11 2m9 10a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>) },
+        { id: 'unitsVacant', title: 'Units Vacant', value: vacantRooms, icon: (<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m7 0V5a2 2 0 012-2h2a2 2 0 012 2v6m-6 0V5a2 2 0 00-2-2H9a2 2 0 00-2 2v6"></path></svg>) },
     ];
 
 
-    // Recent activities are always displayed, but the "See More" button navigates
-    const displayedActivities = recentActivities.slice(0, 5); // Always show top 5
-
-    // Filter for upcoming reminders/tasks
+    // Filter for upcoming reminders/tasks (undone activities)
     const upcomingReminders = [
         ...properties.filter(prop => {
             if (!prop.leaseEndDate) return false;
             const leaseDate = new Date(prop.leaseEndDate);
-            return leaseDate >= today && leaseDate <= threeMonthsFromNow;
+            // Check if lease ends within the next 3 months (or is already past due within a reasonable window, e.g., last 30 days)
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            return (leaseDate >= today && leaseDate <= threeMonthsFromNow) || (leaseDate < today && leaseDate >= thirtyDaysAgo);
         }).map(prop => ({
             id: `lease-${prop.id}`,
             type: 'lease_renewal',
             description: `Lease for ${prop.name} expiring on ${prop.leaseEndDate}.`,
-            date: prop.leaseEndDate
+            date: prop.leaseEndDate,
+            status: (new Date(prop.leaseEndDate) < today) ? 'Overdue' : 'Upcoming'
         })),
-        ...tenants.filter(tenant => {
-            if (!tenant.nextRentDueDate || tenant.overdue) return false; // Exclude overdue, focus on upcoming
-            const dueDate = new Date(tenant.nextRentDueDate);
-            // Consider rent due in the next 30 days as upcoming
-            const thirtyDaysFromNow = new Date();
-            thirtyDaysFromNow.setDate(today.getDate() + 30);
-            return dueDate >= today && dueDate <= thirtyDaysFromNow;
-        }).map(tenant => ({
+        ...tenants.filter(tenant => tenant.overdue).map(tenant => ({ // Only include *overdue* rent here
             id: `rent-${tenant.id}`,
-            type: 'rent_due',
-            description: `Rent of ₦${tenant.rentDue.toLocaleString()} due for ${tenant.name} (${properties.find(p => p.id === tenant.propertyId)?.name}, ${tenant.roomNumber}) on ${tenant.nextRentDueDate}.`,
-            date: tenant.nextRentDueDate
+            type: 'rent_overdue', // Changed type to specifically indicate overdue
+            description: `Rent of ₦${tenant.rentDue.toLocaleString()} is overdue for ${tenant.name} (${properties.find(p => p.id === tenant.propertyId)?.name}, ${tenant.roomNumber}).`,
+            date: tenant.nextRentDueDate,
+            status: 'Overdue'
         })),
         ...maintenanceRequests.filter(req => req.status !== 'Completed').map(req => ({
             id: `maint-${req.id}`,
             type: 'maintenance_pending',
             description: `Maintenance request: "${req.title}" for ${properties.find(p => p.id === req.propertyId)?.name} (${req.roomNumber || 'N/A'}) is ${req.status}.`,
-            date: req.date // Use reported date, or a 'due by' date if available
+            date: req.date, // Use reported date, or a 'due by' date if available
+            status: req.status === 'New' ? 'New' : 'In-Progress' // Map to simpler statuses
         }))
     ].sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort by date
 
-    // Filter for vacant properties
-    const vacantProperties = properties.filter(prop => {
-        const occupiedRoomsInProperty = tenants.filter(t => t.propertyId === prop.id).length;
-        return occupiedRoomsInProperty < prop.totalRooms;
-    });
+    // Determine if there are any upcoming reminders to show a badge on the calendar icon
+    const hasUpcomingReminders = upcomingReminders.length > 0;
+
 
     // Handle notification bell click
     const handleNotificationBellClick = () => {
@@ -379,14 +390,21 @@ export default function App() {
         setNotifications(notifications.map(n => ({ ...n, read: true })));
     };
 
-    // Handle "See More Activity" click
-    const handleSeeMoreActivity = () => {
+    // Handle "See More Activity" click (for both financial and non-financial)
+    const handleSeeMoreActivity = (activityType) => {
         // Simulate navigation to a dedicated Recent Activity page
         // In a full Next.js application, you would create a new file like
         // src/app/recent-activity/page.jsx and navigate to it using useRouter:
         // router.push('/recent-activity');
-        window.location.href = '/recent-activity'; // Simulate navigation for Canvas environment
-        showMessage('Navigating to Recent Activity page...', 'info');
+        window.location.href = `/recent-activity?type=${activityType}`; // Simulate navigation for Canvas environment
+        showMessage(`Navigating to ${activityType.replace('-', ' ')} page...`, 'info');
+    };
+
+    // Handle "View All Properties" button click
+    const handleViewAllProperties = () => {
+        // Simulate navigation to a dedicated properties page
+        window.location.href = `/properties`; // Example URL
+        showMessage(`Navigating to Properties page...`, 'info');
     };
 
     // Handle "View Reminders" icon click
@@ -423,15 +441,6 @@ export default function App() {
         setIsLoggedIn(true);
         showMessage('Logged in successfully!', 'success');
     };
-
-    // Property Insights sections now show all items by default
-    const allPerformance = propertyPerformance;
-    const allVacant = vacantProperties.filter(p => p.totalRooms - tenants.filter(t => t.propertyId === p.id).length > 0);
-    const allLease = properties.filter(prop => {
-        if (!prop.leaseEndDate) return false;
-        const leaseDate = new Date(prop.leaseEndDate);
-        return leaseDate >= today && leaseDate <= threeMonthsFromNow;
-    });
 
     // --- PDF and CSV Download Functions (kept for potential future use, though not used by current UI) ---
     const generatePdf = (data, title, headers) => {
@@ -508,6 +517,217 @@ export default function App() {
         }
     };
 
+    // Mock data for chart visualization
+    const mockMonthlyChartData = [
+        { month: 'Jan', income: 120000, expenses: 40000 },
+        { month: 'Feb', income: 135000, expenses: 45000 },
+        { month: 'Mar', income: 110000, expenses: 38000 },
+        { month: 'Apr', income: 140000, expenses: 50000 },
+        { month: 'May', income: 125000, expenses: 42000 },
+        { month: 'Jun', income: 150000, expenses: 55000 },
+        { month: 'Jul', income: projectedMonthlyIncome, expenses: financials.monthlyExpenses }, // Current month
+    ];
+
+    // Simplified mock daily data for a week
+    const mockDailyChartData = [
+        { day: 'Mon', income: 5000, expenses: 1000 },
+        { day: 'Tue', income: 7000, expenses: 1500 },
+        { day: 'Wed', income: 6000, expenses: 1200 },
+        { day: 'Thu', income: 8000, expenses: 2000 },
+        { day: 'Fri', income: 9000, expenses: 1800 },
+        { day: 'Sat', income: 4000, expenses: 800 },
+        { day: 'Sun', income: 3000, expenses: 700 },
+    ];
+
+    // Simplified mock yearly data for a few years
+    const mockYearlyChartData = [
+        { year: '2022', income: 1200000, expenses: 450000 },
+        { year: '2023', income: 1500000, expenses: 500000 },
+        { year: '2024', income: 1800000, expenses: 600000 },
+        { year: '2025', income: totalIncome * 12, expenses: totalExpenses * 12 }, // Project current year
+    ];
+
+
+    // Chart Initialization and Updates
+    useEffect(() => {
+        // Load Chart.js CDN dynamically if not already loaded
+        if (typeof window !== 'undefined' && !window.Chart) {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+            script.onload = () => {
+                // Once Chart.js is loaded, initialize charts
+                initCharts();
+            };
+            document.head.appendChild(script);
+        } else {
+            // If Chart.js is already loaded, just initialize charts
+            initCharts();
+        }
+
+        // Cleanup function for charts
+        return () => {
+            Object.values(chartInstances.current).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+            chartInstances.current = {};
+        };
+    }, [chartPeriod, activeSection, projectedMonthlyIncome, financials.monthlyExpenses, totalIncome, totalExpenses]); // Re-run when chartPeriod or activeSection or financial data changes
+
+    const initCharts = () => {
+        if (typeof window === 'undefined' || !window.Chart) return;
+
+        // Destroy existing charts to prevent duplicates
+        Object.values(chartInstances.current).forEach(chart => {
+            if (chart) chart.destroy();
+        });
+        chartInstances.current = {};
+
+        let currentChartData;
+        let labelKey;
+        let tooltipTitle;
+
+        switch (chartPeriod) {
+            case 'daily':
+                currentChartData = mockDailyChartData;
+                labelKey = 'day';
+                tooltipTitle = 'Day';
+                break;
+            case 'yearly':
+                currentChartData = mockYearlyChartData;
+                labelKey = 'year';
+                tooltipTitle = 'Year';
+                break;
+            case 'monthly':
+            default:
+                currentChartData = mockMonthlyChartData;
+                labelKey = 'month';
+                tooltipTitle = 'Month';
+                break;
+        }
+
+        // Financials Chart (for Property Statistics)
+        const financialsCtx = document.getElementById('propertyStatisticsChart')?.getContext('2d'); // Changed ID
+        if (financialsCtx) {
+            const chartLabels = currentChartData.map(d => d[labelKey]);
+            const incomeData = currentChartData.map(d => d.income);
+            const expensesData = currentChartData.map(d => d.expenses);
+
+            // Create a gradient for income lines
+            const incomeGradient = financialsCtx.createLinearGradient(0, 0, 0, 400);
+            incomeGradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)'); // Tailwind green-500 with transparency
+            incomeGradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+
+            // Create a gradient for expenses lines
+            const expensesGradient = financialsCtx.createLinearGradient(0, 0, 0, 400);
+            expensesGradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)'); // Tailwind red-500 with transparency
+            expensesGradient.addColorStop(1, 'rgba(239, 68, 68, 0)');
+
+            chartInstances.current.propertyStatisticsChart = new window.Chart(financialsCtx, {
+                type: 'line', // Changed to line chart
+                data: {
+                    labels: chartLabels,
+                    datasets: [
+                        {
+                            label: 'Income (₦)',
+                            data: incomeData,
+                            borderColor: '#10b981', // Solid line color for income
+                            backgroundColor: incomeGradient, // Fill area under the line
+                            fill: true, // Enable area fill
+                            tension: 0.4, // Smooth curves
+                            pointRadius: 5, // Larger points
+                            pointBackgroundColor: '#10b981',
+                            pointBorderColor: '#fff',
+                            pointHoverRadius: 7,
+                            pointHoverBackgroundColor: '#10b981',
+                            pointHoverBorderColor: '#fff',
+                            borderWidth: 2,
+                        },
+                        {
+                            label: 'Expenses (₦)',
+                            data: expensesData,
+                            borderColor: '#ef4444', // Solid line color for expenses
+                            backgroundColor: expensesGradient, // Fill area under the line
+                            fill: true, // Enable area fill
+                            tension: 0.4, // Smooth curves
+                            pointRadius: 5, // Larger points
+                            pointBackgroundColor: '#ef4444',
+                            pointBorderColor: '#fff',
+                            pointHoverRadius: 7,
+                            pointHoverBackgroundColor: '#ef4444',
+                            pointHoverBorderColor: '#fff',
+                            borderWidth: 2,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: 'Inter',
+                                    size: 14,
+                                    weight: '600'
+                                },
+                                color: '#4A5568' // medium-text
+                            }
+                        },
+                        title: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(42, 57, 141, 0.9)', // primary-blue with opacity
+                            titleFont: { family: 'Inter', size: 16, weight: '700' },
+                            bodyFont: { family: 'Inter', size: 14 },
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: true,
+                            callbacks: {
+                                title: function(context) {
+                                    return `${tooltipTitle}: ${context[0].label}`;
+                                },
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += `₦${context.parsed.y.toLocaleString()}`;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => `₦${(value / 1000).toLocaleString()}k`,
+                                font: { family: 'Inter', size: 12, weight: '500' },
+                                color: '#718096' // light-text
+                            },
+                            grid: {
+                                color: 'rgba(226, 232, 240, 0.5)', // border-color with opacity
+                                drawBorder: false,
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { family: 'Inter', size: 12, weight: '500' },
+                                color: '#718096' // light-text
+                            },
+                            grid: {
+                                display: false, // No vertical grid lines
+                                drawBorder: false,
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    };
+
 
     return (
         <div className="app-container">
@@ -520,23 +740,27 @@ export default function App() {
                 html, body {
                     height: 100%;
                     margin: 0;
+                    overflow-x: hidden; /* Prevent horizontal scroll on body */
                 }
 
                 :root {
-                    --bg-light: #f8fafc; /* Lighter background */
-                    --text-dark: #1f2937;
-                    --text-slate-800: #1e293b;
-                    --text-slate-600: #4b5563;
-                    --text-slate-500: #6b7280;
-                    --text-slate-900: #0f172a; /* Darker for main titles */
-                    --indigo-600: #4f46e5;
+                    /* Dribbble inspired colors */
+                    --primary-blue: #2A398D; /* Main blue from Dribbble */
+                    --light-blue: #E8ECF8; /* Lighter blue for backgrounds/accents */
+                    --dark-text: #1A202C; /* Darker text for headings */
+                    --medium-text: #4A5568; /* Medium text for body */
+                    --light-text: #718096; /* Light text for subtle info */
+                    --background-light: #F7FAFC; /* Overall light background */
+                    --white: #ffffff;
+                    --border-color: #E2E8F0; /* Light border */
+
+                    /* Original colors for functional use if needed */
+                    --indigo-600: #4f46e5; /* Kept for compatibility if needed, but primary-blue is preferred */
                     --indigo-700: #4338ca;
                     --indigo-50: #eef2ff;
                     --green-600: #16a34a;
                     --red-600: #dc2626;
                     --amber-500: #f59e0b;
-                    --white: #ffffff;
-                    --border-light: #e2e8f0; /* Softer border */
                     --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
                     --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
                     --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
@@ -545,72 +769,74 @@ export default function App() {
 
                 body {
                     font-family: 'Inter', sans-serif;
-                    background-color: var(--bg-light);
+                    background-color: var(--background-light);
                     line-height: 1.6;
-                    color: var(--text-dark);
-                    display: flex; /* Keep flex for overall layout */
-                    flex-direction: column; /* Allow direct children to stack vertically if needed */
-                    align-items: center; /* Center app-container horizontally */
-                    justify-content: flex-start; /* Align app-container to top */
+                    color: var(--medium-text);
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: flex-start;
                     font-size: 16px;
                 }
 
                 .app-container {
                     display: flex;
-                    width: 100%;
-                    max-width: 1400px; /* Max width for larger screens */
-                    background-color: var(--bg-light); 
-                    color: var(--text-slate-800);
-                    min-height: 100vh; /* Ensure app-container takes full viewport height */
+                    width: 100%; /* Removed max-width */
+                    background-color: var(--background-light); 
+                    color: var(--dark-text);
+                    min-height: 100vh;
+                    box-shadow: var(--shadow-xl); /* Overall app shadow */
+                    border-radius: 1.5rem; /* Rounded app container */
+                    overflow: hidden; /* Ensure shadow and border-radius apply correctly */
                 }
 
                 .sidebar {
-                    width: 250px;
+                    width: 280px; /* Slightly wider sidebar */
                     flex-shrink: 0;
                     background-color: var(--white);
-                    border-right: 1px solid var(--border-light);
+                    border-right: 1px solid var(--border-color);
                     display: flex;
                     flex-direction: column;
                     box-shadow: var(--shadow-sm);
-                    position: fixed; /* Changed to fixed for mobile slide-in */
+                    position: fixed;
                     top: 0;
-                    left: -250px; /* Hidden by default on mobile */
+                    left: -280px; /* Hidden by default on mobile */
                     height: 100vh;
                     overflow-y: auto;
-                    z-index: 200; /* Higher than header for mobile overlay */
-                    transition: left 0.3s ease-in-out; /* Smooth slide transition */
+                    z-index: 200;
+                    transition: left 0.3s ease-in-out;
                 }
 
                 .sidebar.sidebar-open {
-                    left: 0; /* Slide in */
+                    left: 0;
                 }
 
                 @media (min-width: 768px) {
                     .sidebar {
-                        position: sticky; /* Sticky on desktop */
-                        left: 0; /* Always visible on desktop */
-                        display: flex; /* Ensure it's displayed */
+                        position: sticky;
+                        left: 0;
+                        display: flex;
                     }
                 }
 
                 .sidebar-header {
-                    height: 60px;
+                    height: 80px; /* Taller header */
                     display: flex;
                     align-items: center;
-                    justify-content: space-between; /* Space between title and close button */
-                    border-bottom: 1px solid var(--border-light);
-                    padding: 0 1.5rem;
+                    justify-content: space-between;
+                    border-bottom: 1px solid var(--border-color);
+                    padding: 0 2rem; /* More padding */
                 }
 
                 .sidebar-title {
-                    font-size: 1.5rem;
+                    font-size: 1.8rem; /* Larger title */
                     font-weight: 800;
-                    color: var(--indigo-700);
+                    color: var(--primary-blue);
                     letter-spacing: -0.025em;
                 }
 
                 .sidebar-close-button {
-                    display: block; /* Always show on mobile */
+                    display: block;
                     background: none;
                     border: none;
                     cursor: pointer;
@@ -620,67 +846,66 @@ export default function App() {
                 }
 
                 .sidebar-close-button:hover {
-                    background-color: var(--bg-light);
+                    background-color: var(--light-blue);
                 }
 
                 .sidebar-close-button svg {
                     width: 1.5rem;
                     height: 1.5rem;
-                    color: var(--text-slate-600);
+                    color: var(--medium-text);
                 }
 
                 @media (min-width: 768px) {
                     .sidebar-close-button {
-                        display: none; /* Hide on desktop */
+                        display: none;
                     }
                 }
 
-
                 .sidebar-nav {
                     flex: 1;
-                    padding: 1.5rem;
+                    padding: 2rem; /* More padding */
                     display: flex;
                     flex-direction: column;
-                    gap: 0.8rem;
+                    gap: 1rem; /* More space between links */
                 }
 
                 .sidebar-link {
                     display: flex;
                     align-items: center;
-                    padding: 0.85rem 1.15rem;
+                    padding: 1rem 1.25rem; /* More padding */
                     border-radius: 0.75rem;
-                    color: var(--text-slate-600);
+                    color: var(--medium-text);
                     text-decoration: none;
                     transition: all 0.2s ease-in-out;
                     font-weight: 500;
-                    font-size: 0.95rem;
+                    font-size: 1rem; /* Slightly larger font */
                 }
 
                 .sidebar-link:hover {
-                    background-color: var(--indigo-50);
-                    color: var(--indigo-700);
+                    background-color: var(--light-blue);
+                    color: var(--primary-blue);
                     transform: translateY(-2px);
                     box-shadow: var(--shadow-sm);
                 }
 
                 .sidebar-link.active {
-                    background-color: var(--indigo-600);
+                    background-color: var(--primary-blue);
                     color: var(--white);
                     box-shadow: var(--shadow-md);
                     transform: translateY(-2px);
                 }
 
                 .sidebar-link svg {
-                    width: 1.25rem;
-                    height: 1.25rem;
-                    margin-right: 0.85rem;
+                    width: 1.35rem; /* Slightly larger icon */
+                    height: 1.35rem;
+                    margin-right: 1rem;
                 }
 
                 .sidebar-footer {
-                    padding: 1.25rem;
-                    border-top: 1px solid var(--border-light);
-                    font-size: 0.85rem;
-                    color: var(--text-slate-500);
+                    padding: 1.5rem; /* More padding */
+                    border-top: 1px solid var(--border-color);
+                    font-size: 0.9rem;
+                    color: var(--light-text);
                 }
 
                 .sidebar-footer span {
@@ -692,17 +917,17 @@ export default function App() {
                 .main-content {
                     flex: 1;
                     overflow-y: auto;
-                    background-color: var(--bg-light);
+                    background-color: var(--background-light);
                 }
 
                 .header {
-                    height: 60px;
+                    height: 80px; /* Taller header */
                     background-color: var(--white);
-                    border-bottom: 1px solid var(--border-light);
+                    border-bottom: 1px solid var(--border-color);
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    padding: 0 1.5rem;
+                    padding: 0 2.5rem; /* More padding */
                     box-shadow: var(--shadow-md);
                     position: sticky;
                     top: 0;
@@ -712,54 +937,58 @@ export default function App() {
                 .header-left-group {
                     display: flex;
                     align-items: center;
-                    gap: 1rem;
+                    gap: 1.5rem; /* More gap */
                 }
 
                 .header-greeting {
-                    font-size: 1.25rem; /* Smaller font size */
-                    font-weight: 500; /* Less bold */
-                    color: var(--text-slate-800);
-                    white-space: nowrap; /* Prevent wrapping of greeting */
+                    font-size: 1.4rem; /* Larger font size */
+                    font-weight: 600; /* More bold */
+                    color: var(--dark-text);
+                    white-space: nowrap;
                 }
 
                 .header-right-group {
                     display: flex;
                     align-items: center;
-                    gap: 1.5rem;
+                    gap: 1.8rem; /* More gap */
                 }
 
                 .header-icon-button {
                     position: relative;
                     cursor: pointer;
-                    padding: 0.6rem;
+                    padding: 0.7rem; /* Larger padding */
                     border-radius: 50%;
                     transition: background-color 0.2s ease, transform 0.2s ease;
-                    background-color: var(--bg-light);
+                    background-color: var(--light-blue); /* Light blue background */
                     display: flex;
                     align-items: center;
                     justify-content: center;
                 }
 
                 .header-icon-button:hover {
-                    background-color: var(--indigo-50);
+                    background-color: var(--primary-blue);
+                    color: var(--white);
                     transform: scale(1.1);
+                }
+                .header-icon-button:hover svg {
+                    color: var(--white);
                 }
 
                 .header-icon-button svg {
-                    width: 1.6rem;
-                    height: 1.6rem;
-                    color: var(--text-slate-600);
+                    width: 1.8rem; /* Larger icon */
+                    height: 1.8rem;
+                    color: var(--primary-blue); /* Primary blue color */
                     transition: color 0.2s ease;
                 }
 
                 .header-icon-button.has-new svg {
-                    color: var(--indigo-600);
+                    color: var(--red-600); /* Red for new notifications */
                 }
 
                 .notification-badge {
                     position: absolute;
-                    top: -5px;
-                    right: -5px;
+                    top: -8px; /* Adjusted position */
+                    right: -8px; /* Adjusted position */
                     background-color: var(--red-600);
                     color: var(--white);
                     border-radius: 50%;
@@ -783,34 +1012,35 @@ export default function App() {
                 }
 
                 .user-avatar {
-                    width: 40px;
-                    height: 40px;
-                    background-color: var(--indigo-100);
+                    width: 48px; /* Larger avatar */
+                    height: 48px;
+                    background-color: var(--primary-blue); /* Primary blue background */
                     border-radius: 50%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: var(--indigo-700);
+                    color: var(--white);
                     font-weight: 600;
-                    font-size: 1rem;
-                    border: 2px solid var(--indigo-300);
+                    font-size: 1.2rem; /* Larger font */
+                    border: 3px solid var(--light-blue); /* Lighter border */
                     flex-shrink: 0;
-                    cursor: pointer; /* Make it clickable */
-                    transition: transform 0.2s ease, background-color 0.2s ease;
+                    cursor: pointer;
+                    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
                 }
                 .user-avatar:hover {
                     transform: scale(1.05);
-                    background-color: var(--indigo-200);
+                    background-color: var(--indigo-700); /* Darker blue on hover */
+                    border-color: var(--primary-blue);
                 }
 
 
                 .main-content-padding {
-                    padding: 2rem;
+                    padding: 3rem; /* More overall padding */
                 }
 
                 @media (min-width: 768px) {
                     .main-content-padding {
-                        padding: 2.5rem;
+                        padding: 3.5rem; /* Even more padding on larger screens */
                     }
                 }
 
@@ -818,182 +1048,45 @@ export default function App() {
                     display: block;
                     opacity: 1;
                     transition: none;
-                    margin-bottom: 2.5rem;
+                    margin-bottom: 3rem; /* More space between sections */
                 }
                 .content-section:last-child {
                     margin-bottom: 0;
                 }
                 
-                .key-metrics-container {
-                    overflow-x: auto; /* Always enable horizontal scrolling */
-                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-                    padding-bottom: 1rem; /* Add some padding for scrollbar */
-                    margin-bottom: 2rem;
-                    display: flex; /* Ensures flex context for children */
-                    width: 100%; /* Ensure it takes full width */
-                }
-
-                .key-metrics-grid {
-                    display: flex; /* Always use flexbox for horizontal layout */
-                    gap: 1.5rem;
-                    flex-wrap: nowrap; /* Always prevent wrapping */
-                    padding-right: 1rem; /* Space for last card not to be cut off by scrollbar */
-                }
-
-                /* Remove grid-specific media queries for key-metrics-grid */
-                @media (min-width: 640px) {
-                    .key-metrics-grid {
-                        /* No change, remains flex. Min-width on cards ensures layout */
-                    }
-                }
-
-                @media (min-width: 768px) {
-                    .key-metrics-grid {
-                        /* No change, remains flex */
-                    }
-                }
-
-                @media (min-width: 1024px) {
-                    .key-metrics-grid {
-                        /* No change, remains flex */
-                    }
-                }
-
-                .metric-card {
-                    background-color: var(--white);
-                    padding: 2rem 1.5rem;
-                    border-radius: 1.25rem;
-                    box-shadow: var(--shadow-lg);
-                    text-align: center;
-                    transition: all 0.3s ease;
-                    border: 1px solid var(--border-light);
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    min-width: 220px; /* Minimum width for scrollable cards */
-                    flex-shrink: 0; /* Prevent shrinking in flex container */
-                    min-height: 150px;
-                    position: relative;
-                    overflow: hidden;
-                    transform-style: preserve-3d;
-                }
-
-                .metric-card:hover {
-                    box-shadow: var(--shadow-xl);
-                    transform: translateY(-10px) scale(1.03);
-                }
-
-                .metric-card h3 {
-                    font-size: 1.05rem;
-                    font-weight: 600;
-                    color: var(--text-slate-700);
-                    margin-bottom: 0.85rem;
-                    z-index: 1;
-                }
-
-                .metric-card p {
-                    font-size: 2.8rem;
-                    font-weight: 800;
-                    color: var(--indigo-700);
-                    z-index: 1;
-                    line-height: 1;
-                }
-
-                .metric-card::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    height: 100%;
-                    width: 10px;
-                    background-color: transparent;
-                    border-radius: 1.25rem 0 0 1.25rem;
-                    transition: background-color 0.3s ease;
-                }
-
-                .metric-card.type-info::before { background-color: var(--indigo-600); }
-                .metric-card.type-success::before { background-color: var(--green-600); }
-                .metric-card.type-warning::before { background-color: var(--amber-500); }
-                .metric-card.type-danger::before { background-color: var(--red-600); }
-
-                .metric-card-icon {
-                    width: 36px;
-                    height: 36px;
-                    margin-bottom: 1rem;
-                    color: var(--indigo-600);
-                    opacity: 0.8;
-                    transition: color 0.3s ease, opacity 0.3s ease;
-                }
-                .metric-card.type-success .metric-card-icon { color: var(--green-600); }
-                .metric-card.type-warning .metric-card-icon { color: var(--amber-500); }
-                .metric-card.type-danger .metric-card-icon { color: var(--red-600); }
-
-                /* --- Message Box Styles --- */
-                .message-box {
-                    position: fixed;
-                    bottom: 2rem;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    padding: 1rem 1.5rem;
-                    border-radius: 0.75rem;
-                    color: var(--white);
-                    font-weight: 600;
-                    opacity: 0;
-                    visibility: hidden;
-                    transition: opacity 0.3s ease, visibility 0.3s ease;
-                    z-index: 1000;
-                    box-shadow: var(--shadow-lg);
-                    font-size: 0.95rem;
-                }
-
-                .message-box.show {
-                    opacity: 1;
-                    visibility: visible;
-                }
-
-                .message-box.success {
-                    background-color: var(--green-600);
-                }
-
-                .message-box.error {
-                    background-color: #ef4444;
-                }
-                .message-box.info {
-                    background-color: var(--indigo-600);
-                }
-
                 /* --- General Sub-Section Styling --- */
                 .dashboard-sub-section {
                     background-color: var(--white);
-                    padding: 2.5rem;
-                    border-radius: 1.25rem;
-                    box-shadow: var(--shadow-lg);
-                    border: 1px solid var(--border-light);
-                    margin-top: 2.5rem;
+                    padding: 3rem; /* More padding */
+                    border-radius: 1.5rem; /* More rounded */
+                    box-shadow: var(--shadow-lg); /* Stronger shadow */
+                    border: 1px solid var(--border-color);
+                    margin-top: 3rem; /* More space */
+                }
+                .dashboard-sub-section:first-child {
+                    margin-top: 0; /* No top margin for the very first section */
                 }
 
+
                 .dashboard-sub-section-title {
-                    font-size: 1.85rem;
+                    font-size: 2rem; /* Larger title */
                     font-weight: 700;
-                    color: var(--text-slate-800);
-                    margin-bottom: 1.75rem;
-                    border-bottom: 2px solid var(--border-light);
-                    padding-bottom: 0.8rem;
+                    color: var(--dark-text);
+                    margin-bottom: 2rem; /* More space */
+                    border-bottom: 2px solid var(--border-color);
+                    padding-bottom: 1rem; /* More padding */
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                }
-
-                .dashboard-sub-section-title .title-text {
-                    flex-grow: 1;
+                    flex-wrap: wrap; /* Allow wrapping for title and buttons */
+                    gap: 1rem; /* Gap between title and buttons/dropdown */
                 }
 
                 .dashboard-sub-section-description {
-                    color: var(--text-slate-600);
-                    margin-bottom: 1.5rem;
-                    font-size: 1rem;
-                    line-height: 1.6;
+                    color: var(--medium-text);
+                    margin-bottom: 2rem; /* More space */
+                    font-size: 1.05rem; /* Slightly larger font */
+                    line-height: 1.7;
                 }
 
                 .item-list {
@@ -1005,13 +1098,13 @@ export default function App() {
                 .activity-item, .list-item {
                     display: flex;
                     align-items: center;
-                    padding: 1.15rem 0;
-                    border-bottom: 1px dashed var(--border-light);
+                    padding: 1.25rem 0; /* More padding */
+                    border-bottom: 1px dashed var(--border-color);
                     transition: background-color 0.2s ease, transform 0.2s ease;
                 }
                 .activity-item:hover, .list-item:hover {
-                    background-color: var(--indigo-50);
-                    transform: translateX(6px);
+                    background-color: var(--light-blue);
+                    transform: translateX(8px); /* More pronounced slide */
                 }
                 .activity-item:last-child, .list-item:last-child {
                     border-bottom: none;
@@ -1019,320 +1112,348 @@ export default function App() {
 
                 .activity-icon-container {
                     flex-shrink: 0;
-                    width: 44px;
-                    height: 44px;
+                    width: 52px; /* Larger icon container */
+                    height: 52px;
                     border-radius: 50%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    margin-right: 1.5rem;
-                    font-size: 1.3rem;
+                    margin-right: 1.8rem; /* More space */
+                    font-size: 1.5rem; /* Larger icon */
                     color: var(--white);
-                    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Stronger shadow */
                 }
 
                 .activity-icon-rent { background-color: var(--green-600); }
                 .activity-icon-maintenance { background-color: var(--amber-500); }
-                .activity-icon-lease { background-color: var(--indigo-600); }
+                .activity-icon-lease { background-color: var(--primary-blue); } /* Primary blue for lease */
                 .activity-icon-overdue { background-color: var(--red-600); }
                 .activity-icon-completed { background-color: var(--green-600); }
                 .activity-icon-rent_due { background-color: var(--amber-500); }
                 .activity-icon-maintenance_pending { background-color: var(--red-600); }
+                .activity-icon-maintenance_expense { background-color: var(--red-600); } /* Added for expenses */
+                .activity-icon-lease_renewal_fee { background-color: var(--green-600); } /* Added for income */
+                .activity-icon-utility_bill { background-color: var(--red-600); } /* Added for expenses */
+                .activity-icon-tenant_contact_updated { background-color: #60A5FA; } /* Blue-400 */
+                .activity-icon-property_inspection { background-color: #34D399; } /* Green-400 */
 
 
                 .activity-content {
                     flex-grow: 1;
-                    font-size: 1.05rem;
-                    color: var(--text-slate-800);
+                    font-size: 1.1rem; /* Slightly larger font */
+                    color: var(--dark-text); /* Darker text */
                 }
 
                 .activity-date {
                     flex-shrink: 0;
-                    font-size: 0.9rem;
-                    color: var(--text-slate-500);
-                    margin-left: 1.8rem;
+                    font-size: 0.95rem; /* Slightly larger date font */
+                    color: var(--light-text); /* Lighter text for date */
+                    margin-left: 2rem;
                     white-space: nowrap;
                 }
+                .activity-status {
+                    flex-shrink: 0;
+                    font-size: 0.95rem;
+                    font-weight: 600;
+                    margin-left: 1rem;
+                    padding: 0.4rem 0.8rem;
+                    border-radius: 0.5rem;
+                    white-space: nowrap;
+                }
+                .activity-status.Upcoming {
+                    background-color: #e0f2fe; /* Light blue */
+                    color: #0288d1; /* Darker blue */
+                }
+                .activity-status.Overdue {
+                    background-color: #fee2e2; /* Light red */
+                    color: #dc2626; /* Darker red */
+                }
+                .activity-status.New, .activity-status.In-Progress {
+                    background-color: #fffbe6; /* Light amber */
+                    color: #d97706; /* Darker amber */
+                }
 
-                /* See More/Less Button Styles (removed from insight cards) */
+
+                /* See More/Less Button Styles */
                 .toggle-metrics-button {
                     display: block;
                     width: fit-content;
                     margin: 0 auto 2.5rem auto;
-                    padding: 0.9rem 2rem;
-                    background-color: var(--indigo-600);
+                    padding: 1rem 2.5rem; /* More padding */
+                    background-color: var(--primary-blue);
                     color: var(--white);
                     border: none;
                     border-radius: 0.85rem;
-                    font-size: 1.05rem;
+                    font-size: 1.1rem; /* Larger font */
                     font-weight: 600;
                     cursor: pointer;
                     transition: all 0.3s ease;
-                    box-shadow: 0 8px 15px rgba(79, 70, 229, 0.2);
+                    box-shadow: 0 8px 18px rgba(42, 57, 141, 0.3); /* Stronger shadow */
                 }
                 .toggle-metrics-button:hover {
                     background-color: var(--indigo-700);
-                    transform: translateY(-4px);
-                    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
-                }
-                /* Specific styling for buttons within insight cards (now removed from JSX) */
-                .insight-card .toggle-metrics-button {
-                    margin-top: auto;
-                    margin-bottom: 0;
-                    font-size: 0.9rem;
-                    padding: 0.6rem 1.2rem;
+                    transform: translateY(-5px); /* More pronounced lift */
+                    box-shadow: 0 12px 25px rgba(42, 57, 141, 0.4);
                 }
 
-                /* Download Buttons (removed from JSX) */
-                .download-buttons {
-                    display: flex;
-                    gap: 10px;
-                    margin-top: 1rem;
-                    justify-content: flex-end;
+                /* --- Transaction Overview Section (New) --- */
+                .transaction-overview-metrics-grid { /* New class for the 4 cards */
+                    display: flex; /* Use flexbox for horizontal scroll */
+                    overflow-x: auto; /* Enable horizontal scrolling */
+                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                    white-space: nowrap; /* Prevent items from wrapping */
+                    gap: 1.5rem; /* Space between cards */
+                    padding-bottom: 1rem; /* Space for scrollbar */
+                    margin-bottom: 2rem; /* Space between cards and next element */
+                    scroll-snap-type: x mandatory; /* Optional: for smoother snapping */
                 }
-                .download-buttons button {
-                    padding: 0.6rem 1rem;
-                    font-size: 0.9rem;
-                    border-radius: 0.5rem;
-                    border: 1px solid var(--border-light);
+                /* Hide scrollbar for Chrome, Safari and Opera */
+                .transaction-overview-metrics-grid::-webkit-scrollbar {
+                    display: none;
+                }
+                /* Hide scrollbar for IE, Edge and Firefox */
+                .transaction-overview-metrics-grid {
+                    -ms-overflow-style: none;  /* IE and Edge */
+                    scrollbar-width: none;  /* Firefox */
+                }
+
+                @media (min-width: 1024px) { /* On larger screens, revert to grid */
+                    .transaction-overview-metrics-grid {
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
+                        overflow-x: unset; /* Disable scroll */
+                        white-space: normal; /* Allow wrapping */
+                        padding-bottom: 0;
+                        scroll-snap-type: none;
+                    }
+                }
+
+
+                .chart-canvas-container {
+                    position: relative;
+                    height: 300px; /* Consistent height for charts */
+                    width: 100%;
+                }
+
+                .chart-card {
                     background-color: var(--white);
-                    color: var(--text-slate-600);
+                    padding: 3rem;
+                    border-radius: 1.5rem;
+                    box-shadow: var(--shadow-lg);
+                    border: 1px solid var(--border-color);
+                }
+
+                .chart-card-header { /* New flex container for chart title and dropdown */
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 1.5rem;
+                    flex-wrap: wrap;
+                    gap: 1rem;
+                }
+
+                .chart-card-title {
+                    font-size: 1.8rem;
+                    font-weight: 700;
+                    color: var(--dark-text);
+                    margin: 0; /* Reset margin */
+                }
+
+                .chart-period-selector { /* Styles for the new dropdown */
+                    padding: 0.6rem 1rem;
+                    border: 1px solid var(--border-color);
+                    border-radius: 0.75rem;
+                    background-color: var(--light-blue);
+                    font-family: 'Inter', sans-serif;
+                    font-size: 1rem;
+                    font-weight: 500;
+                    color: var(--primary-blue);
                     cursor: pointer;
                     transition: all 0.2s ease;
+                    -webkit-appearance: none; /* Remove default arrow */
+                    -moz-appearance: none;
+                    appearance: none;
+                    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%232A398D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+                    background-repeat: no-repeat;
+                    background-position: right 0.75rem center;
+                    background-size: 1.2rem;
+                    padding-right: 2.5rem; /* Make space for custom arrow */
                 }
-                .download-buttons button:hover {
-                    background-color: var(--indigo-50);
-                    color: var(--indigo-700);
+
+                .chart-period-selector:hover {
+                    border-color: var(--primary-blue);
                     box-shadow: var(--shadow-sm);
                 }
-
-
-                /* Financial Summary Grid */
-                .financial-summary-grid {
-                    display: grid;
-                    grid-template-columns: 1fr;
-                    gap: 1.5rem;
-                }
-                @media (min-width: 640px) {
-                    .financial-summary-grid {
-                        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                    }
-                }
-                @media (min-width: 1024px) {
-                    .financial-summary-grid {
-                        grid-template-columns: repeat(3, 1fr);
-                        gap: 2rem;
-                    }
+                .chart-period-selector:focus {
+                    outline: none;
+                    border-color: var(--primary-blue);
+                    box-shadow: 0 0 0 3px rgba(42, 57, 141, 0.2);
                 }
 
-                .financial-card {
+
+                .stat-card {
                     background-color: var(--white);
-                    padding: 2.25rem;
-                    border-radius: 1.25rem;
-                    box-shadow: var(--shadow-lg);
-                    border: 1px solid var(--border-light);
-                    text-align: center;
-                    transition: all 0.3s ease;
-                    position: relative;
-                    overflow: hidden;
-                }
-                .financial-card:hover {
-                    box-shadow: var(--shadow-xl);
-                    transform: translateY(-6px);
-                }
-
-                .financial-card::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    height: 100%;
-                    width: 10px;
-                    background-color: transparent;
-                    border-radius: 1.25rem 0 0 1.25rem;
-                    transition: background-color 0.3s ease;
-                }
-                .financial-card.type-success::before { background-color: var(--green-600); }
-                .financial-card.type-danger::before { background-color: var(--red-600); }
-                .financial-card.type-info::before { background-color: var(--indigo-600); }
-
-
-                .financial-card h4 {
-                    font-size: 1.15rem;
-                    font-weight: 600;
-                    color: var(--text-slate-700);
-                    margin-bottom: 0.85rem;
-                }
-
-                .financial-card p {
-                    font-size: 3rem;
-                    font-weight: 800;
-                    line-height: 1;
-                }
-                .financial-card.type-success p { color: var(--green-600); }
-                .financial-card.type-danger p { color: var(--red-600); }
-                .financial-card.type-info p { color: var(--indigo-700); }
-
-                /* Grid for combined sections (e.g., performance, vacant, lease alerts) */
-                .combined-section-grid {
-                    display: grid;
-                    grid-template-columns: 1fr;
-                    gap: 2rem;
-                }
-
-                @media (min-width: 768px) {
-                    .combined-section-grid {
-                        grid-template-columns: repeat(2, 1fr);
-                    }
-                }
-
-                @media (min-width: 1024px) {
-                    .combined-section-grid {
-                        grid-template-columns: repeat(3, 1fr);
-                    }
-                }
-
-                /* Specific styling for insight cards */
-                .insight-card {
-                    background-color: var(--white);
-                    padding: 1.8rem;
+                    padding: 1.5rem; /* Default padding for mobile */
                     border-radius: 1rem;
-                    border: 1px solid var(--border-light);
                     box-shadow: var(--shadow-md);
-                    transition: all 0.2s ease;
+                    border: 1px solid var(--border-color);
                     display: flex;
                     flex-direction: column;
-                    justify-content: flex-start; /* Align content to top */
-                    overflow: hidden; /* Ensure content doesn't spill out */
-                    min-height: 280px; /* Reduced min-height as "Show More" is removed */
+                    align-items: flex-start;
+                    justify-content: center;
+                    transition: all 0.2s ease;
+                    flex-shrink: 0; /* Prevent cards from shrinking in flex container */
+                    width: 200px; /* Fixed width for scrollable cards on mobile */
+                    scroll-snap-align: start; /* For scroll snapping */
                 }
-                .insight-card:hover {
+                @media (min-width: 1024px) { /* On larger screens, allow cards to take full grid width */
+                    .stat-card {
+                        width: auto; /* Let grid handle width */
+                        padding: 1rem 1.5rem; /* Reduced vertical padding for rectangular shape */
+                        min-height: 100px; /* Ensure a minimum height but allow content to expand */
+                    }
+                }
+
+                .stat-card:hover {
                     box-shadow: var(--shadow-lg);
                     transform: translateY(-3px);
                 }
 
-                .insight-card-title {
+                .stat-card-icon {
+                    width: 40px;
+                    height: 40px;
+                    margin-bottom: 0.8rem;
+                    color: var(--primary-blue);
+                }
+                .stat-card-title {
+                    font-size: 1rem;
+                    font-weight: 500;
+                    color: var(--medium-text);
+                    margin-bottom: 0.5rem;
+                }
+                .stat-card-value {
+                    font-size: 1.8rem;
                     font-weight: 700;
-                    font-size: 1.2rem; /* Slightly larger title */
-                    color: var(--text-slate-800);
-                    margin-bottom: 1rem; /* Increased margin */
-                    padding-bottom: 0.6rem; /* Increased padding */
-                    border-bottom: 2px solid var(--border-light); /* Thicker border */
-                }
-                .insight-card-detail {
-                    font-size: 1rem; /* Slightly larger text */
-                    color: var(--text-slate-700); /* Darker text for better contrast */
-                    margin-bottom: 0.6rem; /* Increased margin */
-                    line-height: 1.5;
-                }
-                .insight-card-detail strong {
-                    color: var(--text-slate-900);
-                    font-weight: 600;
-                }
-                .insight-card ul {
-                    margin-top: 0.5rem; /* Space between title and first item */
-                    padding-left: 0; /* Remove default ul padding */
-                }
-                .insight-card ul li {
-                    margin-bottom: 1rem; /* Space between list items */
-                }
-                .insight-card ul li:last-child {
-                    margin-bottom: 0;
+                    color: var(--dark-text);
+                    line-height: 1.2;
                 }
 
-                /* Specific color variations for insight cards */
-                .insight-card.type-performance {
-                    background-color: var(--indigo-50);
-                    border-color: var(--indigo-200);
-                }
-                .insight-card.type-performance .insight-card-title {
-                    color: var(--indigo-700);
-                }
-
-                .insight-card.type-vacant {
-                    background-color: var(--amber-50);
-                    border-color: var(--amber-200);
-                }
-                .insight-card.type-vacant .insight-card-title {
-                    color: var(--amber-700);
-                }
-
-                .insight-card.type-lease {
-                    background-color: var(--red-50);
-                    border-color: var(--red-200);
-                }
-                .insight-card.type-lease .insight-card-title {
-                    color: var(--red-700);
-                }
-
-                .insight-card-message {
-                    text-align: center;
-                    color: var(--text-slate-500);
-                    font-style: italic;
-                    flex-grow: 1;
+                .stat-card-percentage {
                     display: flex;
                     align-items: center;
-                    justify-content: center;
-                    padding: 1rem; /* Added padding */
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    margin-top: 0.5rem;
                 }
-                .insight-card-message.success {
+                .stat-card-percentage.increase {
+                    color: var(--green-600);
+                }
+                .stat-card-percentage.decrease {
+                    color: var(--red-600);
+                }
+                .stat-card-percentage svg {
+                    width: 1rem;
+                    height: 1rem;
+                    margin-right: 0.25rem;
+                }
+
+
+                /* --- Property Statistics Section (Renamed from Sales Overview / Stats Summary) --- */
+                .property-stats-section { /* New grid for property stats and chart */
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 2rem;
+                }
+                @media (min-width: 1024px) {
+                    .property-stats-section {
+                        grid-template-columns: 2fr 1fr; /* Chart takes more space on large screens */
+                    }
+                }
+
+                .property-stats-grid { /* Renamed from stats-summary-grid for clarity in this section */
+                    display: grid;
+                    grid-template-columns: 1fr; /* Default to 1 column on small screens */
+                    gap: 1.5rem;
+                }
+                @media (min-width: 768px) { /* On medium screens and up, always try for 2 columns */
+                    .property-stats-grid {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                }
+
+                .view-all-properties-button { /* New button style */
+                    padding: 0.8rem 1.5rem;
+                    background-color: var(--primary-blue);
+                    color: var(--white);
+                    border: none;
+                    border-radius: 0.75rem;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 10px rgba(42, 57, 141, 0.2);
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    white-space: nowrap; /* Prevent text wrapping */
+                }
+                .view-all-properties-button:hover {
+                    background-color: var(--indigo-700);
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 15px rgba(42, 57, 141, 0.3);
+                }
+                .view-all-properties-button svg {
+                    width: 1.2rem;
+                    height: 1.2rem;
+                }
+
+
+                /* --- Transactions History Section (Renamed from Transactions Overview) --- */
+                .transactions-table-container {
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+
+                .transactions-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    min-width: 700px; /* Ensure table is wide enough for content */
+                }
+
+                .transactions-table th, .transactions-table td {
+                    padding: 1rem 1.5rem;
+                    text-align: left;
+                    border-bottom: 1px solid var(--border-color);
+                }
+
+                .transactions-table th {
+                    background-color: var(--light-blue);
+                    color: var(--primary-blue);
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                }
+
+                .transactions-table tbody tr {
+                    transition: background-color 0.2s ease;
+                }
+                .transactions-table tbody tr:hover {
+                    background-color: var(--light-blue);
+                }
+
+                .transactions-table td {
+                    font-size: 0.95rem;
+                    color: var(--dark-text);
+                }
+
+                .transaction-amount.income {
                     color: var(--green-600);
                     font-weight: 600;
                 }
-
-                /* --- Action Required Section --- */
-                .action-required-list {
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
-                }
-
-                .action-required-item {
-                    display: flex;
-                    align-items: center;
-                    padding: 1.25rem 0;
-                    border-bottom: 1px dashed var(--border-light);
-                    color: var(--text-slate-800);
-                    font-size: 1.05rem;
-                    transition: background-color 0.2s ease, transform 0.2s ease;
-                }
-                .action-required-item:hover {
-                    background-color: var(--indigo-50);
-                    transform: translateX(6px);
-                }
-                .action-required-item:last-child {
-                    border-bottom: none;
-                }
-
-                .action-item-icon {
-                    flex-shrink: 0;
-                    width: 38px;
-                    height: 38px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin-right: 1.25rem;
-                    font-size: 1.1rem;
-                    color: var(--white);
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                }
-                .action-item-icon.danger { background-color: var(--red-600); }
-                .action-item-icon.warning { background-color: var(--amber-500); }
-                .action-item-icon.info { background-color: var(--indigo-600); }
-
-                .action-item-content {
-                    flex-grow: 1;
-                    font-weight: 500;
-                }
-                .action-item-content strong {
-                    font-weight: 700;
-                }
-                .action-item-content .sub-text {
-                    font-size: 0.9rem;
-                    color: var(--text-slate-600);
-                    display: block;
-                    margin-top: 0.2rem;
+                .transaction-amount.expense {
+                    color: var(--red-600);
+                    font-weight: 600;
                 }
 
 
@@ -1343,7 +1464,7 @@ export default function App() {
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background-color: rgba(0, 0, 0, 0.5);
+                    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -1360,12 +1481,12 @@ export default function App() {
 
                 .modal-content {
                     background-color: var(--white);
-                    padding: 2rem;
-                    border-radius: 1rem;
-                    box-shadow: var(--shadow-xl);
-                    max-width: 600px;
+                    padding: 2.5rem; /* More padding */
+                    border-radius: 1.25rem; /* More rounded */
+                    box-shadow: var(--shadow-xl); /* Stronger shadow */
+                    max-width: 650px; /* Slightly wider modal */
                     width: 90%;
-                    transform: translateY(-20px);
+                    transform: translateY(-30px); /* More pronounced lift */
                     transition: transform 0.3s ease;
                     display: flex;
                     flex-direction: column;
@@ -1380,156 +1501,157 @@ export default function App() {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    border-bottom: 1px solid var(--border-light);
-                    padding-bottom: 1rem;
-                    margin-bottom: 1.5rem;
+                    border-bottom: 1px solid var(--border-color);
+                    padding-bottom: 1.2rem; /* More padding */
+                    margin-bottom: 1.8rem; /* More space */
                 }
 
                 .modal-title {
-                    font-size: 1.75rem;
+                    font-size: 2rem; /* Larger title */
                     font-weight: 700;
-                    color: var(--text-slate-800);
+                    color: var(--dark-text);
                 }
 
                 .modal-close-button {
                     background: none;
                     border: none;
                     cursor: pointer;
-                    padding: 0.5rem;
+                    padding: 0.6rem; /* Larger padding */
                     border-radius: 50%;
                     transition: background-color 0.2s ease;
                 }
 
                 .modal-close-button:hover {
-                    background-color: var(--bg-light);
+                    background-color: var(--light-blue);
                 }
 
                 .modal-close-button svg {
-                    width: 1.5rem;
-                    height: 1.5rem;
-                    color: var(--text-slate-600);
+                    width: 1.6rem; /* Larger icon */
+                    height: 1.6rem;
+                    color: var(--medium-text);
                 }
 
                 .modal-body {
                     overflow-y: auto;
                     flex-grow: 1;
-                    padding-right: 0.5rem;
+                    padding-right: 0.8rem; /* More padding */
                 }
 
                 .modal-body .item-list .activity-item {
-                    padding: 0.8rem 0;
+                    padding: 1rem 0; /* More padding */
                 }
 
                 .modal-body .item-list .activity-icon-container {
-                    width: 38px;
-                    height: 38px;
-                    font-size: 1.1rem;
+                    width: 44px; /* Larger icon container */
+                    height: 44px;
+                    font-size: 1.2rem; /* Larger icon */
                 }
                 .modal-body .item-list .activity-content {
-                    font-size: 0.95rem;
+                    font-size: 1rem; /* Slightly larger font */
                 }
                 .modal-body .item-list .activity-date {
-                    font-size: 0.8rem;
+                    font-size: 0.85rem; /* Slightly larger date font */
                 }
                 .modal-body .text-slate-500 {
                     text-align: center;
-                    padding: 1rem;
+                    padding: 1.5rem; /* More padding */
+                    font-size: 1.05rem;
                 }
 
                 .notification-item {
                     display: flex;
-                    align-items: center; /* Align items vertically */
-                    padding: 0.8rem 0;
-                    border-bottom: 1px dashed var(--border-light);
-                    color: var(--text-slate-800);
-                    font-size: 0.95rem;
-                    cursor: pointer; /* Indicate clickable */
+                    align-items: center;
+                    padding: 1rem 0; /* More padding */
+                    border-bottom: 1px dashed var(--border-color);
+                    color: var(--dark-text);
+                    font-size: 1rem; /* Slightly larger font */
+                    cursor: pointer;
                     transition: background-color 0.2s ease;
                 }
                 .notification-item:hover {
-                    background-color: var(--indigo-50);
+                    background-color: var(--light-blue);
                 }
                 .notification-item:last-child {
                     border-bottom: none;
                 }
                 .notification-item.read {
-                    color: var(--text-slate-500);
+                    color: var(--light-text);
                 }
                 .notification-item .icon {
                     flex-shrink: 0;
-                    margin-right: 1rem;
-                    color: var(--indigo-600);
+                    margin-right: 1.2rem; /* More space */
+                    color: var(--primary-blue); /* Primary blue for icons */
                 }
                 .notification-item .content {
                     flex-grow: 1;
                 }
                 .notification-item .date {
                     flex-shrink: 0;
-                    margin-left: 1rem;
-                    font-size: 0.8rem;
-                    color: var(--text-slate-500);
+                    margin-left: 1.2rem; /* More space */
+                    font-size: 0.85rem;
+                    color: var(--light-text);
                 }
                 .notification-item .delete-icon {
                     flex-shrink: 0;
-                    margin-left: 0.8rem;
+                    margin-left: 1rem; /* More space */
                     cursor: pointer;
                     color: var(--red-600);
-                    padding: 0.3rem;
+                    padding: 0.4rem; /* Larger padding */
                     border-radius: 50%;
                     transition: background-color 0.2s ease;
                 }
                 .notification-item .delete-icon:hover {
-                    background-color: var(--red-100);
+                    background-color: #FEE2E2; /* Light red hover */
                 }
 
                 .notification-detail-content {
-                    padding: 1.5rem; /* Increased padding */
+                    padding: 2rem; /* More padding */
                     line-height: 1.8;
-                    background-color: var(--indigo-50); /* Light background for contrast */
-                    border-radius: 0.75rem; /* Rounded corners */
-                    box-shadow: inset 0 1px 3px rgba(0,0,0,0.08); /* Inner shadow */
-                    border: 1px solid var(--indigo-200); /* Border matching theme */
-                    margin-top: 1rem; /* Space from title */
-                    color: var(--text-slate-800); /* Darker text */
+                    background-color: var(--light-blue); /* Light blue background */
+                    border-radius: 1rem; /* More rounded */
+                    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); /* Stronger inner shadow */
+                    border: 1px solid var(--primary-blue); /* Primary blue border */
+                    margin-top: 1.5rem; /* More space */
+                    color: var(--dark-text);
                 }
                 .notification-detail-content p {
-                    margin-bottom: 0.8rem; /* Increased margin */
-                    font-size: 1.05rem; /* Slightly larger font */
+                    margin-bottom: 1rem; /* More margin */
+                    font-size: 1.1rem; /* Larger font */
                 }
                 .notification-detail-content p:last-child {
                     margin-bottom: 0;
                 }
                 .notification-detail-content strong {
-                    color: var(--indigo-700); /* Emphasize strong text with primary color */
+                    color: var(--primary-blue);
                     font-weight: 700;
-                    margin-right: 0.3rem; /* Space after strong text */
+                    margin-right: 0.4rem; /* More space */
                 }
 
 
                 /* Mobile Hamburger Menu Button */
                 .hamburger-menu-button {
-                    display: none; /* Hidden by default on desktop */
+                    display: none;
                     background: none;
                     border: none;
                     cursor: pointer;
-                    padding: 0.5rem;
+                    padding: 0.6rem; /* Larger padding */
                     border-radius: 50%;
                     transition: background-color 0.2s ease;
                 }
 
                 .hamburger-menu-button:hover {
-                    background-color: var(--bg-light);
+                    background-color: var(--light-blue);
                 }
 
                 .hamburger-menu-button svg {
-                    width: 1.8rem; /* Larger icon for touch */
-                    height: 1.8rem;
-                    color: var(--text-slate-600);
+                    width: 2rem; /* Even larger icon */
+                    height: 2rem;
+                    color: var(--medium-text);
                 }
 
                 @media (max-width: 767px) {
                     .hamburger-menu-button {
-                        display: block; /* Show on mobile */
+                        display: block;
                     }
                 }
 
@@ -1540,8 +1662,8 @@ export default function App() {
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background-color: rgba(0, 0, 0, 0.5);
-                    z-index: 150; /* Between sidebar and main content */
+                    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+                    z-index: 150;
                     opacity: 0;
                     visibility: hidden;
                     transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -1594,8 +1716,8 @@ export default function App() {
                         <span className="header-greeting">{getGreeting()}, {isLoggedIn && user?.email ? user.email.split('@')[0] : 'Guest'}!</span>
                     </div>
                     <div className="header-right-group">
-                        {/* Upcoming Reminders Icon */}
-                        <div className="header-icon-button" onClick={handleViewRemindersClick} title="View Upcoming Reminders">
+                        {/* Upcoming Reminders Icon (for undone activities) */}
+                        <div className={`header-icon-button ${hasUpcomingReminders ? 'has-new' : ''}`} onClick={handleViewRemindersClick} title="View Upcoming Reminders & Tasks (Undone)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
                                 <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
@@ -1606,14 +1728,17 @@ export default function App() {
                                 <path d="M8 11h.01"/>
                                 <path d="M8 16h.01"/>
                             </svg>
+                            {hasUpcomingReminders && (
+                                <span className="notification-badge">{upcomingReminders.length}</span>
+                            )}
                         </div>
 
                         {/* Notification Bell */}
-                        <div className={`header-icon-button ${hasNewNotifications ? 'has-new' : ''}`} onClick={handleNotificationBellClick} title="View Notifications">
+                        <div className={`header-icon-button ${notificationsCount > 0 ? 'has-new' : ''}`} onClick={handleNotificationBellClick} title="View Notifications">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.004 2.004 0 0118 14.59V10a6 6 0 00-12 0v4.59c0 .538-.214 1.055-.595 1.405L4 17h5m6 0v1a3 3 0 01-6 0v-1m6 0H9"></path>
                             </svg>
-                            {hasNewNotifications && notificationsCount > 0 && (
+                            {notificationsCount > 0 && (
                                 <span className="notification-badge">{notificationsCount}</span>
                             )}
                         </div>
@@ -1622,160 +1747,158 @@ export default function App() {
                 
                 <div className="main-content-padding">
                     <section id="overview" className="content-section active"> {/* Always active */}
-                        {/* Key Metrics at a Glance */}
+                        {/* Transaction Overview Section (First) */}
                         <div className="dashboard-sub-section">
-                            <h4 className="dashboard-sub-section-title">Key Metrics at a Glance</h4>
-                            <p className="dashboard-sub-section-description">A quick overview of your portfolio's essential statistics.</p>
-                            <div className="key-metrics-container"> {/* Added container for horizontal scroll */}
-                                <div className="key-metrics-grid">
-                                    {keyMetrics.map(metric => (
-                                        <div key={metric.id} className={`metric-card type-${metric.type}`}>
-                                            {metric.icon && <span className="metric-card-icon">{metric.icon}</span>}
-                                            <h3>{metric.title}</h3>
-                                            <p>{metric.value}</p>
+                            <h4 className="dashboard-sub-section-title">Transaction Overview</h4>
+                            <p className="dashboard-sub-section-description">A comprehensive look at your financial movements and key sales metrics.</p>
+                            <div className="transaction-overview-metrics-grid"> {/* New grid for the 4 cards */}
+                                <div className="stat-card">
+                                    <span className="stat-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V4m0 12v4m-6-2h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></span>
+                                    <h3 className="stat-card-title">Total Income</h3>
+                                    <p className="stat-card-value">₦{totalIncome.toLocaleString()}</p>
+                                    <div className={`stat-card-percentage ${isIncomeIncreasing ? 'increase' : 'decrease'}`}>
+                                        {isIncomeIncreasing ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-up"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-down"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+                                        )}
+                                        {incomePercentageChange}% vs last month
+                                    </div>
+                                </div>
+                                <div className="stat-card">
+                                    <span className="stat-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></span>
+                                    <h3 className="stat-card-title">Total Expenses</h3>
+                                    <p className="stat-card-value">₦{totalExpenses.toLocaleString()}</p>
+                                </div>
+                                <div className="stat-card">
+                                    <span className="stat-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8L11 2m9 10a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
+                                    <h3 className="stat-card-title">Total Rented Units</h3> {/* Renamed from Total Sold */}
+                                    <p className="stat-card-value">{totalRentedProperties}</p>
+                                </div>
+                                <div className="stat-card">
+                                    <span className="stat-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg></span>
+                                    <h3 className="stat-card-title">Total Views</h3>
+                                    <p className="stat-card-value">{totalViews.toLocaleString()}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Property Statistics (Renamed from Sales Overview / Stats Summary) */}
+                        <div className="dashboard-sub-section">
+                            <div className="dashboard-sub-section-title"> {/* Flex container for title and button */}
+                                <h4>Property Statistics</h4>
+                                <button
+                                    onClick={handleViewAllProperties}
+                                    className="view-all-properties-button"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-home"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                                    View All Properties
+                                </button>
+                            </div>
+                            <p className="dashboard-sub-section-description">Key statistics about your property portfolio and a visual summary of your monthly income and expenses, reflecting funds movement.</p>
+                            <div className="property-stats-section"> {/* New grid for property stats and chart */}
+                                <div className="chart-card"> {/* Chart goes here */}
+                                    <div className="chart-card-header"> {/* New header for chart title and dropdown */}
+                                        <h5 className="chart-card-title">Income & Expenses</h5>
+                                        <select
+                                            className="chart-period-selector"
+                                            value={chartPeriod}
+                                            onChange={(e) => setChartPeriod(e.target.value)}
+                                        >
+                                            <option value="monthly">Monthly</option>
+                                            <option value="daily">Daily</option>
+                                            <option value="yearly">Yearly</option>
+                                        </select>
+                                    </div>
+                                    <div className="chart-canvas-container"> {/* New container for Chart.js */}
+                                        <canvas id="propertyStatisticsChart"></canvas> {/* Changed ID */}
+                                    </div>
+                                </div>
+                                <div className="property-stats-grid"> {/* Renamed from stats-summary-grid for clarity */}
+                                    {propertyStatisticsMetrics.map(metric => (
+                                        <div key={metric.id} className="stat-card">
+                                            <span className="stat-card-icon">{metric.icon}</span>
+                                            <h3 className="stat-card-title">{metric.title}</h3>
+                                            <p className="stat-card-value">{metric.value}</p>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         </div>
 
-                        {/* Action Required Section */}
+                        {/* Financial Transactions History Section */}
                         <div className="dashboard-sub-section">
-                            <h4 className="dashboard-sub-section-title">Action Required</h4>
-                            <p className="dashboard-sub-section-description">Important items that need your immediate attention.</p>
-                            <ul className="action-required-list"> {/* Changed to ul for list format */}
-                                <li className="action-required-item">
-                                    <span className="action-item-icon danger">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    </span>
-                                    <div className="action-item-content">
-                                        <strong>Overdue Rent:</strong> ₦{overdueRentAmount}
-                                        {overdueRentTenantsCount > 0 && (
-                                            <span className="sub-text">{overdueRentTenantsCount} tenant(s) with overdue rent.</span>
-                                        )}
-                                    </div>
-                                </li>
-                                <li className="action-required-item">
-                                    <span className="action-item-icon warning">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                    </span>
-                                    <div className="action-item-content">
-                                        <strong>Pending Maintenance:</strong> {pendingMaintenanceRequests} request(s)
-                                        <span className="sub-text">New or in-progress maintenance issues.</span>
-                                    </div>
-                                </li>
-                                <li className="action-required-item">
-                                    <span className="action-item-icon info">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    </span>
-                                    <div className="action-item-content">
-                                        <strong>Upcoming Renewals:</strong> {upcomingLeaseRenewalsCount} lease(s)
-                                        <span className="sub-text">Leases expiring in the next 3 months.</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-
-                        {/* Recent Activity Feed */}
-                        <div className="dashboard-sub-section">
-                            <h4 className="dashboard-sub-section-title">Recent Activity</h4>
-                            <p className="dashboard-sub-section-description">A chronological list of recent events across your properties.</p>
-                            <ul className="item-list">
-                                {displayedActivities.map(activity => (
-                                    <li key={activity.id} className="activity-item">
-                                        <div className={`activity-icon-container activity-icon-${activity.type.split('_')[0]}`}>
-                                            {activity.type === 'rent_paid' && (
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V4m0 12v4m-6-2h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                            )}
-                                            {activity.type === 'maintenance' && (
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                            )}
-                                            {activity.type === 'lease_renewal' && (
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                            )}
-                                            {activity.type === 'rent_overdue' && (
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                            )}
-                                            {activity.type === 'maintenance_completed' && (
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                            )}
-                                        </div>
-                                        <div className="activity-content">{activity.description}</div>
-                                        <div className="activity-date">{activity.date}</div>
-                                    </li>
-                                ))}
-                            </ul>
-                            {recentActivities.length > 5 && (
+                            <h4 className="dashboard-sub-section-title">Financial Transactions History</h4>
+                            <p className="dashboard-sub-section-description">A detailed record of all financial transactions (payments, transfers, income, expenses) across your properties.</p>
+                            <div className="transactions-table-container">
+                                <table className="transactions-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th>Property</th>
+                                            <th>Tenant</th>
+                                            <th>Amount (₦)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {financialTransactions.map(activity => (
+                                            <tr key={activity.id}>
+                                                <td>{activity.date}</td>
+                                                <td>{activity.type.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</td>
+                                                <td>{activity.description}</td>
+                                                <td>{activity.property}</td>
+                                                <td>{activity.tenant}</td>
+                                                <td className={`transaction-amount ${activity.amount >= 0 ? 'income' : 'expense'}`}>
+                                                    {activity.amount >= 0 ? '+' : ''}₦{activity.amount.toLocaleString()}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {financialTransactions.length > 5 && ( // Assuming more than 5 activities would warrant a "View All"
                                 <button
-                                    onClick={handleSeeMoreActivity}
+                                    onClick={() => handleSeeMoreActivity('financial-transactions')}
                                     className="toggle-metrics-button"
                                     style={{ marginTop: '1.5rem' }}
                                 >
-                                    See More Activity
+                                    View All Financial Transactions
                                 </button>
                             )}
                         </div>
 
-                        {/* Property Insights Section (Performance, Vacant, Lease Alerts) */}
+                        {/* Recent Activities (User & System Actions) Section - NEW */}
                         <div className="dashboard-sub-section">
-                            <h4 className="dashboard-sub-section-title">Property Insights</h4>
-                            <p className="dashboard-sub-section-description">Get a quick overview of property performance, vacant units, and upcoming lease expirations.</p>
-                            <div className="combined-section-grid">
-                                {/* Property Performance Highlights */}
-                                <div className="insight-card type-performance">
-                                    <h5 className="insight-card-title">Performance Highlights</h5>
-                                    {allPerformance.length > 0 ? (
-                                        <ul className="item-list"> {/* Used item-list for consistent styling */}
-                                            {allPerformance.map(perf => (
-                                                <li key={perf.id}>
-                                                    <div className="insight-card-detail"><strong>{perf.propertyName}</strong></div>
-                                                    <div className="insight-card-detail">Occupancy: <strong>{perf.occupancy}</strong></div>
-                                                    <div className="insight-card-detail">Maintenance Cost: <strong>{perf.maintenanceCost}</strong></div>
-                                                    <div className="insight-card-detail">Rating: <strong>{perf.rating} / 5</strong></div>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        <p className="insight-card-message">No performance data available.</p>
-                                    )}
-                                </div>
-
-                                {/* Vacant Properties Overview */}
-                                <div className="insight-card type-vacant">
-                                    <h5 className="insight-card-title">Vacant Properties</h5>
-                                    {allVacant.length > 0 ? (
-                                        <ul className="item-list">
-                                            {allVacant.map(prop => (
-                                                <li key={prop.id}>
-                                                    <div className="insight-card-detail"><strong>{prop.name}</strong></div>
-                                                    <div className="insight-card-detail">Location: <strong>{prop.location}</strong></div>
-                                                    <div className="insight-card-detail">Available Rooms: <strong>{prop.totalRooms - tenants.filter(t => t.propertyId === prop.id).length}</strong></div>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        <p className="insight-card-message success">All properties currently occupied!</p>
-                                    )}
-                                </div>
-
-                                {/* Lease Expiry Alerts */}
-                                <div className="insight-card type-lease">
-                                    <h5 className="insight-card-title">Lease Expiry Alerts</h5>
-                                    {allLease.length > 0 ? (
-                                        <ul className="item-list">
-                                            {allLease.map(prop => (
-                                                <li key={prop.id}>
-                                                    <div className="insight-card-detail"><strong>{prop.name}</strong></div>
-                                                    <div className="insight-card-detail">Location: <strong>{prop.location}</strong></div>
-                                                    <div className="insight-card-detail">Lease Ends: <strong className="text-amber-700">{prop.leaseEndDate}</strong></div>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    ) : (
-                                        <p className="insight-card-message success">No leases expiring soon.</p>
-                                    )}
-                                </div>
-                            </div>
+                            <h4 className="dashboard-sub-section-title">Recent Activities (User & System Actions)</h4>
+                            <p className="dashboard-sub-section-description">A record of other important completed activities, such as maintenance resolutions or tenant updates.</p>
+                            <ul className="item-list">
+                                {recentActivities.length > 0 ? (
+                                    recentActivities.map(activity => (
+                                        <li key={activity.id} className="activity-item">
+                                            <div className={`activity-icon-container activity-icon-${activity.type.split('_')[0]}`}>
+                                                {activity.type === 'maintenance_completed' && (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 12V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2m8-4H8m0 0l3-3m-3 3l3 3m6-3a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path></svg>)}
+                                                {activity.type === 'tenant_contact_updated' && (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"/><circle cx="12" cy="7" r="4"/><path d="M22 12v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg>)}
+                                                {activity.type === 'property_inspection' && (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>)}
+                                            </div>
+                                            <div className="activity-content">{activity.description}</div>
+                                            <div className="activity-date">{activity.date}</div>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <p className="text-slate-500 text-center py-4">No recent activities.</p>
+                                )}
+                            </ul>
+                            {recentActivities.length > 5 && ( // Example: show button if more than 5 activities
+                                <button
+                                    onClick={() => handleSeeMoreActivity('recent-activities')} // This would navigate to a full activity log
+                                    className="toggle-metrics-button"
+                                    style={{ marginTop: '1.5rem' }}
+                                >
+                                    View All Activities
+                                </button>
+                            )}
                         </div>
                     </section>
                 </div>
@@ -1800,7 +1923,7 @@ export default function App() {
                                     <span className="content" onClick={() => handleViewNotificationDetails(notif)}>{notif.message}</span>
                                     <span className="date">{notif.date}</span>
                                     <span className="delete-icon" onClick={() => handleDeleteNotification(notif.id)} title="Delete Notification">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucude-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
                                     </span>
                                 </li>
                             ))}
@@ -1811,8 +1934,8 @@ export default function App() {
                 )}
             </Modal>
 
-            {/* Upcoming Reminders Modal */}
-            <Modal isOpen={isRemindersModalOpen} onClose={() => setIsRemindersModalOpen(false)} title="Upcoming Reminders & Tasks">
+            {/* Upcoming Reminders Modal (for undone activities) */}
+            <Modal isOpen={isRemindersModalOpen} onClose={() => setIsRemindersModalOpen(false)} title="Upcoming Reminders & Tasks (Undone Activities)">
                 {upcomingReminders.length > 0 ? (
                     <>
                         <ul className="item-list">
@@ -1820,11 +1943,12 @@ export default function App() {
                                 <li key={reminder.id} className="activity-item">
                                     <div className={`activity-icon-container activity-icon-${reminder.type.split('_')[0]}`} style={{ width: '38px', height: '38px', fontSize: '1.1rem', marginRight: '1rem' }}>
                                         {reminder.type === 'lease_renewal' && (<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>)}
-                                        {reminder.type === 'rent_due' && (<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V4m0 12v4m-6-2h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>)}
+                                        {reminder.type === 'rent_overdue' && (<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V4m0 12v4m-6-2h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>)}
                                         {reminder.type === 'maintenance_pending' && (<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>)}
-                                </div>
+                                    </div>
                                     <div className="activity-content">{reminder.description}</div>
                                     <div className="activity-date">{reminder.date}</div>
+                                    <span className={`activity-status ${reminder.status.replace(/\s+/g, '-')}`}>{reminder.status}</span>
                                 </li>
                             ))}
                         </ul>
