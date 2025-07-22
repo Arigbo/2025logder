@@ -191,11 +191,6 @@ export default function App() {
     const [hasNewNotifications, setHasNewNotifications] = useState(true); // Simulate new notifications
     const [notificationsCount, setNotificationsCount] = useState(3); // Simulate 3 unread notifications
 
-    // States for "See All" in Property Insights sections
-    const [showAllPerformance, setShowAllPerformance] = useState(false);
-    const [showAllVacant, setShowAllVacant] = useState(false);
-    const [showAllLease, setShowAllLease] = useState(false);
-
     // Mock notification data
     const [notifications, setNotifications] = useState([
         { id: 'notif1', message: 'Rent payment received from Alice Smith for Grand House.', date: '2025-07-20', read: false },
@@ -429,21 +424,16 @@ export default function App() {
         showMessage('Logged in successfully!', 'success');
     };
 
-    // Determine how many items to show for Property Insights sections
-    const maxInsightItems = 2; // Show half, or a reasonable small number
-    const displayedPerformance = showAllPerformance ? propertyPerformance : propertyPerformance.slice(0, maxInsightItems);
-    const displayedVacant = showAllVacant ? vacantProperties : vacantProperties.filter(p => p.totalRooms - tenants.filter(t => t.propertyId === p.id).length > 0).slice(0, maxInsightItems);
-    const displayedLease = showAllLease ? properties.filter(prop => {
+    // Property Insights sections now show all items by default
+    const allPerformance = propertyPerformance;
+    const allVacant = vacantProperties.filter(p => p.totalRooms - tenants.filter(t => t.propertyId === p.id).length > 0);
+    const allLease = properties.filter(prop => {
         if (!prop.leaseEndDate) return false;
         const leaseDate = new Date(prop.leaseEndDate);
         return leaseDate >= today && leaseDate <= threeMonthsFromNow;
-    }) : properties.filter(prop => {
-        if (!prop.leaseEndDate) return false;
-        const leaseDate = new Date(prop.leaseEndDate);
-        return leaseDate >= today && leaseDate <= threeMonthsFromNow;
-    }).slice(0, maxInsightItems);
+    });
 
-    // --- PDF and CSV Download Functions ---
+    // --- PDF and CSV Download Functions (kept for potential future use, though not used by current UI) ---
     const generatePdf = (data, title, headers) => {
         if (typeof window.jspdf === 'undefined' || typeof window.jspdf.autoTable === 'undefined') {
             showMessage('PDF generation library not loaded. Please try again or refresh.', 'error');
@@ -500,34 +490,6 @@ export default function App() {
         }
     };
 
-    // Handlers for specific data downloads
-    const handleDownloadRecentActivity = (format) => {
-        const headers = ['Type', 'Description', 'Date'];
-        const data = recentActivities.map(activity => [
-            activity.type.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase()), // Format type
-            activity.description,
-            activity.date
-        ]);
-        if (format === 'pdf') {
-            generatePdf(data, 'Recent Activities', headers);
-        } else {
-            generateCsv(data, 'Recent Activities', headers);
-        }
-    };
-
-    const handleDownloadReminders = (format) => {
-        const headers = ['Type', 'Description', 'Date'];
-        const data = upcomingReminders.map(reminder => [
-            reminder.type.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase()),
-            reminder.description,
-            reminder.date
-        ]);
-        if (format === 'pdf') {
-            generatePdf(data, 'Upcoming Reminders', headers);
-        } else {
-            generateCsv(data, 'Upcoming Reminders', headers);
-        }
-    };
 
     // --- Notification Specific Handlers ---
     const handleDeleteNotification = (id) => {
@@ -863,38 +825,37 @@ export default function App() {
                 }
                 
                 .key-metrics-container {
-                    overflow-x: auto; /* Enable horizontal scrolling */
+                    overflow-x: auto; /* Always enable horizontal scrolling */
                     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
                     padding-bottom: 1rem; /* Add some padding for scrollbar */
                     margin-bottom: 2rem;
+                    display: flex; /* Ensures flex context for children */
+                    width: 100%; /* Ensure it takes full width */
                 }
 
                 .key-metrics-grid {
-                    display: flex; /* Use flexbox for horizontal layout */
+                    display: flex; /* Always use flexbox for horizontal layout */
                     gap: 1.5rem;
-                    flex-wrap: nowrap; /* Prevent wrapping */
+                    flex-wrap: nowrap; /* Always prevent wrapping */
+                    padding-right: 1rem; /* Space for last card not to be cut off by scrollbar */
                 }
 
+                /* Remove grid-specific media queries for key-metrics-grid */
                 @media (min-width: 640px) {
                     .key-metrics-grid {
-                        display: grid; /* Switch to grid on larger screens */
-                        grid-template-columns: repeat(2, 1fr);
-                        gap: 1.5rem;
-                        flex-wrap: wrap; /* Allow wrapping on larger screens */
+                        /* No change, remains flex. Min-width on cards ensures layout */
                     }
                 }
 
                 @media (min-width: 768px) {
                     .key-metrics-grid {
-                        grid-template-columns: repeat(3, 1fr);
-                        gap: 1.75rem;
+                        /* No change, remains flex */
                     }
                 }
 
                 @media (min-width: 1024px) {
                     .key-metrics-grid {
-                        grid-template-columns: repeat(4, 1fr);
-                        gap: 2rem;
+                        /* No change, remains flex */
                     }
                 }
 
@@ -1093,7 +1054,7 @@ export default function App() {
                     white-space: nowrap;
                 }
 
-                /* See More/Less Button Styles */
+                /* See More/Less Button Styles (removed from insight cards) */
                 .toggle-metrics-button {
                     display: block;
                     width: fit-content;
@@ -1114,15 +1075,15 @@ export default function App() {
                     transform: translateY(-4px);
                     box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
                 }
-                /* Specific styling for buttons within insight cards */
+                /* Specific styling for buttons within insight cards (now removed from JSX) */
                 .insight-card .toggle-metrics-button {
-                    margin-top: auto; /* Pushes the button to the bottom */
-                    margin-bottom: 0; /* Override default bottom margin */
+                    margin-top: auto;
+                    margin-bottom: 0;
                     font-size: 0.9rem;
                     padding: 0.6rem 1.2rem;
                 }
 
-                /* Download Buttons */
+                /* Download Buttons (removed from JSX) */
                 .download-buttons {
                     display: flex;
                     gap: 10px;
@@ -1241,9 +1202,9 @@ export default function App() {
                     transition: all 0.2s ease;
                     display: flex;
                     flex-direction: column;
-                    justify-content: space-between;
+                    justify-content: flex-start; /* Align content to top */
                     overflow: hidden; /* Ensure content doesn't spill out */
-                    min-height: 420px; /* Fixed height to prevent layout shifts */
+                    min-height: 280px; /* Reduced min-height as "Show More" is removed */
                 }
                 .insight-card:hover {
                     box-shadow: var(--shadow-lg);
@@ -1252,20 +1213,31 @@ export default function App() {
 
                 .insight-card-title {
                     font-weight: 700;
-                    font-size: 1.1rem;
+                    font-size: 1.2rem; /* Slightly larger title */
                     color: var(--text-slate-800);
-                    margin-bottom: 0.8rem;
-                    padding-bottom: 0.5rem;
-                    border-bottom: 1px solid var(--border-light);
+                    margin-bottom: 1rem; /* Increased margin */
+                    padding-bottom: 0.6rem; /* Increased padding */
+                    border-bottom: 2px solid var(--border-light); /* Thicker border */
                 }
                 .insight-card-detail {
-                    font-size: 0.95rem;
-                    color: var(--text-slate-600);
-                    margin-bottom: 0.4rem;
+                    font-size: 1rem; /* Slightly larger text */
+                    color: var(--text-slate-700); /* Darker text for better contrast */
+                    margin-bottom: 0.6rem; /* Increased margin */
+                    line-height: 1.5;
                 }
                 .insight-card-detail strong {
                     color: var(--text-slate-900);
                     font-weight: 600;
+                }
+                .insight-card ul {
+                    margin-top: 0.5rem; /* Space between title and first item */
+                    padding-left: 0; /* Remove default ul padding */
+                }
+                .insight-card ul li {
+                    margin-bottom: 1rem; /* Space between list items */
+                }
+                .insight-card ul li:last-child {
+                    margin-bottom: 0;
                 }
 
                 /* Specific color variations for insight cards */
@@ -1301,6 +1273,7 @@ export default function App() {
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    padding: 1rem; /* Added padding */
                 }
                 .insight-card-message.success {
                     color: var(--green-600);
@@ -1510,24 +1483,26 @@ export default function App() {
                 }
 
                 .notification-detail-content {
-                    padding: 1rem 1.5rem; /* Added padding */
+                    padding: 1.5rem; /* Increased padding */
                     line-height: 1.8;
-                    background-color: var(--bg-light); /* Light background */
+                    background-color: var(--indigo-50); /* Light background for contrast */
                     border-radius: 0.75rem; /* Rounded corners */
-                    box-shadow: var(--shadow-sm); /* Subtle shadow */
-                    border: 1px solid var(--border-light); /* Border */
+                    box-shadow: inset 0 1px 3px rgba(0,0,0,0.08); /* Inner shadow */
+                    border: 1px solid var(--indigo-200); /* Border matching theme */
                     margin-top: 1rem; /* Space from title */
+                    color: var(--text-slate-800); /* Darker text */
                 }
                 .notification-detail-content p {
-                    margin-bottom: 0.75rem; /* Increased margin */
-                    font-size: 1rem;
-                    color: var(--text-slate-700);
+                    margin-bottom: 0.8rem; /* Increased margin */
+                    font-size: 1.05rem; /* Slightly larger font */
                 }
                 .notification-detail-content p:last-child {
                     margin-bottom: 0;
                 }
                 .notification-detail-content strong {
-                    color: var(--text-slate-900);
+                    color: var(--indigo-700); /* Emphasize strong text with primary color */
+                    font-weight: 700;
+                    margin-right: 0.3rem; /* Space after strong text */
                 }
 
 
@@ -1739,7 +1714,6 @@ export default function App() {
                                     See More Activity
                                 </button>
                             )}
-                            {/* Removed download buttons for Recent Activities */}
                         </div>
 
                         {/* Property Insights Section (Performance, Vacant, Lease Alerts) */}
@@ -1750,12 +1724,13 @@ export default function App() {
                                 {/* Property Performance Highlights */}
                                 <div className="insight-card type-performance">
                                     <h5 className="insight-card-title">Performance Highlights</h5>
-                                    {displayedPerformance.length > 0 ? (
-                                        <ul className="space-y-3">
-                                            {displayedPerformance.map(perf => (
+                                    {allPerformance.length > 0 ? (
+                                        <ul className="item-list"> {/* Used item-list for consistent styling */}
+                                            {allPerformance.map(perf => (
                                                 <li key={perf.id}>
                                                     <div className="insight-card-detail"><strong>{perf.propertyName}</strong></div>
                                                     <div className="insight-card-detail">Occupancy: <strong>{perf.occupancy}</strong></div>
+                                                    <div className="insight-card-detail">Maintenance Cost: <strong>{perf.maintenanceCost}</strong></div>
                                                     <div className="insight-card-detail">Rating: <strong>{perf.rating} / 5</strong></div>
                                                 </li>
                                             ))}
@@ -1763,22 +1738,14 @@ export default function App() {
                                     ) : (
                                         <p className="insight-card-message">No performance data available.</p>
                                     )}
-                                    {propertyPerformance.length > maxInsightItems && (
-                                        <button
-                                            onClick={() => setShowAllPerformance(!showAllPerformance)}
-                                            className="toggle-metrics-button"
-                                        >
-                                            {showAllPerformance ? 'Show Less' : 'See All Performance'}
-                                        </button>
-                                    )}
                                 </div>
 
                                 {/* Vacant Properties Overview */}
                                 <div className="insight-card type-vacant">
                                     <h5 className="insight-card-title">Vacant Properties</h5>
-                                    {displayedVacant.length > 0 ? (
-                                        <ul className="space-y-3">
-                                            {displayedVacant.map(prop => (
+                                    {allVacant.length > 0 ? (
+                                        <ul className="item-list">
+                                            {allVacant.map(prop => (
                                                 <li key={prop.id}>
                                                     <div className="insight-card-detail"><strong>{prop.name}</strong></div>
                                                     <div className="insight-card-detail">Location: <strong>{prop.location}</strong></div>
@@ -1789,42 +1756,23 @@ export default function App() {
                                     ) : (
                                         <p className="insight-card-message success">All properties currently occupied!</p>
                                     )}
-                                    {vacantProperties.length > maxInsightItems && (
-                                        <button
-                                            onClick={() => setShowAllVacant(!showAllVacant)}
-                                            className="toggle-metrics-button"
-                                        >
-                                            {showAllVacant ? 'Show Less' : 'See All Vacant'}
-                                        </button>
-                                    )}
                                 </div>
 
                                 {/* Lease Expiry Alerts */}
                                 <div className="insight-card type-lease">
                                     <h5 className="insight-card-title">Lease Expiry Alerts</h5>
-                                    {displayedLease.length > 0 ? (
-                                        <ul className="space-y-3">
-                                            {displayedLease.map(prop => (
+                                    {allLease.length > 0 ? (
+                                        <ul className="item-list">
+                                            {allLease.map(prop => (
                                                 <li key={prop.id}>
                                                     <div className="insight-card-detail"><strong>{prop.name}</strong></div>
+                                                    <div className="insight-card-detail">Location: <strong>{prop.location}</strong></div>
                                                     <div className="insight-card-detail">Lease Ends: <strong className="text-amber-700">{prop.leaseEndDate}</strong></div>
                                                 </li>
                                             ))}
                                         </ul>
                                     ) : (
                                         <p className="insight-card-message success">No leases expiring soon.</p>
-                                    )}
-                                    {properties.filter(prop => {
-                                        if (!prop.leaseEndDate) return false;
-                                        const leaseDate = new Date(prop.leaseEndDate);
-                                        return leaseDate >= today && leaseDate <= threeMonthsFromNow;
-                                    }).length > maxInsightItems && (
-                                        <button
-                                            onClick={() => setShowAllLease(!showAllLease)}
-                                            className="toggle-metrics-button"
-                                        >
-                                            {showAllLease ? 'Show Less' : 'See All Lease Alerts'}
-                                        </button>
                                     )}
                                 </div>
                             </div>
@@ -1880,7 +1828,6 @@ export default function App() {
                                 </li>
                             ))}
                         </ul>
-                        {/* Removed download buttons for Upcoming Reminders */}
                     </>
                 ) : (
                     <p className="text-slate-500">No upcoming reminders or tasks.</p>
