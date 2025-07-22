@@ -761,10 +761,10 @@ export default function App() {
                     --green-600: #16a34a;
                     --red-600: #dc2626;
                     --amber-500: #f59e0b;
-                    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-                    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-                    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-                    --shadow-xl: 0 20px 25px rgba(0,0,0,0.1), 0 8px 10px rgba(0,0,0,0.04);
+                    --shadow-sm: 0 1px 2px rgba(0,0,0,0.02); /* Very subtle shadow */
+                    --shadow-md: 0 2px 4px rgba(0,0,0,0.03); /* Very subtle shadow */
+                    --shadow-lg: 0 4px 8px rgba(0,0,0,0.04); /* Very subtle shadow */
+                    --shadow-xl: 0 8px 16px rgba(0,0,0,0.05); /* Very subtle shadow */
                 }
 
                 body {
@@ -866,13 +866,13 @@ export default function App() {
                     padding: 2rem; /* More padding */
                     display: flex;
                     flex-direction: column;
-                    gap: 1rem; /* More space between links */
+                    gap: 0.75rem; /* Reduced space between links */
                 }
 
                 .sidebar-link {
                     display: flex;
                     align-items: center;
-                    padding: 1rem 1.25rem; /* More padding */
+                    padding: 0.85rem 1.25rem; /* Reduced padding */
                     border-radius: 0.75rem;
                     color: var(--medium-text);
                     text-decoration: none;
@@ -928,7 +928,7 @@ export default function App() {
                     align-items: center;
                     justify-content: space-between;
                     padding: 0 2.5rem; /* More padding */
-                    box-shadow: var(--shadow-md);
+                    box-shadow: var(--shadow-md); /* Subtle shadow */
                     position: sticky;
                     top: 0;
                     z-index: 100;
@@ -1001,7 +1001,7 @@ export default function App() {
                     align-items: center;
                     justify-content: center;
                     transform: translate(0, 0);
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                    box-shadow: var(--shadow-sm); /* Subtle shadow */
                     animation: pulse 1.5s infinite;
                 }
 
@@ -1035,12 +1035,12 @@ export default function App() {
 
 
                 .main-content-padding {
-                    padding: 3rem; /* More overall padding */
+                    padding: 2.5rem; /* Reduced overall padding */
                 }
 
                 @media (min-width: 768px) {
                     .main-content-padding {
-                        padding: 3.5rem; /* Even more padding on larger screens */
+                        padding: 3rem; /* Slightly more padding on larger screens */
                     }
                 }
 
@@ -1048,7 +1048,7 @@ export default function App() {
                     display: block;
                     opacity: 1;
                     transition: none;
-                    margin-bottom: 3rem; /* More space between sections */
+                    margin-bottom: 2.5rem; /* Reduced space between sections */
                 }
                 .content-section:last-child {
                     margin-bottom: 0;
@@ -1057,11 +1057,11 @@ export default function App() {
                 /* --- General Sub-Section Styling --- */
                 .dashboard-sub-section {
                     background-color: var(--white);
-                    padding: 3rem; /* More padding */
-                    border-radius: 1.5rem; /* More rounded */
-                    box-shadow: var(--shadow-lg); /* Stronger shadow */
+                    padding: 2.5rem; /* Reduced padding */
+                    border-radius: 1.25rem; /* Slightly less rounded */
+                    box-shadow: var(--shadow-md); /* Subtle shadow */
                     border: 1px solid var(--border-color);
-                    margin-top: 3rem; /* More space */
+                    margin-top: 2.5rem; /* Reduced space */
                 }
                 .dashboard-sub-section:first-child {
                     margin-top: 0; /* No top margin for the very first section */
@@ -1069,24 +1069,24 @@ export default function App() {
 
 
                 .dashboard-sub-section-title {
-                    font-size: 2rem; /* Larger title */
+                    font-size: 1.8rem; /* Slightly smaller title */
                     font-weight: 700;
                     color: var(--dark-text);
-                    margin-bottom: 2rem; /* More space */
-                    border-bottom: 2px solid var(--border-color);
-                    padding-bottom: 1rem; /* More padding */
+                    margin-bottom: 1.5rem; /* Reduced space */
+                    border-bottom: 1px solid var(--border-color); /* Thinner border */
+                    padding-bottom: 0.8rem; /* Reduced padding */
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
                     flex-wrap: wrap; /* Allow wrapping for title and buttons */
-                    gap: 1rem; /* Gap between title and buttons/dropdown */
+                    gap: 0.75rem; /* Reduced gap between title and buttons/dropdown */
                 }
 
                 .dashboard-sub-section-description {
                     color: var(--medium-text);
-                    margin-bottom: 2rem; /* More space */
-                    font-size: 1.05rem; /* Slightly larger font */
-                    line-height: 1.7;
+                    margin-bottom: 1.5rem; /* Reduced space */
+                    font-size: 1rem; /* Standard font size */
+                    line-height: 1.6;
                 }
 
                 .item-list {
@@ -1098,13 +1098,13 @@ export default function App() {
                 .activity-item, .list-item {
                     display: flex;
                     align-items: center;
-                    padding: 1.25rem 0; /* More padding */
+                    padding: 0.8rem 0; /* Reduced padding */
                     border-bottom: 1px dashed var(--border-color);
                     transition: background-color 0.2s ease, transform 0.2s ease;
                 }
                 .activity-item:hover, .list-item:hover {
                     background-color: var(--light-blue);
-                    transform: translateX(8px); /* More pronounced slide */
+                    transform: translateX(4px); /* Less pronounced slide */
                 }
                 .activity-item:last-child, .list-item:last-child {
                     border-bottom: none;
@@ -1112,16 +1112,16 @@ export default function App() {
 
                 .activity-icon-container {
                     flex-shrink: 0;
-                    width: 52px; /* Larger icon container */
-                    height: 52px;
+                    width: 44px; /* Reduced icon container size */
+                    height: 44px;
                     border-radius: 50%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    margin-right: 1.8rem; /* More space */
-                    font-size: 1.5rem; /* Larger icon */
+                    margin-right: 1.2rem; /* Reduced space */
+                    font-size: 1.3rem; /* Reduced icon size */
                     color: var(--white);
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Stronger shadow */
+                    box-shadow: var(--shadow-sm); /* Subtle shadow */
                 }
 
                 .activity-icon-rent { background-color: var(--green-600); }
@@ -1140,24 +1140,24 @@ export default function App() {
 
                 .activity-content {
                     flex-grow: 1;
-                    font-size: 1.1rem; /* Slightly larger font */
+                    font-size: 1rem; /* Standard font size */
                     color: var(--dark-text); /* Darker text */
                 }
 
                 .activity-date {
                     flex-shrink: 0;
-                    font-size: 0.95rem; /* Slightly larger date font */
+                    font-size: 0.9rem; /* Slightly smaller date font */
                     color: var(--light-text); /* Lighter text for date */
-                    margin-left: 2rem;
+                    margin-left: 1.5rem; /* Reduced margin */
                     white-space: nowrap;
                 }
                 .activity-status {
                     flex-shrink: 0;
-                    font-size: 0.95rem;
+                    font-size: 0.85rem; /* Reduced font size */
                     font-weight: 600;
-                    margin-left: 1rem;
-                    padding: 0.4rem 0.8rem;
-                    border-radius: 0.5rem;
+                    margin-left: 0.8rem; /* Reduced margin */
+                    padding: 0.3rem 0.6rem; /* Reduced padding */
+                    border-radius: 0.4rem; /* Slightly less rounded */
                     white-space: nowrap;
                 }
                 .activity-status.Upcoming {
@@ -1178,22 +1178,22 @@ export default function App() {
                 .toggle-metrics-button {
                     display: block;
                     width: fit-content;
-                    margin: 0 auto 2.5rem auto;
-                    padding: 1rem 2.5rem; /* More padding */
+                    margin: 0 auto 2rem auto; /* Reduced margin */
+                    padding: 0.8rem 2rem; /* Reduced padding */
                     background-color: var(--primary-blue);
                     color: var(--white);
                     border: none;
-                    border-radius: 0.85rem;
-                    font-size: 1.1rem; /* Larger font */
+                    border-radius: 0.75rem; /* Slightly less rounded */
+                    font-size: 1rem; /* Standard font size */
                     font-weight: 600;
                     cursor: pointer;
                     transition: all 0.3s ease;
-                    box-shadow: 0 8px 18px rgba(42, 57, 141, 0.3); /* Stronger shadow */
+                    box-shadow: var(--shadow-md); /* Subtle shadow */
                 }
                 .toggle-metrics-button:hover {
                     background-color: var(--indigo-700);
-                    transform: translateY(-5px); /* More pronounced lift */
-                    box-shadow: 0 12px 25px rgba(42, 57, 141, 0.4);
+                    transform: translateY(-3px); /* Less pronounced lift */
+                    box-shadow: var(--shadow-lg); /* Slightly more shadow on hover */
                 }
 
                 /* --- Transaction Overview Section (New) --- */
@@ -1202,9 +1202,9 @@ export default function App() {
                     overflow-x: auto; /* Enable horizontal scrolling */
                     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
                     white-space: nowrap; /* Prevent items from wrapping */
-                    gap: 1.5rem; /* Space between cards */
-                    padding-bottom: 1rem; /* Space for scrollbar */
-                    margin-bottom: 2rem; /* Space between cards and next element */
+                    gap: 1.25rem; /* Reduced space between cards */
+                    padding-bottom: 0.8rem; /* Space for scrollbar */
+                    margin-bottom: 1.5rem; /* Reduced space between cards and next element */
                     scroll-snap-type: x mandatory; /* Optional: for smoother snapping */
                 }
                 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -1231,15 +1231,15 @@ export default function App() {
 
                 .chart-canvas-container {
                     position: relative;
-                    height: 300px; /* Consistent height for charts */
+                    height: 280px; /* Slightly reduced height for charts */
                     width: 100%;
                 }
 
                 .chart-card {
                     background-color: var(--white);
-                    padding: 3rem;
-                    border-radius: 1.5rem;
-                    box-shadow: var(--shadow-lg);
+                    padding: 2.5rem; /* Reduced padding */
+                    border-radius: 1.25rem; /* Slightly less rounded */
+                    box-shadow: var(--shadow-md); /* Subtle shadow */
                     border: 1px solid var(--border-color);
                 }
 
@@ -1247,25 +1247,25 @@ export default function App() {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    margin-bottom: 1.5rem;
+                    margin-bottom: 1.25rem; /* Reduced margin */
                     flex-wrap: wrap;
-                    gap: 1rem;
+                    gap: 0.75rem; /* Reduced gap */
                 }
 
                 .chart-card-title {
-                    font-size: 1.8rem;
+                    font-size: 1.6rem; /* Slightly smaller title */
                     font-weight: 700;
                     color: var(--dark-text);
                     margin: 0; /* Reset margin */
                 }
 
                 .chart-period-selector { /* Styles for the new dropdown */
-                    padding: 0.6rem 1rem;
+                    padding: 0.5rem 0.8rem; /* Reduced padding */
                     border: 1px solid var(--border-color);
-                    border-radius: 0.75rem;
+                    border-radius: 0.6rem; /* Slightly less rounded */
                     background-color: var(--light-blue);
                     font-family: 'Inter', sans-serif;
-                    font-size: 1rem;
+                    font-size: 0.95rem; /* Slightly smaller font */
                     font-weight: 500;
                     color: var(--primary-blue);
                     cursor: pointer;
@@ -1277,7 +1277,7 @@ export default function App() {
                     background-repeat: no-repeat;
                     background-position: right 0.75rem center;
                     background-size: 1.2rem;
-                    padding-right: 2.5rem; /* Make space for custom arrow */
+                    padding-right: 2.2rem; /* Make space for custom arrow */
                 }
 
                 .chart-period-selector:hover {
@@ -1293,46 +1293,41 @@ export default function App() {
 
                 .stat-card {
                     background-color: var(--white);
-                    padding: 1.5rem; /* Default padding for mobile */
-                    border-radius: 1rem;
-                    box-shadow: var(--shadow-md);
-                    border: 1px solid var(--border-color);
+                    padding: 1.2rem; /* Reduced padding for more compactness */
+                    border-radius: 0.8rem; /* Slightly less rounded */
+                    box-shadow: none; /* Removed shadow */
+                    border: 1px solid var(--border-color); /* Added subtle border for definition */
                     display: flex;
                     flex-direction: column;
                     align-items: flex-start;
                     justify-content: center;
                     transition: all 0.2s ease;
                     flex-shrink: 0; /* Prevent cards from shrinking in flex container */
-                    width: 200px; /* Fixed width for scrollable cards on mobile */
+                    width: 180px; /* Reduced fixed width for scrollable cards on mobile */
                     scroll-snap-align: start; /* For scroll snapping */
                 }
                 @media (min-width: 1024px) { /* On larger screens, allow cards to take full grid width */
                     .stat-card {
                         width: auto; /* Let grid handle width */
-                        padding: 1rem 1.5rem; /* Reduced vertical padding for rectangular shape */
-                        min-height: 100px; /* Ensure a minimum height but allow content to expand */
+                        padding: 0.8rem 1.2rem; /* Further reduced vertical padding for rectangular shape */
+                        min-height: 90px; /* Reduced minimum height */
                     }
                 }
 
-                .stat-card:hover {
-                    box-shadow: var(--shadow-lg);
-                    transform: translateY(-3px);
-                }
-
                 .stat-card-icon {
-                    width: 40px;
-                    height: 40px;
-                    margin-bottom: 0.8rem;
+                    width: 36px; /* Reduced icon size */
+                    height: 36px;
+                    margin-bottom: 0.6rem; /* Reduced margin */
                     color: var(--primary-blue);
                 }
                 .stat-card-title {
-                    font-size: 1rem;
+                    font-size: 0.95rem; /* Slightly smaller font */
                     font-weight: 500;
                     color: var(--medium-text);
-                    margin-bottom: 0.5rem;
+                    margin-bottom: 0.4rem; /* Reduced margin */
                 }
                 .stat-card-value {
-                    font-size: 1.8rem;
+                    font-size: 1.6rem; /* Slightly smaller font */
                     font-weight: 700;
                     color: var(--dark-text);
                     line-height: 1.2;
@@ -1341,9 +1336,9 @@ export default function App() {
                 .stat-card-percentage {
                     display: flex;
                     align-items: center;
-                    font-size: 0.9rem;
+                    font-size: 0.85rem; /* Slightly smaller font */
                     font-weight: 600;
-                    margin-top: 0.5rem;
+                    margin-top: 0.4rem; /* Reduced margin */
                 }
                 .stat-card-percentage.increase {
                     color: var(--green-600);
@@ -1352,9 +1347,9 @@ export default function App() {
                     color: var(--red-600);
                 }
                 .stat-card-percentage svg {
-                    width: 1rem;
-                    height: 1rem;
-                    margin-right: 0.25rem;
+                    width: 0.9rem; /* Reduced icon size */
+                    height: 0.9rem;
+                    margin-right: 0.2rem; /* Reduced margin */
                 }
 
 
@@ -1373,7 +1368,7 @@ export default function App() {
                 .property-stats-grid { /* Renamed from stats-summary-grid for clarity in this section */
                     display: grid;
                     grid-template-columns: 1fr; /* Default to 1 column on small screens */
-                    gap: 1.5rem;
+                    gap: 1.25rem; /* Reduced gap */
                 }
                 @media (min-width: 768px) { /* On medium screens and up, always try for 2 columns */
                     .property-stats-grid {
@@ -1382,29 +1377,29 @@ export default function App() {
                 }
 
                 .view-all-properties-button { /* New button style */
-                    padding: 0.8rem 1.5rem;
+                    padding: 0.7rem 1.2rem; /* Reduced padding */
                     background-color: var(--primary-blue);
                     color: var(--white);
                     border: none;
-                    border-radius: 0.75rem;
-                    font-size: 1rem;
+                    border-radius: 0.7rem; /* Slightly less rounded */
+                    font-size: 0.95rem; /* Slightly smaller font */
                     font-weight: 600;
                     cursor: pointer;
                     transition: all 0.3s ease;
-                    box-shadow: 0 4px 10px rgba(42, 57, 141, 0.2);
+                    box-shadow: var(--shadow-sm); /* Subtle shadow */
                     display: flex;
                     align-items: center;
-                    gap: 0.5rem;
+                    gap: 0.4rem; /* Reduced gap */
                     white-space: nowrap; /* Prevent text wrapping */
                 }
                 .view-all-properties-button:hover {
                     background-color: var(--indigo-700);
                     transform: translateY(-2px);
-                    box-shadow: 0 6px 15px rgba(42, 57, 141, 0.3);
+                    box-shadow: var(--shadow-md); /* Slightly more shadow on hover */
                 }
                 .view-all-properties-button svg {
-                    width: 1.2rem;
-                    height: 1.2rem;
+                    width: 1.1rem; /* Slightly smaller icon */
+                    height: 1.1rem;
                 }
 
 
@@ -1417,11 +1412,11 @@ export default function App() {
                 .transactions-table {
                     width: 100%;
                     border-collapse: collapse;
-                    min-width: 700px; /* Ensure table is wide enough for content */
+                    min-width: 600px; /* Slightly reduced min-width */
                 }
 
                 .transactions-table th, .transactions-table td {
-                    padding: 1rem 1.5rem;
+                    padding: 0.8rem 1.2rem; /* Reduced padding */
                     text-align: left;
                     border-bottom: 1px solid var(--border-color);
                 }
@@ -1430,7 +1425,7 @@ export default function App() {
                     background-color: var(--light-blue);
                     color: var(--primary-blue);
                     font-weight: 600;
-                    font-size: 0.9rem;
+                    font-size: 0.85rem; /* Reduced font size */
                     text-transform: uppercase;
                     letter-spacing: 0.05em;
                 }
@@ -1443,7 +1438,7 @@ export default function App() {
                 }
 
                 .transactions-table td {
-                    font-size: 0.95rem;
+                    font-size: 0.9rem; /* Reduced font size */
                     color: var(--dark-text);
                 }
 
@@ -1481,16 +1476,16 @@ export default function App() {
 
                 .modal-content {
                     background-color: var(--white);
-                    padding: 2.5rem; /* More padding */
-                    border-radius: 1.25rem; /* More rounded */
-                    box-shadow: var(--shadow-xl); /* Stronger shadow */
-                    max-width: 650px; /* Slightly wider modal */
+                    padding: 2rem; /* Reduced padding */
+                    border-radius: 1rem; /* Reduced roundedness */
+                    box-shadow: var(--shadow-lg); /* Subtle shadow */
+                    max-width: 600px; /* Slightly narrower modal */
                     width: 90%;
-                    transform: translateY(-30px); /* More pronounced lift */
+                    transform: translateY(-20px); /* Less pronounced lift */
                     transition: transform 0.3s ease;
                     display: flex;
                     flex-direction: column;
-                    max-height: 90vh;
+                    max-height: 85vh; /* Reduced max height */
                 }
 
                 .modal-overlay.show .modal-content {
@@ -1502,12 +1497,12 @@ export default function App() {
                     justify-content: space-between;
                     align-items: center;
                     border-bottom: 1px solid var(--border-color);
-                    padding-bottom: 1.2rem; /* More padding */
-                    margin-bottom: 1.8rem; /* More space */
+                    padding-bottom: 1rem; /* Reduced padding */
+                    margin-bottom: 1.5rem; /* Reduced space */
                 }
 
                 .modal-title {
-                    font-size: 2rem; /* Larger title */
+                    font-size: 1.8rem; /* Slightly smaller title */
                     font-weight: 700;
                     color: var(--dark-text);
                 }
@@ -1516,7 +1511,7 @@ export default function App() {
                     background: none;
                     border: none;
                     cursor: pointer;
-                    padding: 0.6rem; /* Larger padding */
+                    padding: 0.5rem; /* Reduced padding */
                     border-radius: 50%;
                     transition: background-color 0.2s ease;
                 }
@@ -1526,45 +1521,45 @@ export default function App() {
                 }
 
                 .modal-close-button svg {
-                    width: 1.6rem; /* Larger icon */
-                    height: 1.6rem;
+                    width: 1.4rem; /* Reduced icon size */
+                    height: 1.4rem;
                     color: var(--medium-text);
                 }
 
                 .modal-body {
                     overflow-y: auto;
                     flex-grow: 1;
-                    padding-right: 0.8rem; /* More padding */
+                    padding-right: 0.6rem; /* Reduced padding */
                 }
 
                 .modal-body .item-list .activity-item {
-                    padding: 1rem 0; /* More padding */
+                    padding: 0.8rem 0; /* Reduced padding */
                 }
 
                 .modal-body .item-list .activity-icon-container {
-                    width: 44px; /* Larger icon container */
-                    height: 44px;
-                    font-size: 1.2rem; /* Larger icon */
+                    width: 40px; /* Reduced icon container size */
+                    height: 40px;
+                    font-size: 1.1rem; /* Reduced icon size */
                 }
                 .modal-body .item-list .activity-content {
-                    font-size: 1rem; /* Slightly larger font */
+                    font-size: 0.95rem; /* Slightly smaller font */
                 }
                 .modal-body .item-list .activity-date {
-                    font-size: 0.85rem; /* Slightly larger date font */
+                    font-size: 0.8rem; /* Further reduced date font size */
                 }
                 .modal-body .text-slate-500 {
                     text-align: center;
-                    padding: 1.5rem; /* More padding */
-                    font-size: 1.05rem;
+                    padding: 1rem; /* Reduced padding */
+                    font-size: 1rem;
                 }
 
                 .notification-item {
                     display: flex;
                     align-items: center;
-                    padding: 1rem 0; /* More padding */
+                    padding: 0.8rem 0; /* Reduced padding */
                     border-bottom: 1px dashed var(--border-color);
                     color: var(--dark-text);
-                    font-size: 1rem; /* Slightly larger font */
+                    font-size: 0.95rem; /* Slightly smaller font */
                     cursor: pointer;
                     transition: background-color 0.2s ease;
                 }
@@ -1579,7 +1574,7 @@ export default function App() {
                 }
                 .notification-item .icon {
                     flex-shrink: 0;
-                    margin-right: 1.2rem; /* More space */
+                    margin-right: 1rem; /* Reduced space */
                     color: var(--primary-blue); /* Primary blue for icons */
                 }
                 .notification-item .content {
@@ -1587,16 +1582,16 @@ export default function App() {
                 }
                 .notification-item .date {
                     flex-shrink: 0;
-                    margin-left: 1.2rem; /* More space */
-                    font-size: 0.85rem;
+                    margin-left: 1rem; /* Reduced space */
+                    font-size: 0.8rem; /* Further reduced font size */
                     color: var(--light-text);
                 }
                 .notification-item .delete-icon {
                     flex-shrink: 0;
-                    margin-left: 1rem; /* More space */
+                    margin-left: 0.8rem; /* Reduced space */
                     cursor: pointer;
                     color: var(--red-600);
-                    padding: 0.4rem; /* Larger padding */
+                    padding: 0.3rem; /* Reduced padding */
                     border-radius: 50%;
                     transition: background-color 0.2s ease;
                 }
@@ -1605,18 +1600,18 @@ export default function App() {
                 }
 
                 .notification-detail-content {
-                    padding: 2rem; /* More padding */
-                    line-height: 1.8;
+                    padding: 1.5rem; /* Reduced padding */
+                    line-height: 1.7;
                     background-color: var(--light-blue); /* Light blue background */
-                    border-radius: 1rem; /* More rounded */
-                    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); /* Stronger inner shadow */
+                    border-radius: 0.8rem; /* Reduced roundedness */
+                    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Subtle inner shadow */
                     border: 1px solid var(--primary-blue); /* Primary blue border */
-                    margin-top: 1.5rem; /* More space */
+                    margin-top: 1rem; /* Reduced space */
                     color: var(--dark-text);
                 }
                 .notification-detail-content p {
-                    margin-bottom: 1rem; /* More margin */
-                    font-size: 1.1rem; /* Larger font */
+                    margin-bottom: 0.8rem; /* Reduced margin */
+                    font-size: 1rem; /* Standard font size */
                 }
                 .notification-detail-content p:last-child {
                     margin-bottom: 0;
@@ -1624,7 +1619,7 @@ export default function App() {
                 .notification-detail-content strong {
                     color: var(--primary-blue);
                     font-weight: 700;
-                    margin-right: 0.4rem; /* More space */
+                    margin-right: 0.3rem; /* Reduced space */
                 }
 
 
@@ -1974,3 +1969,6 @@ export default function App() {
         </div>
     );
 }
+// there is a problem with the stat summary and transaction overview on laptop screen (screens small than desktop) its not responsive and the card height is still big reduce it to be refined and compact and tha header icons (bell and calendar) alert isnt nice try another thing design
+
+// Overall minimize the text size and size and also the favicon is the logo use that
