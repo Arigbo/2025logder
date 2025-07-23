@@ -276,9 +276,8 @@ export default function App() { // Changed from Page to App for default export
         { name: 'Pricing', href: '#pricing' },
         { name: 'Testimonials', href: '#testimonials' },
     ];
-    const heroBgImage = "https://placehold.co/1200x800/4c51bf/ffffff?text=Hero+Background"; // Placeholder for hero image
     const ctaImage = "https://storage.googleapis.com/generative-ai-prod-images/images/8410219c-8509-4d6a-8b85-502a5cf38743/0.jpeg";
-    const lodgerLogo = "https://storage.googleapis.com/generative-ai-prod-images/images/8a64980a-9d62-4217-a9a3-5c8e370a82f3/0.jpeg";
+    const lodgerLogo = "/favicon.ico";
     const discoverSectionImage = "https://placehold.co/600x400/4c51bf/ffffff?text=Featured+Apartments"; // Placeholder for Discover section
     const landlordSectionImage = "https://placehold.co/600x400/805ad5/ffffff?text=Landlord+Dashboard"; // Placeholder for Landlord section
 
@@ -304,26 +303,41 @@ export default function App() { // Changed from Page to App for default export
                     --border-radius-medium: 12px;
                     --border-radius-large: 15px;
                 }
-
+*{
+padding:0;
+margin: 0;
+}
                 body {
                     font-family: 'Inter', sans-serif;
                     margin: 0;
-                    line-height: 1.7; /* Slightly increased line height */
                     color: var(--text-medium);
                     background-color: var(--bg-light);
                     -webkit-font-smoothing: antialiased;
                     -moz-osx-font-smoothing: grayscale;
                 }
-                .container {
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    padding: 0 20px; /* Increased padding */
-                }
+                    .container{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 90%;
+                    }
+                    main{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 1rem;
+                    }
                 header {
                     background-color: var(--bg-white);
                     box-shadow: 0 0 0 rgba(0,0,0,0); /* Initial no shadow */
-                    padding: 18px 0; /* Slightly more padding */
-                    position: fixed;
+              right: 0;
+              left:0;
+              height: 4rem;
+              display: flex;
+align-items: center;
+flex-direction: column;
+justify-content: center;
+                    position: sticky;
                     width: 100%;
                     top: 0;
                     z-index: 1000;
@@ -336,21 +350,11 @@ export default function App() { // Changed from Page to App for default export
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                }
-                header h1 {
-                    font-size: 32px; /* Increased font size for bolder look */
-                    font-weight: 900; /* Extra bold */
-                    color: var(--text-dark);
-                    display: flex;
-                    align-items: center;
-                    letter-spacing: -1px; /* More distinct letter spacing */
+                    width:95%;
                 }
                 header h1 img {
-                    width: 42px; /* Larger logo */
-                    height: 42px; /* Larger logo */
-                    border-radius: 50%;
-                    margin-right: 14px; /* Increased margin */
-                    box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Subtle shadow on logo */
+width:1.8rem;
+height:2.5rem;
                 }
                 header nav.desktop-nav {
                     display: none;
@@ -358,24 +362,10 @@ export default function App() { // Changed from Page to App for default export
                 header nav.desktop-nav a {
                     color: var(--text-medium);
                     text-decoration: none;
-                    margin-left: 45px; /* Increased spacing */
                     transition: color 0.3s ease, transform 0.2s ease;
-                    font-weight: 600; /* Bolder */
-                    font-size: 19px; /* Slightly larger font */
-                    position: relative;
-                }
-                header nav.desktop-nav a::after {
-                    content: '';
-                    position: absolute;
-                    width: 0%;
-                    height: 3px; /* Thicker underline */
-                    bottom: -6px; /* Slightly lower */
-                    left: 0;
-                    background-color: var(--primary-indigo);
-                    transition: width 0.3s ease-in-out;
-                }
-                header nav.desktop-nav a:hover::after {
-                    width: 100%;
+                    font-weight: 500; /* Bolder */
+                    font-size: 18px; /* Slightly larger font */;
+                    margin-right:0.8rem;
                 }
                 header nav.desktop-nav a:hover {
                     color: var(--primary-indigo);
@@ -387,54 +377,51 @@ export default function App() { // Changed from Page to App for default export
                 .menu-toggle {
                     background: none;
                     border: none;
-                    font-size: 36px; /* Larger toggle */
+                    font-size: 26px; /* Larger toggle */
                     cursor: pointer;
                     color: var(--text-dark);
-                    display: block;
-                    padding: 10px; /* More padding for easier tapping */
-                    border-radius: var(--border-radius-small);
                     transition: background-color 0.3s ease, transform 0.2s ease;
                 }
                 .menu-toggle:hover {
                     background-color: var(--border-color);
-                    transform: scale(1.1);
                 }
-                .mobile-menu-overlay {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba(0, 0, 0, 0.85); /* Even darker, more opaque overlay */
-                    z-index: 1000;
-                    opacity: 0;
-                    visibility: hidden;
-                    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
-                }
-                .mobile-menu-overlay.open {
-                    opacity: 1;
-                    visibility: visible;
-                }
+                // .mobile-menu-overlay {
+                //     position: fixed;
+                //     top: 0;
+                //     left: 0;
+                //     width: 100%;
+                //     height: 100%;
+                //     background-color: rgba(0, 0, 0, 0.85); /* Even darker, more opaque overlay */
+                //     z-index: 1000;
+                //     opacity: 0;
+                //     visibility: hidden;
+                //     transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+                // }
+                // .mobile-menu-overlay.open {
+                //     opacity: 1;
+                //     visibility: visible;
+                // }
                 .mobile-menu {
                     position: fixed;
-                    top: 0;
-                    right: -100%;
-                    width: min(90vw, 380px); /* Even wider, max 380px */
-                    height: 100vh;
+                    top: -120%;
+                    bottom: 100%;
+                    right: 0;
+                    width: 100%;
+                                  height:100vh;
                     background-color: var(--bg-white);
                     padding: 130px 30px 60px 30px; /* More padding */
                     box-sizing: border-box;
-                    transition: right 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother cubic-bezier transition */
+                    transition:  0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother cubic-bezier transition */
                     z-index: 1001;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     overflow-y: auto;
-                    box-shadow: -20px 0 50px rgba(0,0,0,0.5); /* Stronger, more diffused shadow */
-                    border-left: 1px solid var(--border-color);
                 }
                 .mobile-menu.open {
-                    right: 0;
+                    top: 0;
+                    bottom:0;
+
                 }
                 .mobile-menu-close-btn {
                     position: absolute;
@@ -442,15 +429,12 @@ export default function App() { // Changed from Page to App for default export
                     right: 35px; /* Adjusted position */
                     background: none;
                     border: none;
-                    font-size: 44px; /* Even larger */
+                    font-size: 26px; /* Even larger */
                     color: var(--text-light); /* Softer close button color */
                     cursor: pointer;
-                    padding: 12px;
-                    border-radius: 50%;
                     transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
                 }
                 .mobile-menu-close-btn:hover {
-                    background-color: #F0F4F8; /* Lighter hover background */
                     color: var(--text-dark);
                     transform: rotate(90deg); /* Rotate on hover */
                 }
@@ -466,59 +450,61 @@ export default function App() { // Changed from Page to App for default export
                     font-size: 24px; /* Larger font size */
                     color: var(--text-dark);
                     text-decoration: none;
-                    padding: 22px 35px; /* Increased padding */
-                    width: calc(100% - 70px); /* Adjust width for padding */
                     text-align: center;
-                    border-radius: var(--border-radius-medium);
                     transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-                    font-weight: 700; /* Bolder */
-                    box-shadow: 0 5px 12px rgba(0,0,0,0.1); /* More noticeable shadow */
+                    font-weight: 500; /* Bolder */
                 }
                 .mobile-menu nav a:hover {
-                    background-color: #E0E7FF; /* Light indigo background on hover */
                     color: var(--primary-indigo);
                     transform: translateY(-6px); /* More pronounced lift */
-                    box-shadow: 0 10px 20px rgba(0,0,0,0.2); /* Stronger shadow on hover */
                 }
 
                 /* Hero Section */
                 .hero-bg {
-                    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('${heroBgImage}'); /* Even darker overlay */
+                    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('/hero.ico'); /* Even darker overlay */
                     background-size: cover;
                     background-position: center;
                     color: #fff;
                     text-align: center;
-                    padding: 180px 0; /* More vertical padding */
-                    margin-top: 64px;
                     border-bottom-left-radius: 30px; /* More rounded bottom corners */
                     border-bottom-right-radius: 30px;
-                    overflow: hidden;
-                    position: relative; /* For pseudo-elements if needed */
+                    height: 70vh;
+                    width: 100%;
+                        display: flex;
+         align-items: center;
+         justify-content: center;
+              flex-direction: column;
+              gap: 0.8rem;
                 }
+              h2{
+              margin: 0;
+              }
                 .hero-bg h2 {
                     font-size: 64px; /* Significantly larger heading */
                     font-weight: 900; /* Black weight */
                     line-height: 1.05;
-                    margin-bottom: 25px;
                     text-shadow: 3px 3px 6px rgba(0,0,0,0.4); /* Stronger text shadow */
                     letter-spacing: -1.5px; /* Tighter letter spacing */
                 }
                 .hero-bg p {
                     font-size: 24px; /* Larger paragraph */
                     color: #E2E8F0;
-                    margin-bottom: 50px; /* More margin */
-                    max-width: 850px; /* Wider max-width */
-                    margin-left: auto;
-                    margin-right: auto;
+                
+                    width: 80%; /* Wider max-width */
                     line-height: 1.5;
                 }
                 .hero-bg .book-btn {
                     background-color: var(--primary-indigo);
                     color: #fff;
-                    padding: 20px 45px; /* Larger padding */
-                    border-radius: 12px; /* More rounded */
-                    font-weight: 700;
-                    font-size: 22px; /* Larger font */
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         padding-inline: 1.5rem;
+                    border-radius: 7px; /* More rounded */
+                    font-weight: 500;
+                    height: 3rem;
+                    width:fit-content;
+                    font-size: 18px; /* Larger font */
                     text-decoration: none;
                     transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
                     box-shadow: 0 8px 20px rgba(0,0,0,0.25); /* Stronger button shadow */
@@ -532,7 +518,12 @@ export default function App() { // Changed from Page to App for default export
 
                 /* Sections */
                 section {
-                    padding: 120px 0; /* More padding */
+width: 90%;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap:: 1rem;
+padding-block: 1rem;
                 }
                 section.bg-white {
                     background-color: var(--bg-white);
@@ -542,20 +533,18 @@ export default function App() { // Changed from Page to App for default export
                 }
                 .section-title {
                     text-align: center;
-                    margin-bottom: 90px; /* More margin */
+                   
                 }
                 .section-title h3 {
                     font-size: 48px; /* Larger heading */
                     font-weight: 800;
                     color: var(--text-dark);
-                    margin-bottom: 25px;
                     line-height: 1.15;
                     letter-spacing: -1px;
                 }
                 .section-title p {
                     color: var(--text-light); /* Lighter text for subtitle */
-                    max-width: 750px; /* Wider max-width */
-                    margin: 0 auto;
+             
                     font-size: 19px;
                     line-height: 1.6;
                 }
@@ -863,111 +852,6 @@ export default function App() { // Changed from Page to App for default export
                     font-size: 16px;
                     color: var(--text-light);
                 }
-
-                /* Pricing Cards */
-                .pricing-grid {
-                    display: flex;
-                    flex-direction: column;
-                    flex-wrap: wrap;
-                    justify-content: center;
-                    align-items: stretch;
-                    gap: 35px;
-                }
-                .pricing-card {
-                    background-color: var(--bg-white);
-                    border-radius: var(--border-radius-large);
-                    box-shadow: var(--shadow-medium);
-                    padding: 45px; /* More padding */
-                    width: 100%;
-                    max-width: 400px; /* Slightly increased max-width for individual cards */
-                    margin: 0 auto;
-                    border-top-width: 8px; /* Thicker border top */
-                    transition: transform 0.3s ease, box-shadow 0.3s ease;
-                }
-                .pricing-card:hover {
-                    transform: translateY(-8px);
-                    box-shadow: var(--shadow-strong);
-                }
-                .pricing-card.border-indigo-600 {
-                    border-color: var(--primary-indigo);
-                }
-                .pricing-card.border-purple-600 {
-                    border-color: var(--secondary-purple);
-                }
-                .pricing-card-title {
-                    font-size: 32px; /* Larger title */
-                    font-weight: 800;
-                    text-align: center;
-                    margin-bottom: 15px;
-                    color: var(--text-dark);
-                }
-                .pricing-card-subtitle {
-                    color: var(--text-light);
-                    text-align: center;
-                    margin-bottom: 35px;
-                    font-size: 17px;
-                }
-                .pricing-card-price {
-                    font-size: 64px; /* Larger price */
-                    font-weight: 800;
-                    text-align: center;
-                    margin-bottom: 35px;
-                    color: var(--text-dark);
-                }
-                .pricing-card-price-details {
-                    font-size: 22px; /* Larger details */
-                    font-weight: normal;
-                    color: var(--text-light);
-                }
-                .pricing-features-list {
-                    list-style: none;
-                    padding: 0;
-                    margin-bottom: 45px; /* More margin */
-                    color: var(--text-medium);
-                    line-height: 1.7;
-                }
-                .pricing-feature-item {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 20px; /* More spacing */
-                    font-size: 18px;
-                }
-                .icon-check {
-                    width: 24px; /* Larger checkmark */
-                    height: 24px; /* Larger checkmark */
-                    color: #38A169; /* Green checkmark */
-                    margin-right: 18px;
-                }
-                .pricing-card-button {
-                    display: block;
-                    width: 100%;
-                    text-align: center;
-                    color: #fff;
-                    padding: 18px 28px; /* Larger padding */
-                    border-radius: var(--border-radius-medium);
-                    font-weight: 700;
-                    font-size: 19px;
-                    text-decoration: none;
-                    transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-                }
-                .pricing-card-button.bg-indigo-600 {
-                    background-color: var(--primary-indigo);
-                }
-                .pricing-card-button.bg-indigo-600:hover {
-                    opacity: 0.9;
-                    transform: translateY(-3px);
-                    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-                }
-                .pricing-card-button.bg-purple-600 {
-                    background-color: var(--secondary-purple);
-                }
-                .pricing-card-button.bg-purple-600:hover {
-                    opacity: 0.9;
-                    transform: translateY(-3px);
-                    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-                }
-
                 /* CTA Section */
                 .cta-section {
                     background-color: var(--primary-indigo);
@@ -1017,36 +901,46 @@ export default function App() { // Changed from Page to App for default export
                 footer {
                     background-color: var(--text-dark); /* Darker footer */
                     color: #E2E8F0;
-                    padding: 70px 0; /* More padding */
-                    text-align: center;
-                    margin-top: 120px; /* More margin */
+                    width: 100%;
+                    height: 16rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
                 footer .footer-content {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    gap: 35px; /* More gap */
+                        justify-content: center;
+                    gap: 1rem;
+                    width: 90%;
+                    height:80%;
                 }
                 footer .footer-logo {
-                    font-size: 30px;
-                    font-weight: 800;
+                    font-size: 28px;
+                    font-weight: 700;
                     display: flex;
                     align-items: center;
-                    margin-bottom: 25px; /* For mobile */
                     color: var(--bg-white); /* White logo text */
+                    width:100%;
                 }
                 footer .footer-logo img {
                     width: 40px;
                     height: 40px;
                     border-radius: 50%;
-                    margin-right: 12px;
                 }
+                    .footer-links {
+                    display: flex;
+                    align-items: center;
+                        justify-content: center;
+                    gap: 1rem;
+                    width: 100%;
+                    }
                 footer .footer-links a {
                     color: #CBD5E0; /* Lighter gray for links */
                     text-decoration: none;
-                    margin: 0 20px; /* More spacing */
                     transition: color 0.3s ease, transform 0.2s ease;
-                    font-size: 17px;
+                    font-size: 14px;
                     font-weight: 500;
                 }
                 footer .footer-links a:hover {
@@ -1054,13 +948,15 @@ export default function App() { // Changed from Page to App for default export
                     transform: translateY(-3px);
                 }
                 footer .social-icons {
-                    display: flex;
-                    gap: 30px; /* More gap */
-                    margin-top: 25px;
+width: 100%;
+display: flex;
+align-items: center;
+    justify-content: center;
+    gap: 1rem;
                 }
-                footer .social-icons a {
+                footer .social-icons a svg{
+                height: 20px;
                     color: #E2E8F0;
-                    font-size: 32px; /* Larger icons */
                     transition: color 0.3s ease, transform 0.2s ease;
                 }
                 footer .social-icons a:hover {
@@ -1068,7 +964,6 @@ export default function App() { // Changed from Page to App for default export
                     transform: translateY(-5px);
                 }
                 footer .copyright {
-                    margin-top: 35px;
                     font-size: 16px;
                     color: #A0AEC0;
                 }
@@ -1104,7 +999,9 @@ export default function App() { // Changed from Page to App for default export
 
                 @media (min-width: 768px) { /* md breakpoint */
                     header nav.desktop-nav {
-                        display: block;
+                        display: flex;
+                        gap: 1rem;
+                        align-items: center;
                     }
                     .menu-toggle {
                         display: none;
@@ -1172,7 +1069,7 @@ export default function App() { // Changed from Page to App for default export
             `}</style>
 
             <header className={headerScrolled ? 'scrolled' : ''}>
-                <div className="container header-content">
+                <div className="header-content">
                     <h1>
                         <img src={lodgerLogo} alt="Lodger Logo" />
                         Lodger
@@ -1189,7 +1086,7 @@ export default function App() { // Changed from Page to App for default export
             </header>
 
             {/* Mobile Menu Overlay */}
-            <div className={`mobile-menu-overlay ${isMenuOpen ? 'open' : ''}`} onClick={() => setIsMenuOpen(false)}></div>
+            {/* <div className={`mobile-menu-overlay ${isMenuOpen ? 'open' : ''}`} onClick={() => setIsMenuOpen(false)}></div> */}
 
             <div className={`mobile-menu ${isMenuOpen ? 'open' : ''}`}>
                 <button className="mobile-menu-close-btn" onClick={() => setIsMenuOpen(false)}>
@@ -1205,11 +1102,11 @@ export default function App() { // Changed from Page to App for default export
             <main>
                 {/* Hero Section */}
                 <Section id="home" className="hero-bg">
-                    <div className="container">
+                  
                         <h2>Find Your Perfect Space, Instantly.</h2>
                         <p>Discover a wide range of apartments, rooms, and shared spaces tailored to your needs. Effortless booking, seamless living.</p>
                         <a href="/discover/" className="book-btn">Book Your Space Now</a>
-                    </div>
+                   
                 </Section>
 
                 {/* Discover Apartments Section */}
@@ -1308,7 +1205,7 @@ export default function App() { // Changed from Page to App for default export
                 */}
 
                 {/* Pricing Section */}
-                <Section id="pricing" className="bg-white">
+                {/* <Section id="pricing" className="bg-white">
                     <div className="container">
                         <div className="section-title">
                             <h3>Flexible Pricing Plans</h3>
@@ -1364,7 +1261,7 @@ export default function App() { // Changed from Page to App for default export
                             />
                         </div>
                     </div>
-                </Section>
+                </Section> */}
 
                 {/* Testimonials Section */}
                 <Section id="testimonials" className="bg-gray-50">
@@ -1407,7 +1304,7 @@ export default function App() { // Changed from Page to App for default export
             </main>
 
             <footer>
-                <div className="container footer-content">
+                <div className="footer-content">
                     <div className="footer-logo">
                         <img src={lodgerLogo} alt="Lodger Logo" />
                         Lodger
