@@ -1139,26 +1139,14 @@ export default function App() {
   };
 
   return (
-    <div className="app-container">
-      {/* Google Fonts link for global application */}
-      <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-      />
-      {/* Favicon link - points to public/favicon.ico in a Next.js project */}
-      <link
-        rel="icon"
-        href="https://placehold.co/32x32/2A398D/ffffff?text=LL"
-      />{" "}
-      {/* Placeholder favicon */}
-      {/* Pure CSS styles embedded directly */}
+    <>
       <style jsx global>{`
         /* Ensure html and body take full viewport height for proper scrolling */
         html,
         body {
           height: 100%;
           margin: 0;
-          overflow-x: hidden; /* Prevent horizontal scroll on body */
+          padding: 0;
         }
 
         :root {
@@ -1192,7 +1180,7 @@ export default function App() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: flex-start;
+          justify-content: start;
           font-size: 15px; /* Slightly reduced base font size */
         }
 
@@ -1204,7 +1192,6 @@ export default function App() {
           min-height: 100vh;
           box-shadow: var(--shadow-xl); /* Overall app shadow */
           border-radius: 1.2rem; /* Slightly reduced rounded app container */
-          overflow: hidden; /* Ensure shadow and border-radius apply correctly */
         }
 
         .sidebar {
@@ -1416,7 +1403,6 @@ export default function App() {
           flex: 1;
           overflow-y: auto;
           background-color: var(--background-light);
-          margin-left: 0; /* Removed default margin */
           transition: margin-left 0.3s ease-in-out;
         }
 
@@ -1439,28 +1425,29 @@ export default function App() {
           background-color: var(--white);
           border-bottom: 1px solid var(--border-color);
           display: flex;
+          flex-direction: column;
           align-items: center;
-          justify-content: space-between;
-          padding: 0 2rem; /* Reduced padding */
+          justify-content: center;
           box-shadow: var(--shadow-md); /* Subtle shadow */
           position: sticky;
           top: 0;
+          right: 0;
+          left: 0;
           z-index: 100;
+          width: 100%;
         }
+.header_inner{
+width: 95%;
+display: flex;
+justify-content: space-between;
+align-item: center;
 
+}
         .header-left-group {
           display: flex;
           align-items: center;
-          gap: 1.2rem; /* Reduced gap */
+          gap: 0.3rem; /* Reduced gap */
         }
-
-        .header-greeting {
-          font-size: 1.2rem; /* Reduced font size */
-          font-weight: 600; /* More bold */
-          color: var(--dark-text);
-          white-space: nowrap;
-        }
-
         .header-right-group {
           display: flex;
           align-items: center;
@@ -1489,8 +1476,8 @@ export default function App() {
         }
 
         .header-icon-button svg {
-          width: 1.6rem; /* Reduced icon size */
-          height: 1.6rem;
+          width: 1.2rem; /* Reduced icon size */
+          height: 1.2rem;
           color: var(--primary-blue); /* Primary blue color */
           transition: color 0.2s ease;
         }
@@ -1498,24 +1485,17 @@ export default function App() {
         /* Red dot badge for new notifications/reminders */
         .notification-badge {
           position: absolute;
-          top: -4px; /* Adjusted position */
-          right: -4px; /* Adjusted position */
+          top: 1px; /* Adjusted position */
+          right: 1px; /* Adjusted position */
           background-color: var(--red-600);
-          color: var(--white);
           border-radius: 50%;
           width: 10px; /* Smaller dot */
           height: 10px; /* Smaller dot */
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 0.6rem; /* Very small, might not show number */
-          font-weight: 700;
-          /* Removed animation and shadow */
         }
 
         .user-avatar {
-          width: 42px; /* Reduced avatar size */
-          height: 42px;
+          width: 2rem; /* Reduced avatar size */
+          height: 2rem;
           background-color: var(--primary-blue); /* Primary blue background */
           border-radius: 50%;
           display: flex;
@@ -1529,6 +1509,7 @@ export default function App() {
           cursor: pointer;
           transition: transform 0.2s ease, background-color 0.2s ease,
             border-color 0.2s ease;
+            display: none;
         }
         .user-avatar:hover {
           transform: scale(1.02); /* Less pronounced scale */
@@ -1536,34 +1517,29 @@ export default function App() {
           border-color: var(--primary-blue);
         }
 
-        .main-content-padding {
-          padding: 2rem; /* Reduced overall padding */
-        }
-
-        @media (min-width: 768px) {
-          .main-content-padding {
-            padding: 2.5rem; /* Slightly more padding on larger screens */
-          }
-        }
-
         .content-section {
-          display: block;
-          opacity: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2rem;
+          width: 100%;
+          padding-block: 1rem;
           transition: none;
-          margin-bottom: 2rem; /* Reduced space between sections */
-        }
-        .content-section:last-child {
-          margin-bottom: 0;
         }
 
         /* --- General Sub-Section Styling --- */
         .dashboard-sub-section {
           background-color: var(--white);
-          padding: 2rem; /* Reduced padding */
+          padding: 1rem;
+          width: 85%;
           border-radius: 1rem; /* Reduced roundedness */
           box-shadow: var(--shadow-md); /* Subtle shadow */
           border: 1px solid var(--border-color);
-          margin-top: 2rem; /* Reduced space */
+        }
+        @media (min-width: 768px) {
+          .dashboard-sub-section {
+            width: 92%;
+          }
         }
         .dashboard-sub-section:first-child {
           margin-top: 0; /* No top margin for the very first section */
@@ -1725,14 +1701,10 @@ export default function App() {
 
         /* --- Transaction Overview Section (New) --- */
         .transaction-overview-metrics-grid {
-          display: flex; /* Changed to flex for horizontal scroll */
-          overflow-x: auto; /* Enable horizontal scrolling */
+          width: 100%;
+          overflow-x: scroll; /* Enable horizontal scrolling */
           -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-          white-space: nowrap; /* Prevent items from wrapping */
           gap: 1rem; /* Space between cards */
-          padding-bottom: 0.6rem; /* Space for scrollbar */
-          margin-bottom: 1.2rem; /* Space between cards and next element */
-          scroll-snap-type: x mandatory; /* Optional: for smoother snapping */
         }
         /* Hide scrollbar for Chrome, Safari and Opera */
         .transaction-overview-metrics-grid::-webkit-scrollbar {
@@ -1743,27 +1715,44 @@ export default function App() {
           -ms-overflow-style: none; /* IE and Edge */
           scrollbar-width: none; /* Firefox */
         }
+        .transaction-overview-metrics-grid-inner {
+          display: flex;
+          width: fit-content;
+          gap: 1rem;
+        }
 
         .chart-canvas-container {
-          position: relative;
           height: 250px; /* Reduced height for charts */
           width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .chart-card {
-          background-color: var(--white);
-          padding: 2rem; /* Reduced padding */
-          border-radius: 1rem; /* Reduced roundedness */
-          box-shadow: var(--shadow-md); /* Subtle shadow */
-          border: 1px solid var(--border-color);
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
         }
-
+        @media (min-width: 1024px) {
+          .chart-card {
+            padding: 2rem;
+            width: 60%;
+            background-color: var(--white);
+            padding: 0rem; /* Reduced padding */
+            border-radius: 1rem; /* Reduced roundedness */
+            box-shadow: var(--shadow-md); /* Subtle shadow */
+            border: 1px solid var(--border-color);
+          }
+        }
         .chart-card-header {
           /* New flex container for chart title and dropdown */
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 1rem; /* Reduced margin */
           flex-wrap: wrap;
           gap: 0.6rem; /* Reduced gap */
         }
@@ -1772,7 +1761,6 @@ export default function App() {
           font-size: 1.4rem; /* Reduced title size */
           font-weight: 700;
           color: var(--dark-text);
-          margin: 0; /* Reset margin */
         }
 
         .chart-period-selector {
@@ -1814,17 +1802,16 @@ export default function App() {
           border: 1px solid var(--border-color);
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
+          align-items: start;
           justify-content: center;
           transition: all 0.2s ease;
-          width: 20rem; /* Minimum width for scrollable cards */
+          width: 14.1rem; /* Minimum width for scrollable cards */
           gap: 0.6rem;
           box-shadow: var(--shadow-sm); /* Added subtle shadow */
         }
         @media (min-width: 768px) {
           .stat-card {
-            min-width: unset; /* Remove min-width on larger screens */
-    
+            width: 17rem;
           }
         }
 
@@ -1852,14 +1839,15 @@ export default function App() {
           color: var(--medium-text);
           margin: 0;
           padding: 0;
-          height:fit-content;
+          height: fit-content;
         }
         h1,
         h2,
         h3,
         h4,
         h5,
-        h6,p {
+        h6,
+        p {
           margin: 0;
           padding: 0;
         }
@@ -1889,28 +1877,35 @@ export default function App() {
 
         /* --- Property Statistics Section (Renamed from Sales Overview / Stats Summary) --- */
         .property-stats-section {
-          /* New grid for property stats and chart */
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 1.5rem; /* Reduced gap */
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1.5rem;
+          width: 100%;
         }
+
         @media (min-width: 1024px) {
           .property-stats-section {
-            grid-template-columns: 1fr; /* Chart takes more space on large screens */
+            flex-direction: row;
+            justify-content: space-between;
           }
         }
-
-        .property-stats-grid {
-          /* Renamed from stats-summary-grid for clarity in this section */
-          display: grid;
-          grid-template-columns: repeat(
-            auto-fit,
-            minmax(150px, 1fr)
-          ); /* Responsive grid for stat cards */
-          gap: 1rem; /* Reduced gap */
+        .property-stats-section .stat-card {
+          width: 100%;
+          align-items: center;
+          padding-block: 1rem;
+          padding-inline: 0;
+          gap: 0.6rem;
+          box-shadow: var(--shadow-sm); /* Added subtle shadow */
         }
-        /* No specific media queries needed here, auto-fit handles responsiveness */
-
+        .property-stats-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.5rem;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+        }
         .view-all-properties-button {
           /* New button style */
           padding: 0.6rem 1rem; /* Reduced padding */
@@ -2011,16 +2006,17 @@ export default function App() {
 
         .modal-content {
           background-color: var(--white);
-          padding: 1.8rem; /* Reduced padding */
+          padding: 1rem; /* Reduced padding */
           border-radius: 0.9rem; /* Reduced roundedness */
           box-shadow: var(--shadow-lg); /* Subtle shadow */
           max-width: 550px; /* Reduced max width */
-          width: 90%;
+          width: 86%;
           transform: translateY(-15px); /* Less pronounced lift */
           transition: transform 0.3s ease;
           display: flex;
           flex-direction: column;
-          max-height: 80vh; /* Reduced max height */
+          max-height: 90vh; /* Reduced max height */
+          gap: 0.5rem;
         }
 
         .modal-overlay.show .modal-content {
@@ -2033,11 +2029,10 @@ export default function App() {
           align-items: center;
           border-bottom: 1px solid var(--border-color);
           padding-bottom: 0.8rem; /* Reduced padding */
-          margin-bottom: 1.2rem; /* Reduced space */
         }
 
         .modal-title {
-          font-size: 1.6rem; /* Reduced title size */
+          font-size: 1.3rem; /* Reduced title size */
           font-weight: 700;
           color: var(--dark-text);
         }
@@ -2063,12 +2058,13 @@ export default function App() {
 
         .modal-body {
           overflow-y: auto;
-          flex-grow: 1;
-          padding-right: 0.5rem; /* Reduced padding */
+          width: auto;
         }
 
         .modal-body .item-list .activity-item {
-          padding: 0.7rem 0; /* Reduced padding */
+          padding: 0.2rem 0; /* Reduced padding */
+          width: 150vw;
+          height: 3.4rem;
         }
 
         .modal-body .item-list .activity-icon-container {
@@ -2163,7 +2159,6 @@ export default function App() {
           background: none;
           border: none;
           cursor: pointer;
-          padding: 0.5rem; /* Reduced padding */
           border-radius: 50%;
           transition: background-color 0.2s ease;
         }
@@ -2173,8 +2168,8 @@ export default function App() {
         }
 
         .hamburger-menu-button svg {
-          width: 1.8rem; /* Reduced icon size */
-          height: 1.8rem;
+          width: 1.6rem; /* Reduced icon size */
+          height: 1.6rem;
           color: var(--medium-text);
         }
 
@@ -2203,104 +2198,37 @@ export default function App() {
           visibility: visible;
         }
       `}</style>
-      {/* Sidebar Overlay for Mobile */}
-      <div
-        className={`sidebar-overlay ${isSidebarOpen ? "show" : ""}`}
-        onClick={() => setIsSidebarOpen(false)}
-      ></div>
-      {/* Sidebar Navigation */}
-      <aside
-        className={`sidebar ${isSidebarOpen ? "sidebar-open" : ""} ${
-          isSidebarCollapsed ? "collapsed" : ""
-        }`}
-      >
-        <div className="sidebar-header">
-          <h1 className="sidebar-title">Landlord App</h1>
-          {/* Mobile close button */}
-          <button
-            className="sidebar-close-button"
-            onClick={() => setIsSidebarOpen(false)}
-            aria-label="Close navigation menu"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-x"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </button>
-          {/* Desktop toggle button */}
-          <button
-            className="sidebar-toggle-button"
-            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            aria-label="Toggle sidebar size"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-chevron-left"
-            >
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-          </button>
-        </div>
-        <nav className="sidebar-nav">
-          <a
-            href="#overview"
-            onClick={() => handleNavigation("overview")}
-            className={`sidebar-link ${
-              activeSection === "overview" ? "active" : ""
-            }`}
-          >
-            <svg
-              className="w-5 h-5 mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-              ></path>
-            </svg>
-            <span>Dashboard</span>
-          </a>
-        </nav>
-        <div className="sidebar-footer">
-          User ID: <span className="font-mono break-all">{userId}</span>
-        </div>
-      </aside>
-      {/* Main Content Area - All sections integrated into Dashboard Overview */}
-      <main
-        className={`main-content ${
-          isSidebarCollapsed ? "sidebar-collapsed" : ""
-        }`}
-      >
-        <header className="header">
-          <div className="header-left-group">
-            {/* Hamburger menu button for mobile */}
+      <div className="app-container">
+        {/* Google Fonts link for global application */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+        {/* Favicon link - points to public/favicon.ico in a Next.js project */}
+        <link
+          rel="icon"
+          href="https://placehold.co/32x32/2A398D/ffffff?text=LL"
+        />{" "}
+        {/* Placeholder favicon */}
+        {/* Pure CSS styles embedded directly */}
+        {/* Sidebar Overlay for Mobile */}
+        <div
+          className={`sidebar-overlay ${isSidebarOpen ? "show" : ""}`}
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+        {/* Sidebar Navigation */}
+        <aside
+          className={`sidebar ${isSidebarOpen ? "sidebar-open" : ""} ${
+            isSidebarCollapsed ? "collapsed" : ""
+          }`}
+        >
+          <div className="sidebar-header">
+            <h1 className="sidebar-title">Landlord App</h1>
+            {/* Mobile close button */}
             <button
-              className="hamburger-menu-button"
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              aria-label="Toggle navigation menu"
+              className="sidebar-close-button"
+              onClick={() => setIsSidebarOpen(false)}
+              aria-label="Close navigation menu"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -2312,38 +2240,17 @@ export default function App() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="lucide lucide-menu"
+                className="lucide lucide-x"
               >
-                <line x1="4" x2="20" y1="12" y2="12" />
-                <line x1="4" x2="20" y1="6" y2="6" />
-                <line x1="4" x2="20" y1="18" y2="18" />
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
               </svg>
             </button>
-            {/* User Avatar moved to be before greeting */}
-            <div
-              className="user-avatar"
-              onClick={handleUserAvatarClick}
-              title={
-                isLoggedIn ? `Logged in as ${user.email}` : "Login / Sign Up"
-              }
-            >
-              {isLoggedIn && user?.email
-                ? user.email.charAt(0).toUpperCase()
-                : "U"}
-            </div>
-            <span className="header-greeting">
-              {getGreeting()},{" "}
-              {isLoggedIn && user?.email ? user.email.split("@")[0] : "Guest"}!
-            </span>
-          </div>
-          <div className="header-right-group">
-            {/* Upcoming Reminders Icon (for undone activities) */}
-            <div
-              className={`header-icon-button ${
-                hasUpcomingReminders ? "has-new" : ""
-              }`}
-              onClick={handleViewRemindersClick}
-              title="View Upcoming Reminders & Tasks (Undone)"
+            {/* Desktop toggle button */}
+            <button
+              className="sidebar-toggle-button"
+              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+              aria-label="Toggle sidebar size"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -2355,53 +2262,152 @@ export default function App() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                className="lucide lucide-chevron-left"
               >
-                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z" />
-                <path d="M12 11h.01" />
-                <path d="M12 16h.01" />
-                <path d="M16 11h.01" />
-                <path d="M16 16h.01" />
-                <path d="M8 11h.01" />
-                <path d="M8 16h.01" />
+                <path d="m15 18-6-6 6-6" />
               </svg>
-              {hasUpcomingReminders && (
-                <span className="notification-badge"></span>
-              )}
-            </div>
-
-            {/* Notification Bell */}
-            <div
-              className={`header-icon-button ${
-                notificationsCount > 0 ? "has-new" : ""
+            </button>
+          </div>
+          <nav className="sidebar-nav">
+            <a
+              href="#overview"
+              onClick={() => handleNavigation("overview")}
+              className={`sidebar-link ${
+                activeSection === "overview" ? "active" : ""
               }`}
-              onClick={handleNotificationBellClick}
-              title="View Notifications"
             >
               <svg
+                className="w-5 h-5 mr-3"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  d="M15 17h5l-1.405-1.405A2.004 2.004 0 0118 14.59V10a6 6 0 00-12 0v4.59c0 .538-.214 1.055-.595 1.405L4 17h5m6 0v1a3 3 0 01-6 0v-1m6 0H9"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
                 ></path>
               </svg>
-              {notificationsCount > 0 && (
-                <span className="notification-badge"></span>
-              )}
-            </div>
+              <span>Dashboard</span>
+            </a>
+          </nav>
+          <div className="sidebar-footer">
+            User ID: <span className="font-mono break-all">{userId}</span>
           </div>
-        </header>
-
-        <div className="main-content-padding">
+        </aside>
+        {/* Main Content Area - All sections integrated into Dashboard Overview */}
+        <main
+          className={`main-content ${
+            isSidebarCollapsed ? "sidebar-collapsed" : ""
+          }`}
+        >
+          <header className="header">
+     <div className="header_inner">
+               <div className="header-left-group">
+              {/* Hamburger menu button for mobile */}
+              <button
+                className="hamburger-menu-button"
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                aria-label="Toggle navigation menu"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-menu"
+                >
+                  <line x1="4" x2="20" y1="12" y2="12" />
+                  <line x1="4" x2="20" y1="6" y2="6" />
+                  <line x1="4" x2="20" y1="18" y2="18" />
+                </svg>
+              </button>
+              {/* User Avatar moved to be before greeting
+              <div
+                className="user-avatar"
+                onClick={handleUserAvatarClick}
+                title={
+                  isLoggedIn ? `Logged in as ${user.email}` : "Login / Sign Up"
+                }
+              >
+                {isLoggedIn && user?.email
+                  ? user.email.charAt(0).toUpperCase()
+                  : "U"}
+              </div>
+              <span className="header-greeting">
+                {getGreeting()},{" "}
+                {isLoggedIn && user?.email ? user.email.split("@")[0] : "Guest"}
+                !
+              </span> */}
+            </div>
+            <div className="header-right-group">
+              {/* Upcoming Reminders Icon (for undone activities) */}
+              <div
+                className={`header-icon-button ${
+                  hasUpcomingReminders ? "has-new" : ""
+                }`}
+                onClick={handleViewRemindersClick}
+                title="View Upcoming Reminders & Tasks (Undone)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                  <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z" />
+                  <path d="M12 11h.01" />
+                  <path d="M12 16h.01" />
+                  <path d="M16 11h.01" />
+                  <path d="M16 16h.01" />
+                  <path d="M8 11h.01" />
+                  <path d="M8 16h.01" />
+                </svg>
+                {hasUpcomingReminders && (
+                  <span className="notification-badge"></span>
+                )}
+              </div>
+              {/* Notification Bell */}
+              <div
+                className={`header-icon-button ${
+                  notificationsCount > 0 ? "has-new" : ""
+                }`}
+                onClick={handleNotificationBellClick}
+                title="View Notifications"
+              >
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 17h5l-1.405-1.405A2.004 2.004 0 0118 14.59V10a6 6 0 00-12 0v4.59c0 .538-.214 1.055-.595 1.405L4 17h5m6 0v1a3 3 0 01-6 0v-1m6 0H9"
+                  ></path>
+                </svg>
+                {notificationsCount > 0 && (
+                  <span className="notification-badge"></span>
+                )}
+              </div>
+            </div>
+     </div>
+          </header>
           <section id="overview" className="content-section active">
-            {" "}
-            {/* Always active */}
             {/* Transaction Overview Section (First) */}
             <div className="dashboard-sub-section">
               <h4 className="dashboard-sub-section-title">
@@ -2412,140 +2418,142 @@ export default function App() {
                 metrics.
               </p>
               <div className="transaction-overview-metrics-grid">
-                {" "}
-                {/* New grid for the 4 cards */}
-                <div className="stat-card">
-                  <div className="stat-card-icon-wrapper">
-                    <span className="stat-card-icon">
-                      <svg
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
+                <div className="transaction-overview-metrics-grid-inner">
+                  {" "}
+                  {/* New grid for the 4 cards */}
+                  <div className="stat-card">
+                    <div className="stat-card-icon-wrapper">
+                      <span className="stat-card-icon">
+                        <svg
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V4m0 12v4m-6-2h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          ></path>
+                        </svg>
+                      </span>
+                    </div>
+                    <h3 className="stat-card-title">Total Income</h3>
+                    <p className="stat-card-value">
+                      ₦{totalIncome.toLocaleString()}
+                    </p>
+                    <div
+                      className={`stat-card-percentage ${
+                        isIncomeIncreasing ? "increase" : "decrease"
+                      }`}
+                    >
+                      {isIncomeIncreasing ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
+                          className="lucide lucide-arrow-up"
+                        >
+                          <path d="M12 19V5" />
+                          <path d="m5 12 7-7 7 7" />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
                           strokeWidth="2"
-                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V4m0 12v4m-6-2h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        ></path>
-                      </svg>
-                    </span>
-                  </div>
-                  <h3 className="stat-card-title">Total Income</h3>
-                  <p className="stat-card-value">
-                    ₦{totalIncome.toLocaleString()}
-                  </p>
-                  <div
-                    className={`stat-card-percentage ${
-                      isIncomeIncreasing ? "increase" : "decrease"
-                    }`}
-                  >
-                    {isIncomeIncreasing ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="lucide lucide-arrow-up"
-                      >
-                        <path d="M12 19V5" />
-                        <path d="m5 12 7-7 7 7" />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="lucide lucide-arrow-down"
-                      >
-                        <path d="M12 5v14" />
-                        <path d="m19 12-7 7-7-7" />
-                      </svg>
-                    )}
-                    {incomePercentageChange}% vs last month
-                  </div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-card-icon-wrapper">
-                    <span className="stat-card-icon">
-                      <svg
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-                        ></path>
-                      </svg>
-                    </span>
+                          className="lucide lucide-arrow-down"
+                        >
+                          <path d="M12 5v14" />
+                          <path d="m19 12-7 7-7-7" />
+                        </svg>
+                      )}
+                      {incomePercentageChange}% vs last month
+                    </div>
                   </div>
-                  <h3 className="stat-card-title">Total Expenses</h3>
-                  <p className="stat-card-value">
-                    ₦{totalExpenses.toLocaleString()}
-                  </p>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-card-icon-wrapper">
-                    <span className="stat-card-icon">
-                      <svg
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M13 7h8m0 0v8m0-8L11 2m9 10a9 9 0 11-18 0 9 9 0 0118 0z"
-                        ></path>
-                      </svg>
-                    </span>
+                  <div className="stat-card">
+                    <div className="stat-card-icon-wrapper">
+                      <span className="stat-card-icon">
+                        <svg
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                          ></path>
+                        </svg>
+                      </span>
+                    </div>
+                    <h3 className="stat-card-title">Total Expenses</h3>
+                    <p className="stat-card-value">
+                      ₦{totalExpenses.toLocaleString()}
+                    </p>
                   </div>
-                  <h3 className="stat-card-title">Total Rented Units</h3>{" "}
-                  {/* Renamed from Total Sold */}
-                  <p className="stat-card-value">{totalRentedProperties}</p>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-card-icon-wrapper">
-                    <span className="stat-card-icon">
-                      <svg
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        ></path>
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                        ></path>
-                      </svg>
-                    </span>
+                  <div className="stat-card">
+                    <div className="stat-card-icon-wrapper">
+                      <span className="stat-card-icon">
+                        <svg
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M13 7h8m0 0v8m0-8L11 2m9 10a9 9 0 11-18 0 9 9 0 0118 0z"
+                          ></path>
+                        </svg>
+                      </span>
+                    </div>
+                    <h3 className="stat-card-title">Total Rented Units</h3>{" "}
+                    {/* Renamed from Total Sold */}
+                    <p className="stat-card-value">{totalRentedProperties}</p>
                   </div>
-                  <h3 className="stat-card-title">Total Views</h3>
-                  <p className="stat-card-value">
-                    {totalViews.toLocaleString()}
-                  </p>
+                  <div className="stat-card">
+                    <div className="stat-card-icon-wrapper">
+                      <span className="stat-card-icon">
+                        <svg
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          ></path>
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                          ></path>
+                        </svg>
+                      </span>
+                    </div>
+                    <h3 className="stat-card-title">Total Views</h3>
+                    <p className="stat-card-value">
+                      {totalViews.toLocaleString()}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2610,8 +2618,6 @@ export default function App() {
                   </div>
                 </div>
                 <div className="property-stats-grid">
-                  {" "}
-                  {/* Renamed from stats-summary-grid for clarity */}
                   {propertyStatisticsMetrics.map((metric) => (
                     <div key={metric.id} className="stat-card">
                       <div className="stat-card-icon-wrapper">
@@ -2780,120 +2786,69 @@ export default function App() {
               )}
             </div>
           </section>
-        </div>
-      </main>
-      <MessageBox message={message} type={messageType} />
-      {/* Notifications Modal */}
-      <Modal
-        isOpen={isNotificationsModalOpen}
-        onClose={() => setIsNotificationsModalOpen(false)}
-        title="Your Notifications"
-      >
-        {notifications.length > 0 ? (
-          <>
-            <ul className="item-list">
-              {notifications.map((notif) => (
-                <li
-                  key={notif.id}
-                  className={`notification-item ${notif.read ? "read" : ""}`}
-                >
-                  <span className="icon">
-                    {notif.read ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="lucide lucide-check-circle"
-                      >
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <path d="m9 11 3 3L22 4" />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="lucide lucide-bell"
-                      >
-                        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-                        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-                      </svg>
-                    )}
-                  </span>
-                  <span
-                    className="content"
-                    onClick={() => handleViewNotificationDetails(notif)}
+        </main>
+        <MessageBox message={message} type={messageType} />
+        {/* Notifications Modal */}
+        <Modal
+          isOpen={isNotificationsModalOpen}
+          onClose={() => setIsNotificationsModalOpen(false)}
+          title="Your Notifications"
+        >
+          {notifications.length > 0 ? (
+            <>
+              <ul className="item-list">
+                {notifications.map((notif) => (
+                  <li
+                    key={notif.id}
+                    className={`notification-item ${notif.read ? "read" : ""}`}
                   >
-                    {notif.message}
-                  </span>
-                  <span className="date">{notif.date}</span>
-                  <span
-                    className="delete-icon"
-                    onClick={() => handleDeleteNotification(notif.id)}
-                    title="Delete Notification"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucude-trash-2"
+                    <span className="icon">
+                      {notif.read ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="lucide lucide-check-circle"
+                        >
+                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                          <path d="m9 11 3 3L22 4" />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="lucide lucide-bell"
+                        >
+                          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                        </svg>
+                      )}
+                    </span>
+                    <span
+                      className="content"
+                      onClick={() => handleViewNotificationDetails(notif)}
                     >
-                      <path d="M3 6h18" />
-                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                      <line x1="10" x2="10" y1="11" y2="17" />
-                      <line x1="14" x2="14" y1="11" y2="17" />
-                    </svg>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </>
-        ) : (
-          <p className="text-slate-500">No new notifications.</p>
-        )}
-      </Modal>
-      {/* Upcoming Reminders Modal (for undone activities) */}
-      <Modal
-        isOpen={isRemindersModalOpen}
-        onClose={() => setIsRemindersModalOpen(false)}
-        title="Upcoming Reminders & Tasks (Undone Activities)"
-      >
-        {upcomingReminders.length > 0 ? (
-          <>
-            <ul className="item-list">
-              {upcomingReminders.map((reminder) => (
-                <li key={reminder.id} className="activity-item">
-                  <div
-                    className={`activity-icon-container activity-icon-${
-                      reminder.type.split("_")[0]
-                    }`}
-                    style={{
-                      width: "34px",
-                      height: "34px",
-                      fontSize: "1rem",
-                      marginRight: "0.8rem",
-                    }}
-                  >
-                    {reminder.type === "lease_renewal" && (
+                      {notif.message}
+                    </span>
+                    <span className="date">{notif.date}</span>
+                    <span
+                      className="delete-icon"
+                      onClick={() => handleDeleteNotification(notif.id)}
+                      title="Delete Notification"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="18"
@@ -2904,71 +2859,124 @@ export default function App() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
+                        className="lucide lucude-trash-2"
                       >
-                        <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        <path d="M3 6h18" />
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                        <line x1="10" x2="10" y1="11" y2="17" />
+                        <line x1="14" x2="14" y1="11" y2="17" />
                       </svg>
-                    )}
-                    {reminder.type === "rent_overdue" && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V4m0 12v4m-6-2h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                      </svg>
-                    )}
-                    {reminder.type === "maintenance_pending" && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                      </svg>
-                    )}
-                  </div>
-                  <div className="activity-content">{reminder.description}</div>
-                  <div className="activity-date">{reminder.date}</div>
-                  <span
-                    className={`activity-status ${reminder.status.replace(
-                      /\s+/g,
-                      "-"
-                    )}`}
-                  >
-                    {reminder.status}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </>
-        ) : (
-          <p className="text-slate-500">No upcoming reminders or tasks.</p>
-        )}
-      </Modal>
-      {/* Notification Details Modal */}
-      <NotificationDetailsModal
-        isOpen={isNotificationDetailsModalOpen}
-        onClose={() => setIsNotificationDetailsModalOpen(false)}
-        notification={selectedNotification}
-      />
-      {/* Login/Signup Modal */}
-      <LoginSignupModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        onLoginSuccess={handleLoginSuccess}
-      />
-    </div>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p className="text-slate-500">No new notifications.</p>
+          )}
+        </Modal>
+        {/* Upcoming Reminders Modal (for undone activities) */}
+        <Modal
+          isOpen={isRemindersModalOpen}
+          onClose={() => setIsRemindersModalOpen(false)}
+          title="Upcoming Reminders & Tasks (Undone Activities)"
+        >
+          {upcomingReminders.length > 0 ? (
+            <>
+              <ul className="item-list">
+                {upcomingReminders.map((reminder) => (
+                  <li key={reminder.id} className="activity-item">
+                    <div
+                      className={`activity-icon-container activity-icon-${
+                        reminder.type.split("_")[0]
+                      }`}
+                      style={{
+                        width: "34px",
+                        height: "34px",
+                        fontSize: "1rem",
+                        marginRight: "0.8rem",
+                      }}
+                    >
+                      {reminder.type === "lease_renewal" && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                      )}
+                      {reminder.type === "rent_overdue" && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V4m0 12v4m-6-2h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                      )}
+                      {reminder.type === "maintenance_pending" && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                      )}
+                    </div>
+                    <div className="activity-content">
+                      {reminder.description}
+                    </div>
+                    <div className="activity-date">{reminder.date}</div>
+                    <span
+                      className={`activity-status ${reminder.status.replace(
+                        /\s+/g,
+                        "-"
+                      )}`}
+                    >
+                      {reminder.status}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p className="text-slate-500">No upcoming reminders or tasks.</p>
+          )}
+        </Modal>
+        {/* Notification Details Modal */}
+        <NotificationDetailsModal
+          isOpen={isNotificationDetailsModalOpen}
+          onClose={() => setIsNotificationDetailsModalOpen(false)}
+          notification={selectedNotification}
+        />
+        {/* Login/Signup Modal */}
+        <LoginSignupModal
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+          onLoginSuccess={handleLoginSuccess}
+        />
+      </div>
+    </>
   );
 }
