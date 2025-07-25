@@ -1284,12 +1284,18 @@ export default function App() {
 
         .sidebar-toggle-button {
           display: none; /* Hidden by default, only for desktop */
-          background: none;
+          background-color: var(--light-blue);
           border: none;
           cursor: pointer;
-          padding: 0.4rem; /* Reduced padding */
           border-radius: 50%;
-          transition: background-color 0.2s ease, transform 0.3s ease-in-out;
+          transition: 0.2s ease, transform 0.3s ease-in-out;
+          position: fixed;
+          bottom: 2rem;
+          height: 2.5rem;
+          width: 2.5rem;
+          left: 19%;
+          align-items: center;
+          justify-content: center;
         }
 
         .sidebar-toggle-button:hover {
@@ -1297,17 +1303,21 @@ export default function App() {
         }
 
         .sidebar-toggle-button svg {
-          width: 1.4rem; /* Reduced icon size */
-          height: 1.4rem;
+          width: 70%; /* Reduced icon size */
+          height: 70%;
           color: var(--medium-text);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         @media (min-width: 768px) {
           .sidebar-toggle-button {
-            display: block; /* Show on desktop */
+            display: flex;
           }
           .sidebar.collapsed .sidebar-toggle-button {
             transform: rotate(180deg); /* Rotate icon when collapsed */
+            left: 7%;
           }
         }
 
@@ -1436,13 +1446,12 @@ export default function App() {
           z-index: 100;
           width: 100%;
         }
-.header_inner{
-width: 95%;
-display: flex;
-justify-content: space-between;
-align-item: center;
-
-}
+        .header_inner {
+          width: 95%;
+          display: flex;
+          justify-content: space-between;
+          align-item: center;
+        }
         .header-left-group {
           display: flex;
           align-items: center;
@@ -1509,7 +1518,7 @@ align-item: center;
           cursor: pointer;
           transition: transform 0.2s ease, background-color 0.2s ease,
             border-color 0.2s ease;
-            display: none;
+          display: none;
         }
         .user-avatar:hover {
           transform: scale(1.02); /* Less pronounced scale */
@@ -1737,10 +1746,10 @@ align-item: center;
           justify-content: center;
           gap: 1rem;
         }
-        @media (min-width: 1024px) {
+        @media (min-width: 767px) {
           .chart-card {
-            padding: 2rem;
-            width: 60%;
+            padding: 1rem;
+            width: 70%;
             background-color: var(--white);
             padding: 0rem; /* Reduced padding */
             border-radius: 1rem; /* Reduced roundedness */
@@ -1884,11 +1893,14 @@ align-item: center;
           width: 100%;
         }
 
-        @media (min-width: 1024px) {
+        @media (min-width: 767px) {
           .property-stats-section {
             flex-direction: row;
             justify-content: space-between;
           }
+                    .property-stats-grid {
+          width: 30%;
+        }
         }
         .property-stats-section .stat-card {
           width: 100%;
@@ -2063,7 +2075,7 @@ align-item: center;
 
         .modal-body .item-list .activity-item {
           padding: 0.2rem 0; /* Reduced padding */
-          width: 150vw;
+          width: 35rem;
           height: 3.4rem;
         }
 
@@ -2204,12 +2216,6 @@ align-item: center;
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
-        {/* Favicon link - points to public/favicon.ico in a Next.js project */}
-        <link
-          rel="icon"
-          href="https://placehold.co/32x32/2A398D/ffffff?text=LL"
-        />{" "}
-        {/* Placeholder favicon */}
         {/* Pure CSS styles embedded directly */}
         {/* Sidebar Overlay for Mobile */}
         <div
@@ -2223,7 +2229,7 @@ align-item: center;
           }`}
         >
           <div className="sidebar-header">
-            <h1 className="sidebar-title">Landlord App</h1>
+            <img src="/favicon.ico" alt="" />
             {/* Mobile close button */}
             <button
               className="sidebar-close-button"
@@ -2303,32 +2309,32 @@ align-item: center;
           }`}
         >
           <header className="header">
-     <div className="header_inner">
-               <div className="header-left-group">
-              {/* Hamburger menu button for mobile */}
-              <button
-                className="hamburger-menu-button"
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                aria-label="Toggle navigation menu"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-menu"
+            <div className="header_inner">
+              <div className="header-left-group">
+                {/* Hamburger menu button for mobile */}
+                <button
+                  className="hamburger-menu-button"
+                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                  aria-label="Toggle navigation menu"
                 >
-                  <line x1="4" x2="20" y1="12" y2="12" />
-                  <line x1="4" x2="20" y1="6" y2="6" />
-                  <line x1="4" x2="20" y1="18" y2="18" />
-                </svg>
-              </button>
-              {/* User Avatar moved to be before greeting
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-menu"
+                  >
+                    <line x1="4" x2="20" y1="12" y2="12" />
+                    <line x1="4" x2="20" y1="6" y2="6" />
+                    <line x1="4" x2="20" y1="18" y2="18" />
+                  </svg>
+                </button>
+                {/* User Avatar moved to be before greeting
               <div
                 className="user-avatar"
                 onClick={handleUserAvatarClick}
@@ -2345,67 +2351,67 @@ align-item: center;
                 {isLoggedIn && user?.email ? user.email.split("@")[0] : "Guest"}
                 !
               </span> */}
-            </div>
-            <div className="header-right-group">
-              {/* Upcoming Reminders Icon (for undone activities) */}
-              <div
-                className={`header-icon-button ${
-                  hasUpcomingReminders ? "has-new" : ""
-                }`}
-                onClick={handleViewRemindersClick}
-                title="View Upcoming Reminders & Tasks (Undone)"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                  <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z" />
-                  <path d="M12 11h.01" />
-                  <path d="M12 16h.01" />
-                  <path d="M16 11h.01" />
-                  <path d="M16 16h.01" />
-                  <path d="M8 11h.01" />
-                  <path d="M8 16h.01" />
-                </svg>
-                {hasUpcomingReminders && (
-                  <span className="notification-badge"></span>
-                )}
               </div>
-              {/* Notification Bell */}
-              <div
-                className={`header-icon-button ${
-                  notificationsCount > 0 ? "has-new" : ""
-                }`}
-                onClick={handleNotificationBellClick}
-                title="View Notifications"
-              >
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
+              <div className="header-right-group">
+                {/* Upcoming Reminders Icon (for undone activities) */}
+                <div
+                  className={`header-icon-button ${
+                    hasUpcomingReminders ? "has-new" : ""
+                  }`}
+                  onClick={handleViewRemindersClick}
+                  title="View Upcoming Reminders & Tasks (Undone)"
                 >
-                  <path
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 17h5l-1.405-1.405A2.004 2.004 0 0118 14.59V10a6 6 0 00-12 0v4.59c0 .538-.214 1.055-.595 1.405L4 17h5m6 0v1a3 3 0 01-6 0v-1m6 0H9"
-                  ></path>
-                </svg>
-                {notificationsCount > 0 && (
-                  <span className="notification-badge"></span>
-                )}
+                  >
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                    <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z" />
+                    <path d="M12 11h.01" />
+                    <path d="M12 16h.01" />
+                    <path d="M16 11h.01" />
+                    <path d="M16 16h.01" />
+                    <path d="M8 11h.01" />
+                    <path d="M8 16h.01" />
+                  </svg>
+                  {hasUpcomingReminders && (
+                    <span className="notification-badge"></span>
+                  )}
+                </div>
+                {/* Notification Bell */}
+                <div
+                  className={`header-icon-button ${
+                    notificationsCount > 0 ? "has-new" : ""
+                  }`}
+                  onClick={handleNotificationBellClick}
+                  title="View Notifications"
+                >
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M15 17h5l-1.405-1.405A2.004 2.004 0 0118 14.59V10a6 6 0 00-12 0v4.59c0 .538-.214 1.055-.595 1.405L4 17h5m6 0v1a3 3 0 01-6 0v-1m6 0H9"
+                    ></path>
+                  </svg>
+                  {notificationsCount > 0 && (
+                    <span className="notification-badge"></span>
+                  )}
+                </div>
               </div>
             </div>
-     </div>
           </header>
           <section id="overview" className="content-section active">
             {/* Transaction Overview Section (First) */}
