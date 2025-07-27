@@ -1140,7 +1140,7 @@ export default function App() {
 
   return (
     <>
-      <style jsx global>{`
+      <style>{`
         /* Ensure html and body take full viewport height for proper scrolling */
         html,
         body {
@@ -1293,7 +1293,7 @@ export default function App() {
           bottom: 2rem;
           height: 2.5rem;
           width: 2.5rem;
-          left: 19%;
+          left: 17rem;
           align-items: center;
           justify-content: center;
         }
@@ -1317,7 +1317,7 @@ export default function App() {
           }
           .sidebar.collapsed .sidebar-toggle-button {
             transform: rotate(180deg); /* Rotate icon when collapsed */
-            left: 7%;
+            left: 5.5rem;
           }
         }
 
@@ -1748,14 +1748,19 @@ export default function App() {
         }
         @media (min-width: 767px) {
           .chart-card {
-            padding: 1rem;
-            width: 70%;
+            padding: 0.5rem;
+            width: 60%;
             background-color: var(--white);
-            padding: 0rem; /* Reduced padding */
             border-radius: 1rem; /* Reduced roundedness */
             box-shadow: var(--shadow-md); /* Subtle shadow */
             border: 1px solid var(--border-color);
           }
+                    .chart-canvas-container {
+          height: 100%; /* Reduced height for charts */
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
         }
         .chart-card-header {
           /* New flex container for chart title and dropdown */
@@ -1893,15 +1898,7 @@ export default function App() {
           width: 100%;
         }
 
-        @media (min-width: 767px) {
-          .property-stats-section {
-            flex-direction: row;
-            justify-content: space-between;
-          }
-                    .property-stats-grid {
-          width: 30%;
-        }
-        }
+    
         .property-stats-section .stat-card {
           width: 100%;
           align-items: center;
@@ -1917,6 +1914,18 @@ export default function App() {
           align-items: center;
           justify-content: center;
           width: 100%;
+        }
+              @media (min-width: 767px) {
+          .property-stats-section {
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 0.7rem;
+          }
+                    .property-stats-grid {
+          width: 40%;
+          gap: 1rem;
+          
+        }
         }
         .view-all-properties-button {
           /* New button style */
