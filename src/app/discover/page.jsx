@@ -1516,13 +1516,7 @@ export default function DiscoverPage() {
       {!(currentPage === 'details' && isMobile) && currentPage !== 'map' && currentPage !== 'bookmarks' && currentPage !== 'compare' && currentPage !== 'saved-searches' && currentPage !== 'profile' && currentPage !== 'dashboard' && (
         <div className={`app-container ${isSidebarCollapsed ? 'sidebar-collapsed-mode' : ''}`}>
           <style>{`
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-            /* Removed Swiper CSS imports */
-            /* @import 'swiper/swiper-bundle.min.css'; */
-            /* @import 'swiper/css'; */
-            /* @import 'swiper/css/pagination'; */
-            /* @import 'swiper/css/navigation'; */
 
             /* Swiper related styles are now for custom slider */
             .swiper {

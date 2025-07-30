@@ -1,16 +1,9 @@
 "use client"; // This directive marks the component as a Client Component in Next.js
 import React, { useState, useEffect } from "react";
-import {AISpaceDescription} from "@/app/component/aiGenerator"
-import {TestimonialCard} from "@/app/component/testimonial"
-import {FeatureCard} from "@/app/component/featurescard"
-// Reusable component (simplified, without framer-motion)
-const Section = ({ children, className, id }) => {
-  return (
-    <section id={id} className={className}>
-      {children}
-    </section>
-  );
-};
+import { AISpaceDescription } from "@/app/component/aiGenerator";
+import { TestimonialCard } from "@/app/component/testimonial";
+import { FeatureCard } from "@/app/component/featurescard";
+import Image from "next/image";
 // Define a reusable PricingCard component
 // const PricingCard = ({
 //   title,
@@ -59,9 +52,7 @@ const Section = ({ children, className, id }) => {
 //   </div>
 // );
 
-
-
-export default function App() {
+export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [headerScrolled, setHeaderScrolled] = useState(false);
 
@@ -95,7 +86,42 @@ export default function App() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
+  const features = [
+    {
+      icon: "M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18v-9",
+      title: "Extensive Listings",
+      description:
+        "Browse thousands of verified apartments, rooms, and shared spaces.",
+    },
+    {
+      icon: "M13 10V3L4 14h7v7l9-11h-7z",
+      title: "Instant Booking",
+      description:
+        "Secure your desired space with a few clicks, no lengthy paperwork.",
+    },
+    {
+      icon: "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z",
+      title: "Direct Communication",
+      description: "Chat directly with landlords and potential flatmates.",
+    },
+    {
+      icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.92 12c0 2.895 1.19 5.518 3.102 7.379L3 21l3.72-1.395A11.982 11.982 0 0012 22c4.418 0 8-3.582 8-8s-3.582-8-8-8z",
+      title: "Secure Payments",
+      description: "Process rent and deposits securely through our platform.",
+    },
+    {
+      icon: "M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4",
+      title: "Personalized Matches",
+      description:
+        "Our algorithm suggests spaces that fit your preferences and lifestyle.",
+    },
+    {
+      icon: "M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2 2m-2-2l-2 2m0 0l-2 2m2-2l2-2M9 20l2-2m-2 2l-2-2m0 0l-2-2m2 2l2 2m0 0l2 2m-2-2l-2-2M17 3l2 2m-2-2l-2 2m0 0l-2 2m2-2l2-2M21 9l-2-2m2 2l-2-2m0 0l-2-2m2 2l2 2M17 21l2-2m-2 2l-2-2m0 0l-2-2m2 2l2 2",
+      title: "AI Description Generator",
+      description:
+        "Landlords can use AI to generate compelling property descriptions.",
+    },
+  ];
   // Updated navigation links to include Discover and Landlord pages
   const navLinks = [
     { name: "Discover Apartments", href: "/discover/" }, // New link
@@ -115,7 +141,7 @@ export default function App() {
   return (
     <>
       <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap'); /* Added more weights */
+               
                 :root {
                     --primary-indigo: #5A67D8; /* Softer indigo */
                     --primary-indigo-dark: #434190;
@@ -134,18 +160,7 @@ export default function App() {
                     --border-radius-medium: 12px;
                     --border-radius-large: 15px;
                 }
-*{
-padding:0;
-margin: 0;
-}
-                body {
-                    font-family: 'Inter', sans-serif;
-                    margin: 0;
-                    color: var(--text-medium);
-                    background-color: var(--bg-light);
-                    -webkit-font-smoothing: antialiased;
-                    -moz-osx-font-smoothing: grayscale;
-                }
+     
                     .container{
                     display: flex;
                     flex-direction: column;
@@ -158,6 +173,7 @@ margin: 0;
                     flex-direction: column;
                     align-items: center;
                     gap: 3rem;
+                    width: 100%;
                     }
                 header {
                     background-color: var(--bg-white);
@@ -1003,7 +1019,7 @@ align-items: center;
 
       <main>
         {/* Hero Section */}
-        <Section id="home" className="hero-bg">
+        <section id="home" className="hero-bg">
           <h2>Find Your Perfect Space, Instantly.</h2>
           <p>
             Discover a wide range of apartments, rooms, and shared spaces
@@ -1012,10 +1028,10 @@ align-items: center;
           <a href="/discover/" className="book-btn">
             Book Your Space Now
           </a>
-        </Section>
+        </section>
 
         {/* Discover Apartments Section */}
-        <Section id="discover-apartments" className="bg-white">
+        <section id="discover-apartments" className="bg-white">
           <div className="container">
             <div className="section-title">
               <h3>Discover Your Next Home</h3>
@@ -1027,6 +1043,8 @@ align-items: center;
             <div className="flex-container-center-md">
               {" "}
               {/* Custom class for flex layout */}
+              
+             {/* <Image src="/@/app/assests/hero.jpg" width={240} height={400}/> */}
               <img
                 src={discoverSectionImage}
                 alt="Featured Apartments"
@@ -1048,10 +1066,10 @@ align-items: center;
               </div>
             </div>
           </div>
-        </Section>
+        </section>
 
         {/* Become a Landlord Section */}
-        <Section id="become-a-landlord" className="bg-gray-50">
+        <section id="become-a-landlord" className="bg-gray-50">
           <div className="container">
             <div className="section-title">
               <h3>Become a Landlord with Ease</h3>
@@ -1085,10 +1103,10 @@ align-items: center;
               </div>
             </div>
           </div>
-        </Section>
+        </section>
 
         {/* Features Section */}
-        <Section id="features" className="bg-white">
+        <section id="features" className="bg-white">
           <div className="container">
             <div className="section-title">
               <h3>Features Designed for You</h3>
@@ -1098,132 +1116,40 @@ align-items: center;
               </p>
             </div>
             <div className="feature-grid">
-              <FeatureCard
-                icon={
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18v-9"
-                    ></path>
-                  </svg>
-                }
-                title="Extensive Listings"
-                description="Browse thousands of verified apartments, rooms, and shared spaces."
-              />
-              <FeatureCard
-                icon={
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    ></path>
-                  </svg>
-                }
-                title="Instant Booking"
-                description="Secure your desired space with a few clicks, no lengthy paperwork."
-              />
-              <FeatureCard
-                icon={
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                    ></path>
-                  </svg>
-                }
-                title="Direct Communication"
-                description="Chat directly with landlords and potential flatmates."
-              />
-              <FeatureCard
-                icon={
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.92 12c0 2.895 1.19 5.518 3.102 7.379L3 21l3.72-1.395A11.982 11.982 0 0012 22c4.418 0 8-3.582 8-8s-3.582-8-8-8z"
-                    ></path>
-                  </svg>
-                }
-                title="Secure Payments"
-                description="Process rent and deposits securely through our platform."
-              />
-              <FeatureCard
-                icon={
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-                    ></path>
-                  </svg>
-                }
-                title="Personalized Matches"
-                description="Our algorithm suggests spaces that fit your preferences and lifestyle."
-              />
-              <FeatureCard
-                icon={
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2 2m-2-2l-2 2m0 0l-2 2m2-2l2-2M9 20l2-2m-2 2l-2-2m0 0l-2-2m2 2l2 2m0 0l2 2m-2-2l-2-2M17 3l2 2m-2-2l-2 2m0 0l-2 2m2-2l2-2M21 9l-2-2m2 2l-2-2m0 0l-2-2m2 2l2 2M17 21l2-2m-2 2l-2-2m0 0l-2-2m2 2l2 2"
-                    ></path>
-                  </svg>
-                }
-                title="AI Description Generator"
-                description="Landlords can use AI to generate compelling property descriptions."
-              />
+              {features.map((feature) => {
+                return (
+                  <FeatureCard
+                    icon={
+                      <svg
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d={feature.icon}
+                        ></path>
+                      </svg>
+                    }
+                    title={feature.title}
+                    description={feature.description}
+                  />
+                );
+              })}
             </div>
           </div>
-        </Section>
+        </section>
 
         {/* AI Space Description Section - Commented out */}
-      
-                <Section id="ai-description" className="bg-white">
-                    <div className="container">
-                        <AISpaceDescription />
-                    </div>
-                </Section>
- 
+
+        {/* <section id="ai-description" className="bg-white">
+          <div className="container">
+            <AISpaceDescription />
+          </div>
+        </section> */}
 
         {/* Pricing Section */}
         {/* <Section id="pricing" className="bg-white">
@@ -1285,7 +1211,7 @@ align-items: center;
                 </Section> */}
 
         {/* Testimonials Section */}
-        <Section id="testimonials" className="bg-gray-50">
+        <section id="testimonials" className="bg-gray-50">
           <div className="container">
             <div className="section-title">
               <h3>What Our Users Say</h3>
@@ -1317,10 +1243,10 @@ align-items: center;
               </div>
             </div>
           </div>
-        </Section>
+        </section>
 
         {/* Call to Action Section */}
-        <Section id="cta-section" className="cta-section">
+        <section id="cta-section" className="cta-section">
           <div className="container">
             <h3>Ready to find your perfect space or list your property?</h3>
             <p>
@@ -1331,7 +1257,7 @@ align-items: center;
               Start Your Journey
             </a>
           </div>
-        </Section>
+        </section>
       </main>
 
       <footer>
