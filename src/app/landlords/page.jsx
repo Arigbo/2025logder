@@ -1,9 +1,8 @@
 "use client"; // This directive marks the component as a Client Component
-
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Chart from "chart.js/auto"; // Import Chart.js
 import { DashboardContext } from "@/app/landlords/layout"; // Import the context from the layout file
-
+import Modal from "@/app/component/modal";
 // --- Load external scripts for PDF generation ---
 // This ensures jspdf and jspdf-autotable are available globally when needed.
 // This block should ideally be placed outside the component or managed with a custom hook
@@ -22,44 +21,7 @@ if (typeof window !== "undefined" && !window.jspdf) {
 }
 
 // --- Modal Component (moved here for data-dependent modals) ---
-// A generic modal component for displaying content on top of the main page.
-function Modal({ isOpen, onClose, title, children }) {
-  if (!isOpen) return null; // Don't render if the modal is not open
 
-  return (
-    // Overlay to dim the background and close modal on click outside content
-    <div
-      className={isOpen ? "modal-overlay show" : "modal-overlay"}
-      onClick={onClose}
-    >
-      {/* Modal content area, prevents closing when clicking inside */}
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h3 className="modal-title">{title}</h3>
-          {/* Close button with an SVG icon */}
-          <button className="modal-close-button" onClick={onClose}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide-x-icon"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
-          </button>
-        </div>
-        <div className="modal-body">{children}</div>
-      </div>
-    </div>
-  );
-}
 
 // --- Notification Details Modal Component (moved here) ---
 // Displays detailed information about a selected notification.
@@ -329,28 +291,26 @@ export default function DashboardOverviewContent() {
       chartInstances.current = {}; // Reset the ref to clear old instances
     };
   }, [allMockProperties, chartPeriod, isLoggedIn]); // Re-run effect if properties data, chartPeriod, or isLoggedIn changes
-
   return (
-    < div className="content-area-inner">
+    <div className="content-area-inner">
       {/* Conditional rendering based on login status */}
       {!isLoggedIn ? (
-        <div className="">
-          <h1 className="text-size-3xl font-bold text-gray-800 margin-bottom-4">Welcome to Lodger!</h1>
-          <p className="text-size-lg text-gray-600 margin-bottom-8">Please log in to access your landlord dashboard and manage your properties.</p>
+        <div className="not-login">
+          <h1 className="text-size-3xl font-bold text-gray-800">Welcome to Lodger!</h1>
+          <p className="text-size-lg text-gray-600 ">Please log in to access your landlord dashboard and manage your properties.</p>
           <button
             onClick={() => setIsLoginModalOpen(true)}
             className="button-primary button-large"
           >
             Login / Sign Up
           </button>
-          <p className="text-size-sm text-gray-500 margin-top-4">Use demo@example.com and 'password' to try it out!</p>
+          <p className="text-size-sm text-gray-500 ">Use demo@example.com and 'password' to try it out!</p>
         </div>
       ) : (
         <div className="overview-section">
-          <h1 className="section-title margin-bottom-6 text-gray-800">Dashboard Overview</h1>
-
-          {/* --- Key Metrics Section --- */}
-          <div className="card-flex">
+          <h1 className="section-title text-gray-800">Dashboard Overview</h1>
+<div className="overview-section-inner">
+         <div className="card-flex">
     <div className="card-flex-inner">
             {/* Total Properties Card */}
             <div className="card">
@@ -450,7 +410,7 @@ export default function DashboardOverviewContent() {
           </div>
 
           {/* --- Quick Actions --- */}
-          <div className="quick-actions">
+          {/* <div className="quick-actions">
             <h2 className="quick-actions-title">Quick Actions</h2>
             <div className="quick-actions-grid sm-cols-2 md-cols-3 lg-cols-4">
               <button className="action-card" onClick={() => showMessage("Add New Property clicked!")}>
@@ -470,7 +430,7 @@ export default function DashboardOverviewContent() {
                 <span className="action-card-text">Contact Tenant</span>
               </button>
             </div>
-          </div>
+          </div> */}
 
           {/* --- Recent Activity Feed --- */}
           <div className="activity-feed">
@@ -512,7 +472,7 @@ export default function DashboardOverviewContent() {
                     <p className="lease-due-date">Rent Due: {tenant.rentDueDate}</p>
                   </div>
                   <button className="lease-contact-button" onClick={() => showMessage(`Contacted ${tenant.name} about lease.`)}>
-                    Contact
+                   <i className="fas fa-phone"></i> Contact
                   </button>
                 </li>
               ))}
@@ -523,6 +483,7 @@ export default function DashboardOverviewContent() {
             </ul>
           </div>
 
+</div>
           {/* Notification and Reminder Modals (now local to this component) */}
           <Modal
             isOpen={isNotificationsModalOpen}
@@ -639,6 +600,6 @@ export default function DashboardOverviewContent() {
           </div>
         </div>
       )}
-    </ div>
+    </div>
   );
 }
