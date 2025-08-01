@@ -96,7 +96,7 @@ export default function PropertiesPage() {
     );
 
     return (
-        <div>
+        <div className="content-area-inner">
             <div className="page-header">
                 <h1 className="page-title">Properties</h1>
                 <button className="btn btn-primary" onClick={() => setIsAddModalOpen(true)}>
