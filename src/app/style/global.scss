@@ -2,15 +2,22 @@
 @import "./landlord.scss";
 @import "./variables.scss";
 @import "./properties.scss";
+@import "./overview.scss";
+@import "./tenants.scss";
 * {
   padding: 0;
   margin: 0;
+    font-family: "Inter", sans-serif;
 }
 body {
-  font-family: "Inter", sans-serif;
+
   background-color: var(--background-light);
   color: var(--medium-text);
   display: flex;
   flex-direction: column;
-  font-size: 15px;
+}
+input::placeholder{
+  font-weight: 400;
+  color: var(--text-secondary);
+  opacity: 1; /* Ensures placeholder is fully opaque */
 }

@@ -1,0 +1,357 @@
+/* src/styles/_tenants-page.scss */
+
+// Variables (ensure consistency with your main SCSS files)
+$color-white: #ffffff;
+$color-gray-50: #f9fafb;
+$color-gray-100: #f3f4f6;
+$color-gray-200: #e5e7eb;
+$color-gray-300: #d1d5db;
+$color-gray-500: #6b7280;
+$color-gray-600: #4b5563;
+$color-gray-700: #374151;
+$color-gray-800: #1f2937;
+$color-gray-900: #111827;
+$color-blue-500: #3b82f6;
+$color-blue-600: #2563eb;
+$color-blue-700: #1d4ed8;
+$color-red-500: #ef4444;
+$color-red-600: #dc2626;
+$color-green-500: #22c55e;
+$color-orange-500: #f97316;
+
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// Base button styles (can be shared via a global mixin)
+@mixin button-base {
+  padding: 0.625rem 1.25rem; // px-5 py-2.5
+  border-radius: 0.5rem; // rounded-lg
+  font-size: 0.875rem; // text-sm
+  font-weight: 500; // font-medium
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    margin-right: 0.5rem; // space-x-2
+  }
+}
+
+.tenants-page-container {
+  padding: 2rem;
+  background-color: $color-gray-50;
+  min-height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: $color-gray-800;
+    line-height: 1.2;
+  }
+
+  .button-primary {
+    @include button-base;
+    background-color: $color-blue-600;
+    color: $color-white;
+    box-shadow: $shadow-md;
+
+    &:hover {
+      background-color: $color-blue-700;
+    }
+  }
+}
+
+.tenant-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+.tenant-card {
+  background-color: $color-white;
+  border-radius: 0.75rem;
+  box-shadow: $shadow-lg;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid $color-gray-200;
+  transition: box-shadow 0.2s ease-in-out;
+  position: relative; /* Needed for absolute positioning of menu */
+
+  &:hover {
+    box-shadow: $shadow-xl;
+  }
+
+  .tenant-image-container {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    border: 2px solid $color-blue-500;
+    background-color: $color-gray-100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .tenant-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  .tenant-info {
+    flex-grow: 1;
+    margin-bottom: 1.25rem;
+
+    .tenant-name {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: $color-gray-800;
+      margin-bottom: 0.5rem;
+    }
+
+    .tenant-detail {
+      color: $color-gray-600;
+      font-size: 0.9375rem;
+      margin-bottom: 0.4rem;
+
+      strong {
+        color: $color-gray-700;
+        font-weight: 600;
+      }
+
+      &.status-paid {
+        color: $color-green-500;
+        font-weight: 600;
+      }
+      &.status-overdue {
+        color: $color-red-500;
+        font-weight: 600;
+      }
+      &.status-due {
+        color: $color-orange-500;
+        font-weight: 600;
+      }
+      &.status-part_payment {
+        color: $color-blue-500;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .tenant-actions-container {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10; /* Ensure menu appears above other content */
+
+    .ellipsis-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $color-gray-600;
+      transition: background-color 0.2s ease-in-out;
+
+      &:hover {
+        background-color: $color-gray-100;
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .tenant-actions-menu {
+      position: absolute;
+      top: 100%; /* Position below the ellipsis button */
+      right: 0;
+      background-color: $color-white;
+      border-radius: 0.5rem;
+      box-shadow: $shadow-lg;
+      border: 1px solid $color-gray-200;
+      min-width: 180px; /* Adjust as needed */
+      display: flex;
+      flex-direction: column;
+      padding: 0.5rem 0;
+      transform-origin: top right;
+      animation: fadeInScale 0.2s ease-out forwards;
+
+      .menu-item {
+        @include button-base;
+        width: 100%;
+        text-align: left;
+        padding: 0.75rem 1rem;
+        border-radius: 0; /* No rounded corners for individual items */
+        background-color: transparent;
+        color: $color-gray-800;
+        justify-content: flex-start; /* Align text to start */
+
+        &:hover {
+          background-color: $color-gray-100;
+        }
+
+        &.menu-item-danger {
+          color: $color-red-600;
+
+          &:hover {
+            background-color: lighten($color-red-500, 40%);
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Styles for tenant detail modal content */
+.tenant-detail-content {
+  background-color: $color-white;
+  border-radius: 0.75rem;
+  box-shadow: $shadow-md;
+  padding: 1.5rem;
+  font-size: 1rem;
+  color: $color-gray-700;
+  line-height: 1.6;
+  border: 1px solid $color-gray-200;
+  text-align: center;
+
+  .tenant-image-container-modal {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 1.5rem auto;
+    border: 3px solid $color-blue-500;
+    background-color: $color-gray-100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .tenant-image-modal {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  p {
+    margin-bottom: 0.8rem;
+    line-height: 1.5;
+    text-align: left; /* Align text left within modal */
+  }
+
+  strong {
+    color: $color-gray-800;
+    font-weight: 600;
+    margin-right: 0.5rem;
+  }
+
+  .status-paid {
+    color: $color-green-500;
+    font-weight: 600;
+  }
+  .status-overdue {
+    color: $color-red-500;
+    font-weight: 600;
+  }
+  .status-due {
+    color: $color-orange-500;
+    font-weight: 600;
+  }
+  .status-part_payment {
+    color: $color-blue-500;
+    font-weight: 600;
+  }
+}
+
+/* Form styling within modals */
+.form-spacing {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .form-group {
+    margin-bottom: 0.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $color-gray-700;
+    margin-bottom: 0.25rem;
+  }
+
+  .form-input,
+  .form-select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid $color-gray-300;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    color: $color-gray-900;
+    background-color: $color-white;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+    &:focus {
+      outline: none;
+      border-color: $color-blue-500;
+      box-shadow: 0 0 0 2px rgba($color-blue-500, 0.2);
+    }
+  }
+}
+
+.no-data-message {
+  text-align: center;
+  color: $color-gray-500;
+  font-size: 1rem;
+  padding: 2rem;
+  grid-column: 1 / -1; /* Span across all columns in grid */
+}
+
+/* Keyframe for menu animation */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
