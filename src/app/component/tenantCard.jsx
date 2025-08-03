@@ -1,111 +1,130 @@
 // src/components/TenantCard.js
-// This component displays a single tenant's information in a card format
-// with actions accessible via an ellipsis menu.
+// This component displays individual tenant information and provides action buttons.
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react"; // Import useState hook
 
-export default function TenantCard({ tenant, propertyName, onViewDetails, onEditTenant, onDeleteTenant, onContactTenant, onEndLease, onRemoveTenant }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(null);
-  const buttonRef = useRef(null);
+// TenantCard component receives tenant data and handlers for actions.
+const TenantCard = ({
+  tenant,
+  propertyName,
+  onViewDetails,
+  onEditTenant,
+  onContactTenant,
+  onEndLease,
+  onRemoveTenant,
+}) => {
+  // State to manage the visibility of additional action buttons
+  const [showMoreActions, setShowMoreActions] = useState(false);
 
-  // Helper to get payment status display text
-  const getPaymentStatusText = (status) => {
-    if (!status) return 'N/A'; // Handle cases where status might be undefined
-    return status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ');
-  };
+  // Determine styling based on paymentStatus
+  let rentDueColorClass = "text-green"; // Default for 'paid' or 'due'
+  let statusBadge = null;
+  let rentDueText = `Rent Due: ₦${tenant.rentDue.toLocaleString()}`;
 
-  // Close the menu if a click occurs outside of it
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target)
-      ) {
-        setIsMenuOpen(false);
-      }
-    };
+  if (tenant.paymentStatus === "overdue") {
+    rentDueColorClass = "text-red";
+    statusBadge = <span className="tenant-status-badge overdue">Overdue</span>;
+  } else if (tenant.paymentStatus === "part_payment") {
+    rentDueColorClass = "text-orange"; // Use orange for part payment
+    statusBadge = (
+      <span className="tenant-status-badge part-payment">Part Payment</span>
+    );
+    rentDueText = `Balance: ₦${tenant.rentDue.toLocaleString()}`; // Show balance for part payment
+  } else if (tenant.paymentStatus === "paid") {
+    statusBadge = <span className="tenant-status-badge paid">Paid</span>;
+  } else if (tenant.paymentStatus === "due") {
+    statusBadge = (
+      <span className="tenant-status-badge due-soon">Due Soon</span>
+    );
+  }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const handleActionClick = (actionFn, ...args) => {
-    setIsMenuOpen(false); // Close menu after action
-    if (actionFn) {
-      actionFn(...args);
-    }
+  // Function to toggle the visibility of more actions
+  const toggleMoreActions = () => {
+    setShowMoreActions(!showMoreActions);
   };
 
   return (
-    <div className="tenant-card">
-      <div className="tenant-image-container">
-        <img
-          src={tenant.imageUrl || "https://placehold.co/100x100/E0E0E0/000000?text=TN"}
-          alt={`${tenant.name}`}
-          className="tenant-image"
-          onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/100x100/E0E0E0/000000?text=TN" }}
-        />
-      </div>
-      <div className="tenant-info">
-        <h3 className="tenant-name">{tenant.name}</h3>
-        <p className="tenant-detail">Property: {propertyName}</p>
-        <p className="tenant-detail">Rent Due: ₦{tenant.rentDue.toLocaleString()}</p>
-        <p className="tenant-detail">Due Date: {tenant.rentDueDate}</p>
-        <p className={`tenant-detail status-${tenant.paymentStatus}`}>
-          Status: {getPaymentStatusText(tenant.paymentStatus)}
-        </p>
-      </div>
-      <div className="tenant-actions-container">
-        <button
-          ref={buttonRef}
-          className="ellipsis-button"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="More actions"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" />
-          </svg>
-        </button>
-        {isMenuOpen && (
-          <div ref={menuRef} className="tenant-actions-menu">
-            {onViewDetails && (
-              <button className="menu-item" onClick={() => handleActionClick(onViewDetails, tenant)}>
-                View Details
-              </button>
+    <>
+      <style></style>
+      <div className="tenant-card">
+        {/* Tenant Info Section */}
+        <div className="tenant-info">
+          <div className="tenant-top">
+            <h3 className="tenant-name">{tenant.name}</h3>
+            {/* Conditional rendering for more actions menu */}
+            {showMoreActions && (
+              <div className="more-actions-menu">
+                <div className="more-actions-menu-inner">
+                  <button
+                    className="action-button"
+                    onClick={() => {
+                      onEndLease(tenant);
+                      setShowMoreActions(false); // Close menu after action
+                    }}
+                    aria-label={`End lease for ${tenant.name}`}
+                  >
+                    End Lease
+                  </button>
+                  {tenant.overdue && ( // Only show remove button if overdue
+                    <button
+                      className="action-button button-danger-menu"
+                      onClick={() => {
+                        onRemoveTenant(tenant);
+                        setShowMoreActions(false); // Close menu after action
+                      }}
+                      aria-label={`Remove ${tenant.name}`}
+                    >
+                      Remove Tenant
+                    </button>
+                  )}
+                </div>
+              </div>
             )}
-            {onEditTenant && (
-              <button className="menu-item" onClick={() => handleActionClick(onEditTenant, tenant)}>
-                Edit
-              </button>
-            )}
-            {onContactTenant && (
-              <button className="menu-item" onClick={() => handleActionClick(onContactTenant, tenant)}>
-                Contact
-              </button>
-            )}
-            {onEndLease && (
-              <button className="menu-item" onClick={() => handleActionClick(onEndLease, tenant)}>
-                End Lease
-              </button>
-            )}
-            {onRemoveTenant && (
-              <button className="menu-item menu-item-danger" onClick={() => handleActionClick(onRemoveTenant, tenant)}>
-                Remove Tenant
-              </button>
-            )}
-            {onDeleteTenant && ( // This is likely for permanent delete with confirmation modal
-              <button className="menu-item menu-item-danger" onClick={() => handleActionClick(onDeleteTenant, tenant)}>
-                Delete Permanently
-              </button>
-            )}
+            {/* Ellipsis button to toggle more actions */}
+            <button
+              className="ellipsis-button"
+              onClick={toggleMoreActions}
+              aria-label="More actions"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4z"></path>
+              </svg>
+            </button>
           </div>
-        )}
+          <p className="tenant-property">Property: {propertyName}</p>
+          <p className={`tenant-rent-due ${rentDueColorClass}`}>
+            {rentDueText} on {tenant.rentDueDate}
+          </p>
+          {statusBadge && <div className="mt-2">{statusBadge}</div>}{" "}
+          {/* Render the appropriate status badge */}
+        </div>
+
+        {/* Tenant Actions Section */}
+        <div className="tenant-actions">
+          {/* Always visible buttons */}
+          <button
+            className="action-button button-secondary"
+            onClick={() => onViewDetails(tenant)}
+            aria-label={`View details for ${tenant.name}`}
+          >
+            View Details
+          </button>
+          <button
+            className="action-button button-primary"
+            onClick={() => onContactTenant(tenant)}
+            aria-label={`Contact ${tenant.name}`}
+          >
+            Contact
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
-}
+};
+
+export default TenantCard;

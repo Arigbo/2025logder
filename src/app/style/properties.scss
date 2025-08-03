@@ -67,10 +67,6 @@ width: 95%;
   border: 1px solid $color-gray-200;
   transition: box-shadow 0.2s ease-in-out;
 
-  &:hover {
-    box-shadow: $shadow-xl;
-  }
-
   .property-name {
     font-size: 1.375rem;
     font-weight: 700;
