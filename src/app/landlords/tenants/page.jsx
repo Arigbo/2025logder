@@ -317,13 +317,15 @@ export default function TenantsPage() {
 
       {/* --- Filters Section --- */}
       <div className="filters-section">
-        <input
+     <div>
+   <input
           type="text"
           placeholder="Search tenants by name or property..."
           className="form-input search-input"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+     </div>
         <select
           className="form-select property-filter"
           value={filterProperty}
@@ -417,11 +419,11 @@ export default function TenantsPage() {
             <p><strong>Name:</strong> {selectedTenant.name}</p>
             <p><strong>Property:</strong> {getPropertyName(selectedTenant.propertyId)}</p>
             <p>
-              <strong>Rent Due:</strong> ₦{selectedTenant.rentDue.toLocaleString()}
-              {selectedTenant.paymentStatus === 'part_payment' && ` (Balance: ₦${selectedTenant.rentDue.toLocaleString()})`}
+              <strong>Rent Due:</strong><span className={`price ${selectedTenant.paymentStatus === 'part_payment' ? 'orange' : (selectedTenant.overdue ? "red" : "green")}`}>₦{selectedTenant.rentDue.toLocaleString()}
+              {selectedTenant.paymentStatus === 'part_payment' && ` (Balance: ₦${selectedTenant.rentDue.toLocaleString()})`}</span>
             </p>
             <p><strong>Due Date:</strong> {selectedTenant.rentDueDate}</p>
-            <p><strong>Status:</strong> {selectedTenant.paymentStatus === 'part_payment' ? 'Part Payment' : (selectedTenant.overdue ? "Overdue" : "Current")}</p>
+            <p><strong>Status:</strong><span className={`status ${selectedTenant.paymentStatus === 'part_payment' ? 'orange' : (selectedTenant.overdue ? "red" : "green")}`}> {selectedTenant.paymentStatus === 'part_payment' ? 'Part Payment' : (selectedTenant.overdue ? "Overdue" : "Current")}</span></p>
             <p><strong>Email:</strong> {selectedTenant.contact}</p>
             <p><strong>Phone:</strong> {selectedTenant.phone || 'N/A'}</p>
             <p><strong>Lease Start:</strong> {selectedTenant.leaseStart || 'N/A'}</p>

@@ -33,7 +33,6 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
 
 // Base button styles (can be shared via a global mixin)
 @mixin button-base {
-  padding: 0.625rem 1.25rem; // px-5 py-2.5
   border-radius: 0.5rem; // rounded-lg
   font-size: 0.875rem; // text-sm
   font-weight: 500; // font-medium
@@ -44,7 +43,8 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
+width: fit-content;
+padding-inline: 1rem;
   svg {
     margin-right: 0.5rem; // space-x-2
   }
@@ -63,23 +63,36 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
   flex-direction: column;
   gap: 1rem;
   border-radius: 0.75rem;
+  gap: 1rem;
   width: 100%;
   @media (min-width: 768px) {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
   }
-
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 2rem;
+    padding-block: 1rem;
+    input {
+      position: static;
+      padding: 0;
+      width: 92%;
+    }
+  }
   .form-input.search-input {
-    flex-grow: 1;
-    padding: 0.75rem 1rem;
+    padding-block: 0.75rem;
+    padding-inline: 1rem;
     border-radius: 0.5rem;
     border: 1px solid $color-gray-300;
     font-size: 1rem;
     color: $color-gray-900;
     background-color: $color-white;
     transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-
     &:focus {
       outline: none;
       border-color: $color-blue-500;
@@ -161,9 +174,12 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
   }
 
   p {
+    width: 100%;
     margin-bottom: 0.8rem;
     line-height: 1.5;
-    text-align: left; /* Align text left within modal */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   strong {
@@ -171,61 +187,42 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     font-weight: 600;
     margin-right: 0.5rem;
   }
-
-  .status-paid {
-    color: $color-green-500;
-    font-weight: 600;
+  .price {
+    &.green {
+      color: $color-green-500;
+      font-weight: 600;
+    }
+    &.red {
+      color: $color-red-500;
+      font-weight: 600;
+    }
+    &.orange {
+      color: $color-orange-500;
+      font-weight: 600;
+    }
   }
-  .status-overdue {
-    color: $color-red-500;
-    font-weight: 600;
-  }
-  .status-due {
-    color: $color-orange-500;
-    font-weight: 600;
-  }
-  .status-part_payment {
-    color: $color-blue-500;
-    font-weight: 600;
-  }
-}
-
-/* Form styling within modals */
-.form-spacing {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  .form-group {
-    margin-bottom: 0.5rem;
-  }
-
-  .form-label {
-    display: block;
-    font-size: 0.875rem;
+  .status {
+    height: 2rem;
+    width: fit-content;
+    padding-inline: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border-radius: 1rem;
     font-weight: 500;
-    color: $color-gray-700;
-    margin-bottom: 0.25rem;
-  }
-
-  .form-input,
-  .form-select {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid $color-gray-300;
-    border-radius: 0.375rem;
-    font-size: 1rem;
-    color: $color-gray-900;
-    background-color: $color-white;
-    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-
-    &:focus {
-      outline: none;
-      border-color: $color-blue-500;
-      box-shadow: 0 0 0 2px rgba($color-blue-500, 0.2);
+    &.green {
+      background-color: $color-green-500;
+    }
+    &.red {
+      background-color: $color-red-500;
+    }
+    &.orange {
+      background-color: $color-orange-500;
     }
   }
 }
+
 
 .no-data-message {
   text-align: center;
@@ -328,7 +325,6 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
 
     .button-primary {
       @include button-base;
-      padding: 0.5rem 1rem;
       background-color: $color-blue-600;
       color: $color-white;
       &:hover {
@@ -338,7 +334,6 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
 
     .button-secondary {
       @include button-base;
-      padding: 0.5rem 1rem;
       background-color: $color-gray-200;
       color: $color-gray-800;
       &:hover {
@@ -354,7 +349,6 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
   color: $color-blue-600;
   box-shadow: none;
   border: 1px solid $color-blue-600;
-  margin-top: 1.5rem;
 
   &:hover {
     background-color: $color-blue-50;
@@ -393,7 +387,6 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
 
     .button-contact {
       @include button-base;
-      padding: 1rem;
       flex-direction: column; /* Stack icon and text */
       gap: 0.5rem; /* Space between icon and text */
       background-color: $color-blue-500;
@@ -511,7 +504,10 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
 
 /* Base button styles */
 .action-button {
-  padding: 0.6rem 1.2rem; /* More padding */
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
   font-size: 0.9rem; /* Slightly larger font */
   font-weight: 500;
   border-radius: 0.5rem; /* More rounded */
@@ -582,8 +578,8 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
   width: 0;
   height: 0;
   &-inner {
-    top: 1.5rem;
-    width: 12rem;
+    top: 1rem;
+    width: 8rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -593,23 +589,12 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.08); /* Stronger shadow */
     padding: 0.75rem;
     position: relative;
-    right: 9.5rem;
+    right: 4.4rem;
     z-index: 20; /* Higher z-index */
+    .action-button {
+      width: 100%;
+    }
   }
-}
-
-.more-actions-menu button {
-  width: 100%;
-  padding: 0.6rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #4a5568; /* gray-700 */
-  text-align: left;
-  border-radius: 0.375rem; /* rounded-md */
-  transition: background-color 150ms ease-in-out;
-  outline: none;
-  border: none;
-  cursor: pointer;
 }
 
 .more-actions-menu button:hover {
