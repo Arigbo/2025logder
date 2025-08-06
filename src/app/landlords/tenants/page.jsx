@@ -470,7 +470,7 @@ export default function TenantsPage() {
               </div>
             )}
 
-            <div className="flex justify-end space-x-4 mt-4">
+            <div className="bottom">
               <button type="button" className="button-secondary" onClick={() => setIsRequestLeaseEndModalOpen(false)}>Cancel</button>
               <button type="submit" className="button-danger">Submit Request</button>
             </div>
@@ -508,7 +508,7 @@ export default function TenantsPage() {
                 ))}
               </select>
             </div>
-            <div className="flex justify-end space-x-4 mt-4">
+            <div className="bottom">
               <button type="button" className="button-secondary" onClick={() => setIsApproveApplicationModalOpen(false)}>Cancel</button>
               <button type="submit" className="button-primary">Approve</button>
             </div>
@@ -549,14 +549,14 @@ export default function TenantsPage() {
       {/* Remove Tenant Warning Modal (New) */}
       <Modal isOpen={isRemoveTenantWarningModalOpen} onClose={() => setIsRemoveTenantWarningModalOpen(false)} title="Remove Tenant Warning">
         {tenantToRemove ? (
-          <div className="text-center p-4">
-            <p className="mb-4 text-lg font-semibold text-red-600">
+          <div className="remove-tenant-warning-content">
+            <p className="">
               ⚠️ Warning: Removing {tenantToRemove.name} due to overdue rent and expired lease.
             </p>
-            <p className="mb-6 text-gray-700">
+            <p className="">
               Based on local law, the tenant is typically given a notice period (e.g., 2 days) to vacate the property or settle outstanding payments. Please ensure all legal requirements are met before proceeding.
             </p>
-            <div className="flex justify-center space-x-4">
+            <div className="bottom">
               <button type="button" className="button-secondary" onClick={() => setIsRemoveTenantWarningModalOpen(false)}>Cancel</button>
               <button type="button" className="button-danger" onClick={confirmRemoveTenant}>Proceed with Removal</button>
             </div>

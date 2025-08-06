@@ -336,15 +336,25 @@
   justify-content: center;
   background-color: white;
   border-radius: 8px;
-  padding-block: 5rem;
+  padding-block: 2rem;
   width: 80%;
-  height: fit-content;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    height: 70%;
+      overflow: auto;
+  &-inner{
+      overflow: scroll;
+      width: 100%;
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  }
 }
 .modal-body {
-  overflow: scroll;
   width: 90%;
-    padding-block: 5rem;
+  .bottom{
+    display: flex;
+  }
 }
 .modal-header {
   width: 95%;
@@ -451,7 +461,7 @@ input {
   font-size: 0.875rem;
   text-align: center;
 }
-.button-primary {
+button {
   width: 100%;
   display: flex;
   justify-content: center;
