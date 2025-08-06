@@ -330,7 +330,7 @@ export default function PropertiesPage() {
               <p className="property-detail">Occupied Rooms: {getOccupiedRooms(property.id)}</p>
               <p className="property-detail">Rent per Room: ₦{property.rentPerRoom.toLocaleString()}</p>
               <p className="property-detail">Lease Period: {property.leasePeriod || 'N/A'} months</p> {/* Display lease period */}
-              <div className="property-actions">
+              <div className="bottom">
                 <button className="button-secondary" onClick={() => handleViewPropertyDetails(property)}>
                   View Details
                 </button>
@@ -426,7 +426,7 @@ export default function PropertiesPage() {
               <option value="24">24 Months (2 Years)</option>
             </select>
           </div>
-          <div className="flex justify-end space-x-4 mt-4">
+          <div className="bottom">
             <button type="button" className="button-secondary" onClick={() => setIsPropertyModalOpen(false)}>Cancel</button>
             <button type="submit" className="button-primary">{currentProperty ? "Update Property" : "Add Property"}</button>
           </div>
@@ -495,7 +495,7 @@ export default function PropertiesPage() {
                 <p className="mb-6 text-gray-700">
                   A request will be sent to the administrator for review. Deletion will not occur until approved by the admin.
                 </p>
-                <div className="flex justify-center space-x-4">
+                <div className="bottom">
                   <button type="button" className="button-secondary" onClick={() => setIsDeletePropertyModalOpen(false)}>Cancel</button>
                   <button type="button" className="button-primary" onClick={requestAdminDeletion}>Send Request to Admin</button>
                 </div>
@@ -557,7 +557,7 @@ export default function PropertiesPage() {
                 onChange={(e) => setMaintenancePreferredTime(e.target.value)}
               />
             </div>
-            <div className="flex justify-end space-x-4 mt-4">
+            <div className="bottom">
               <button type="button" className="button-secondary" onClick={() => setIsMaintenanceRequestModalOpen(false)}>Cancel</button>
               <button type="submit" className="button-primary">Submit Request</button>
             </div>

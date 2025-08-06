@@ -4,13 +4,17 @@
 @import "./properties.scss";
 @import "./overview.scss";
 @import "./tenants.scss";
+@import "./notification.scss";
 * {
   padding: 0;
   margin: 0;
     font-family: "Inter", sans-serif;
 }
 body {
-
+img{
+  width: 100%;
+  height: auto;
+}
   background-color: var(--background-light);
   color: var(--medium-text);
   display: flex;

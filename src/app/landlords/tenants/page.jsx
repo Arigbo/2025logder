@@ -534,7 +534,7 @@ export default function TenantsPage() {
                 <p><strong>Requested On:</strong> {request.requestDate}</p>
                 <p><strong>Reason:</strong> {request.reason}</p>
                 <p><strong>Type:</strong> {request.isEarlyTermination ? "Early Termination Request" : "Standard Lease End Request"}</p>
-                <div className="r">
+                <div className="bottom">
                   <button className="button-primary" onClick={() => handleApprovePendingLeaseEnd(request.tenantId)}>Approve</button>
                   <button className="button-secondary" onClick={() => handleCancelPendingLeaseEndRequest(request.tenantId)}>Cancel Request</button>
                 </div>
@@ -550,10 +550,8 @@ export default function TenantsPage() {
       <Modal isOpen={isRemoveTenantWarningModalOpen} onClose={() => setIsRemoveTenantWarningModalOpen(false)} title="Remove Tenant Warning">
         {tenantToRemove ? (
           <div className="remove-tenant-warning-content">
-            <p className="">
+            <p className="warning-message">
               ⚠️ Warning: Removing {tenantToRemove.name} due to overdue rent and expired lease.
-            </p>
-            <p className="">
               Based on local law, the tenant is typically given a notice period (e.g., 2 days) to vacate the property or settle outstanding payments. Please ensure all legal requirements are met before proceeding.
             </p>
             <div className="bottom">
