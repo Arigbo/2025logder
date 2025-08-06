@@ -534,7 +534,7 @@ export default function TenantsPage() {
                 <p><strong>Requested On:</strong> {request.requestDate}</p>
                 <p><strong>Reason:</strong> {request.reason}</p>
                 <p><strong>Type:</strong> {request.isEarlyTermination ? "Early Termination Request" : "Standard Lease End Request"}</p>
-                <div className="request-actions">
+                <div className="r">
                   <button className="button-primary" onClick={() => handleApprovePendingLeaseEnd(request.tenantId)}>Approve</button>
                   <button className="button-secondary" onClick={() => handleCancelPendingLeaseEndRequest(request.tenantId)}>Cancel Request</button>
                 </div>
