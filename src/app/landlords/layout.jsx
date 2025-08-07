@@ -450,7 +450,7 @@ function LoginSignupModal({ isOpen, onClose, onLoginSuccess }) {
   );
 }
 function Sidebar({
-closeSideBar,
+  closeSideBar,
   isSidebarOpen,
   isSidebarCollapsed,
   toggleSidebarCollapse,
@@ -532,7 +532,7 @@ closeSideBar,
             key={item.id}
             href={item.href} // Use href for actual routing
             className={`nav-item ${item.href === pathname ? "active" : ""}`} // Determine active state based on current path
-         onClick={closeSideBar}
+            onClick={closeSideBar}
           >
             <div className="nav-item-inner">
               {/* SVG icon for each navigation item */}
@@ -959,10 +959,6 @@ export default function DashboardLayout({ children }) {
     setIsLoginModalOpen(false);
     showMessage("Logged in successfully!", "success");
   };
-const closeSideBar=()=>{
-  setIsSidebarOpen(false)
-  console.log("sidebar closed")
-}
   const handleUserAvatarClick = () => {
     if (!isLoggedIn) {
       setIsLoginModalOpen(true);
@@ -1175,7 +1171,6 @@ const closeSideBar=()=>{
     selectedNotification,
     setSelectedNotification,
     setIsNotificationDetailsModalOpen,
-    closeSideBar
   };
 
   // FIX: Check if children exists before trying to access its props or cloning it.
@@ -1198,7 +1193,7 @@ const closeSideBar=()=>{
             <Sidebar
               isSidebarOpen={isSidebarOpen}
               isSidebarCollapsed={isSidebarCollapsed}
-              closeSideBar={!isSidebarOpen}
+              closeSideBar={() => setIsSidebarOpen(false)}
               // Pass handleNavigation and activeSection from the page component
               handleNavigation={pageProps.handleNavigation}
               activeSection={pageProps.activeSection}
@@ -1220,7 +1215,7 @@ const closeSideBar=()=>{
               }`}
             >
               <Header
-                toggleSidebarOpen={() => setIsSidebarOpen(!isSidebarOpen)}
+                toggleSidebarOpen={() => setIsSidebarOpen(true)}
                 getGreeting={getGreeting}
                 user={user}
               />
