@@ -1,279 +1,93 @@
-/* --- Notifications List Styling --- */
-
-.notifications-list-container {
-  position: fixed;
-  top: 1.5rem; /* Adjust as needed, e.g., below a header */
-  right: 1.5rem;
-  z-index: 999; /* Below modal, but above most content */
+.notification-content {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem; /* Slightly more compact gap */
-  max-height: calc(100vh - 3rem); /* Max height to prevent overflow, with top/bottom margin */
-  overflow-y: auto; /* Enable scrolling if many notifications */
-  padding-right: 0.5rem; /* For scrollbar spacing */
-
-  /* Custom Scrollbar (Webkit browsers) */
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #a0a0a0; /* Slightly darker scrollbar */
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #777;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    top: 1rem;
-    right: 1rem;
-    left: 1rem; /* Make it full width on small screens */
-    max-width: unset; /* Remove max-width constraint */
-    padding-right: 0;
-    gap: 0.4rem; /* Smaller gap on mobile */
-  }
-}
-
-.notification-item {
-  display: flex;
   align-items: center;
-  padding: 0.8rem 1.1rem; /* Slightly reduced padding for compactness */
-  border-radius: 0.6rem; /* Slightly less rounded for a crisper look */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07); /* Even softer, simpler shadow */
-  background-color: #fff;
-  color: #333;
-width: 100%;
-  opacity: 0;
-  transform: translateX(20px);
-  animation: slideInFadeIn 0.3s ease-out forwards;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  border-left: 4px solid transparent; /* Slightly thinner border */
-
-  &.info {
-    background-color: #e6f7ff; /* Lightest blue */
-    border-color: #17a2b8; /* Vibrant blue */
-    color: #0c5460; /* Dark blue text */
-  }
-
-  &.warning {
-    background-color: #fffbe6; /* Lightest yellow */
-    border-color: #ffc107; /* Vibrant yellow */
-    color: #856404; /* Dark yellow text */
-  }
-
-  /* Read/Unread states for notification item - Simpler & Clearer */
-  &.read {
-    background-color: #fcfcfc; /* Very subtle background for read */
-    color: #a0a0a0; /* Softer gray text for read */
-    font-weight: normal;
-    border-left-color: #e0e0e0; /* Very light gray border for read */
-
-    p {
-      color: #a0a0a0;
-      font-weight: normal;
-    }
-  }
-
-  &.unread {
-    background-color: #ffffff; /* Clean white background for unread */
-    color: #333333; /* Stronger dark text for unread */
-    font-weight: 600;
-    border-left-color: #007bff; /* A classic, vibrant blue for unread */
-
+  width: 100%;
+  .notification-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+    color: #333;
+    width: 100%;
+    border-bottom: 1px solid rgb(217, 215, 215);
+    animation: slideInFadeIn 0.3s ease-out forwards;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out,
+      box-shadow 0.2s ease-in-out;
     p {
       color: #333333;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    &.warning {
+      background-color: #fffbe6; /* Lightest yellow */
+      border-color: #ffc107; /* Vibrant yellow */
+      color: #856404; /* Dark yellow text */
+    }
+
+    /* Read/Unread states for notification item - Simpler & Clearer */
+    &.read {
+      color: #a0a0a0; /* Softer gray text for read */
+
+      p {
+        color: #a0a0a0;
+        font-weight: 200;
+      }
+    }
+
+    &.unread {
+      background-color: #ffffff; /* Clean white background for unread */
+      color: #333333; /* Stronger dark text for unread */
       font-weight: 600;
-    }
-  }
-}
-
-.notification-icon {
-  flex-shrink: 0;
-  font-size: 1.6rem; /* Slightly smaller icon for compactness */
-  margin-right: 1rem; /* Slightly reduced margin */
-  line-height: 1;
-  width: 2.2rem; /* Adjusted size */
-  height: 2.2rem; /* Adjusted size */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.04); /* Slightly lighter subtle background */
-
-  &.success { color: #28a745; background-color: rgba(40, 167, 69, 0.12); } /* More saturated background */
-  &.error { color: #dc3545; background-color: rgba(220, 53, 69, 0.12); }
-  &.info { color: #17a2b8; background-color: rgba(23, 162, 184, 0.12); }
-  &.warning { color: #ffc107; background-color: rgba(255, 193, 7, 0.12); }
-}
-
-.notification-content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.notification-title {
-  font-weight: 700;
-  margin-bottom: 0.15rem; /* Further reduced margin */
-  font-size: 1rem; /* Standard font size for simplicity */
-  color: #212121; /* Very dark for strong contrast */
-}
-
-.notification-message {
-  font-size: 0.85rem; /* Slightly smaller for compactness */
-  line-height: 1.4;
-  color: #555555; /* Darker gray for message */
-}
-
-.notification-close-button {
-  background: none;
-  border: none;
-  font-size: 1.2rem; /* Slightly smaller for compactness */
-  cursor: pointer;
-  color: #b0b0b0; /* Lighter gray for close button */
-  margin-left: 1rem; /* Slightly reduced margin */
-  padding: 0;
-  flex-shrink: 0;
-  transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
-
-  &:hover {
-    color: #777777; /* Darker gray on hover */
-    transform: rotate(90deg);
-  }
-}
-
-/* Keyframe for notification animation */
-@keyframes slideInFadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-
-.modal-button {
-  padding: 0.7rem 1.4rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  border: none;
-  outline: none;
-
-  &-confirm {
-    background-color: #e53e3e; /* Red for confirmation */
-    color: #fff;
-
-    &:hover {
-      background-color: #c53030;
-      transform: translateY(-1px);
+      border-left-color: #007bff; /* A classic, vibrant blue for unread */
     }
   }
 
-  &-cancel {
-    background-color: #edf2f7; /* Light gray for cancel */
-    color: #2d3748;
+  .notification-icon {
+    flex-shrink: 0;
+    font-size: 1.6rem; /* Slightly smaller icon for compactness */
+    margin-right: 1rem; /* Slightly reduced margin */
+    line-height: 1;
+    width: 2.2rem; /* Adjusted size */
+    height: 2.2rem; /* Adjusted size */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: rgba(
+      0,
+      0,
+      0,
+      0.04
+    ); /* Slightly lighter subtle background */
 
-    &:hover {
-      background-color: #e2e8f0;
-      transform: translateY(-1px);
+    &.success {
+      color: #28a745;
+      background-color: rgba(40, 167, 69, 0.12);
+    } /* More saturated background */
+    &.error {
+      color: #dc3545;
+      background-color: rgba(220, 53, 69, 0.12);
+    }
+    &.info {
+      color: #17a2b8;
+      background-color: rgba(23, 162, 184, 0.12);
+    }
+    &.warning {
+      color: #ffc107;
+      background-color: rgba(255, 193, 7, 0.12);
     }
   }
-}
 
-.modal-close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #a0aec0;
-    transition: color 0.2s ease-in-out;
-}
-
-.modal-close-button:hover {
-    color: #4a5568;
-}
-
-/* --- Notification Details Modal Content Styling --- */
-.notification-detail-content {
-  padding: 1.5rem;
-  text-align: left;
-  font-family: 'Inter', sans-serif;
-
-  p {
-    margin-bottom: 0.75rem;
-    line-height: 1.6;
-
-    &:last-child {
-      margin-bottom: 0;
+  @keyframes slideInFadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
     }
-
-    strong {
-      font-weight: 600;
-      margin-right: 0.5rem;
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
-  }
-}
-
-.notification-detail-text-read {
-  color: #6b7280; /* Gray for read */
-  font-weight: normal;
-}
-
-.notification-detail-text-unread {
-  color: #1f2937; /* Dark for unread */
-  font-weight: bold;
-}
-
-/* --- Notification List Item Specific Styles --- */
-.notification-item {
-  /* ... existing styles ... */
-  display: flex; /* Ensure flex for alignment of text and button */
-  justify-content: space-between; /* Space out content and button */
-  align-items: center; /* Vertically align items */
-
-  p {
-    flex-grow: 1; /* Allow message to take available space */
-    margin-right: 1rem; /* Space between text and button */
-  }
-}
-
-.button-link {
-  background: none;
-  border: none;
-  color: #007bff; /* A more standard vibrant blue for links */
-  cursor: pointer;
-  font-size: 0.85rem; /* Slightly smaller for compactness */
-  font-weight: 500;
-  padding: 0.2rem 0.4rem; /* Reduced padding */
-  border-radius: 0.2rem; /* Slightly less rounded */
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-  text-decoration: underline;
-
-  &:hover {
-    background-color: #e0f0ff; /* Lighter blue background on hover */
-    color: #0056b3; /* Darker blue on hover */
-    text-decoration: none;
-  }
-
-  &:active {
-    background-color: #cce0ff;
   }
 }

@@ -374,7 +374,19 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     }
   }
 }
-
+.payment-approval-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  &-body {
+    width: 100%;
+    p {
+      width: 100%;
+    }
+  }
+}
 /* Modals & Messages */
 .modal-overlay {
   position: fixed;
@@ -394,11 +406,14 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     align-items: center;
     background-color: white;
     border-radius: 8px;
-    width: 50%;
+    width: 95%;
     padding-block: 1.5rem;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     overflow: auto;
     max-height: 90%;
+    @media screen and (min-width: 768px) {
+      width: 50%;
+    }
     &-inner {
       width: 100%;
       height: fit-content;
@@ -479,31 +494,38 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
 }
 
 /* Form Elements */
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
+
 /* Form styling within modals (re-used from tenants-page.scss or globals) */
-.form-spacing {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  .form-group {
+.form {
+  &-spacing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
   }
 
-  .form-label {
+  &-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    div {
+      width: 100%;
+      display: flex;
+    }
+  }
+  &-label {
     width: 100%;
     font-size: 0.875rem;
     font-weight: 500;
     color: $color-gray-700;
     margin-bottom: 0.25rem;
   }
-
-  .form-input,
-  .form-select {
+&-error-message{
+  color: var(--red-color-dark);
+}
+  &-input,
+  &-select {
     width: 100%;
     padding: 0.5rem 0.75rem;
     border: 1px solid $color-gray-300;
@@ -520,6 +542,7 @@ form {
     }
   }
 }
+
 .button {
   &-primary {
     @include button-base;
@@ -567,9 +590,7 @@ form {
     /* Hide menu button on larger screens */
     display: none;
   }
-  .modal-content {
-    width: 40%;
-  }
+
   .card-grid.md-cols-2 {
     grid-template-columns: repeat(2, 1fr);
   }

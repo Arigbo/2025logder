@@ -283,25 +283,25 @@ function PaymentApprovalModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Approve Payment">
-      <div className="payment-approval-content text-center p-4">
-        <p className="mb-4 text-lg font-semibold">
-          A payment of <strong>₦{amount.toLocaleString()}</strong> has been
-          received from <strong>{tenantName}</strong>.
-        </p>
-        <p className="mb-4 text-gray-700">
-          Current rent due before this payment: ₦
-          {currentRentDue.toLocaleString()}.
-        </p>
-        {expectedCompletionDate && (
-          <p className="mb-4 text-gray-700">
-            Tenant expects to complete payment by:{" "}
-            <strong>{expectedCompletionDate}</strong>.
+      <div className="payment-approval-content">
+        <div className="payment-approval-content-body">
+          <p className="">
+            A payment of <strong>₦{amount.toLocaleString()}</strong> has been
+            received from <strong>{tenantName}</strong>.
           </p>
-        )}
-        <p className="mb-6 text-gray-700">
-          Do you want to accept this payment?
-        </p>
-        <div className="flex justify-center space-x-4">
+          <p className="">
+            Current rent due before this payment: ₦
+            {currentRentDue.toLocaleString()}.
+          </p>
+          {expectedCompletionDate && (
+            <p className="">
+              Tenant expects to complete payment by:{" "}
+              <strong>{expectedCompletionDate}</strong>.
+            </p>
+          )}
+          <p className="">Do you want to accept this payment?</p>
+        </div>
+        <div className="bottom">
           <button
             className="button-secondary"
             onClick={() =>
@@ -395,7 +395,7 @@ function LoginSignupModal({ isOpen, onClose, onLoginSuccess }) {
           </div>
           <div className="modal-body">
             <form onSubmit={handleSubmit} className="form-spacing">
-              <div>
+              <div className="form-group">
                 <label htmlFor="email" className="form-label">
                   Email
                 </label>
@@ -410,7 +410,7 @@ function LoginSignupModal({ isOpen, onClose, onLoginSuccess }) {
                   />
                 </div>
               </div>
-              <div>
+              <div className="form-group">
                 <label htmlFor="password" className="form-label">
                   Password
                 </label>
@@ -450,10 +450,9 @@ function LoginSignupModal({ isOpen, onClose, onLoginSuccess }) {
   );
 }
 function Sidebar({
+closeSideBar,
   isSidebarOpen,
   isSidebarCollapsed,
-  handleNavigation,
-  activeSection,
   toggleSidebarCollapse,
   user,
   isLoggedIn,
@@ -533,7 +532,7 @@ function Sidebar({
             key={item.id}
             href={item.href} // Use href for actual routing
             className={`nav-item ${item.href === pathname ? "active" : ""}`} // Determine active state based on current path
-            onClick={() => {}}
+         onClick={closeSideBar}
           >
             <div className="nav-item-inner">
               {/* SVG icon for each navigation item */}
@@ -960,7 +959,10 @@ export default function DashboardLayout({ children }) {
     setIsLoginModalOpen(false);
     showMessage("Logged in successfully!", "success");
   };
-
+const closeSideBar=()=>{
+  setIsSidebarOpen(false)
+  console.log("sidebar closed")
+}
   const handleUserAvatarClick = () => {
     if (!isLoggedIn) {
       setIsLoginModalOpen(true);
@@ -1173,6 +1175,7 @@ export default function DashboardLayout({ children }) {
     selectedNotification,
     setSelectedNotification,
     setIsNotificationDetailsModalOpen,
+    closeSideBar
   };
 
   // FIX: Check if children exists before trying to access its props or cloning it.
@@ -1195,6 +1198,7 @@ export default function DashboardLayout({ children }) {
             <Sidebar
               isSidebarOpen={isSidebarOpen}
               isSidebarCollapsed={isSidebarCollapsed}
+              closeSideBar={!isSidebarOpen}
               // Pass handleNavigation and activeSection from the page component
               handleNavigation={pageProps.handleNavigation}
               activeSection={pageProps.activeSection}
@@ -1240,69 +1244,68 @@ export default function DashboardLayout({ children }) {
               onClose={() => setIsNotificationsModalOpen(false)}
               title="Notifications"
             >
-              {notifications.map((n) => (
-                <div
-                  key={n.id}
-                  className={`notification-item ${n.read ? "read" : "unread"}`}
-                  onClick={() => {
-                    setSelectedNotification(n);
-                    setIsNotificationDetailsModalOpen(true);
-                    // Mark as read when clicked, unless it's a pending payment approval
-                    if (
-                      !n.read &&
-                      n.type !== "payment_received" &&
-                      n.status !== "pending_approval"
-                    ) {
-                      setNotifications((prev) =>
-                        prev.map((notif) =>
-                          notif.id === n.id ? { ...notif, read: true } : notif
-                        )
-                      );
-                    }
-                  }}
-                >
-                  <p
-                    style={{
-                      color: n.read ? "#6b7280" : "#1f2937",
-                      fontWeight: n.read ? "normal" : "bold",
+              <div className="notification-content">
+                {notifications.map((n) => (
+                  <div
+                    key={n.id}
+                    className={`notification-item ${
+                      n.read ? "read" : "unread"
+                    }`}
+                    onClick={() => {
+                      setSelectedNotification(n);
+                      setIsNotificationDetailsModalOpen(true);
+                      // Mark as read when clicked, unless it's a pending payment approval
+                      if (
+                        !n.read &&
+                        n.type !== "payment_received" &&
+                        n.status !== "pending_approval"
+                      ) {
+                        setNotifications((prev) =>
+                          prev.map((notif) =>
+                            notif.id === n.id ? { ...notif, read: true } : notif
+                          )
+                        );
+                      }
                     }}
                   >
-                    {n.message} - {n.date}
-                  </p>
-                  {!n.read &&
-                    n.type === "general" && ( // Only show mark as read for general unread notifications
-                      <button
-                        className="button-link"
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent modal from opening
-                          setNotifications((prev) =>
-                            prev.map((notif) =>
-                              notif.id === n.id
-                                ? { ...notif, read: true }
-                                : notif
-                            )
-                          );
-                        }}
-                      >
-                        Mark as Read
-                      </button>
-                    )}
-                  {n.type === "payment_received" &&
-                    n.status === "pending_approval" && (
-                      <button
-                        className="button-link"
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent notification details modal from opening
-                          setSelectedPaymentNotification(n);
-                          setIsPaymentApprovalModalOpen(true);
-                          setIsNotificationsModalOpen(false); // Close general notifications modal
-                        }}
-                      >
-                        Review Payment
-                      </button>
-                    )}
-                </div>
-              ))}
+                    <p>
+                      {n.message} - {n.date}
+                    </p>
+                    {!n.read &&
+                      n.type === "general" && ( // Only show mark as read for general unread notifications
+                        <button
+                          className="button-link"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent modal from opening
+                            setNotifications((prev) =>
+                              prev.map((notif) =>
+                                notif.id === n.id
+                                  ? { ...notif, read: true }
+                                  : notif
+                              )
+                            );
+                          }}
+                        >
+                          Mark as Read
+                        </button>
+                      )}
+                    {n.type === "payment_received" &&
+                      n.status === "pending_approval" && (
+                        <button
+                          className="button-link"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent notification details modal from opening
+                            setSelectedPaymentNotification(n);
+                            setIsPaymentApprovalModalOpen(true);
+                            setIsNotificationsModalOpen(false); // Close general notifications modal
+                          }}
+                        >
+                          Review Payment
+                        </button>
+                      )}
+                  </div>
+                ))}
+              </div>
               {notifications.length === 0 && <p>No new notifications.</p>}
             </Modal>
             <Modal
