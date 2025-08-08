@@ -1,12 +1,13 @@
-// src/components/TenantCard.js
-// This component displays individual tenant information and provides action buttons.
+"use client";
 
-import React, { useState } from "react"; // Import useState hook
+import fa from "fontawesome";
+import React, { useState } from "react";
 
-// TenantCard component receives tenant data and handlers for actions.
+// TenantCard component displays individual tenant information and provides action buttons.
 const TenantCard = ({
   tenant,
   propertyName,
+  isLeaseDue,
   onViewDetails,
   onContactTenant,
   onEndLease,
@@ -37,23 +38,30 @@ const TenantCard = ({
     );
   }
 
+  // New logic: Check if both lease and rent are overdue
+  const isLeaseAndRentOverdue =
+    isLeaseDue && tenant.paymentStatus === "overdue";
+  const showEndRent =
+  isLeaseDue === false && tenant.paymentStatus === "due" ||  tenant.paymentStatus === "part_payment";
   // Function to toggle the visibility of more actions
   const toggleMoreActions = () => {
     setShowMoreActions(!showMoreActions);
   };
 
   return (
-    <>
-      <style></style>
-      <div className="tenant-card">
-        {/* Tenant Info Section */}
-        <div className="tenant-info">
-          <div className="tenant-top">
-            <h3 className="tenant-name">{tenant.name}</h3>
-            {/* Conditional rendering for more actions menu */}
-            {showMoreActions && (
-              <div className="more-actions-menu">
-                <div className="more-actions-menu-inner">
+    <div className="tenant-card">
+      {/* Tenant Info Section */}
+      <div className="tenant-info">
+        <div className="tenant-top">
+          <h3 className="tenant-name">{tenant.name}</h3>
+          {/* Conditional rendering for more actions menu */}
+          {showMoreActions && (
+            <div className="more-actions-menu">
+              <div className="more-actions-menu-inner">
+                {/* Only show 'End Lease' if not both lease and rent are overdue */}
+                {isLeaseAndRentOverdue ? (
+                  ""
+                ) : (
                   <button
                     className="action-button"
                     onClick={() => {
@@ -64,65 +72,73 @@ const TenantCard = ({
                   >
                     End Lease
                   </button>
-                  {tenant.overdue && ( // Only show remove button if overdue
-                    <button
-                      className="action-button button-danger-menu"
-                      onClick={() => {
-                        onRemoveTenant(tenant);
-                        setShowMoreActions(false); // Close menu after action
-                      }}
-                      aria-label={`Remove ${tenant.name}`}
-                    >
-                      Remove Tenant
-                    </button>
-                  )}
-                </div>
+                )}
+                {showEndRent ? (
+                  <button className="action-button">End Rent</button>
+                ) : (
+                  ""
+                )}
+                {/* Show 'Remove Tenant' only if the tenant is overdue */}
+                {tenant.paymentStatus === "overdue" ? (
+                  <button
+                    className="action-button button-danger-menu"
+                    onClick={() => {
+                      onRemoveTenant(tenant);
+                      setShowMoreActions(false); // Close menu after action
+                    }}
+                    aria-label={`Remove ${tenant.name}`}
+                  >
+                    Remove Tenant
+                  </button>
+                ) : (
+                  ""
+                )}
               </div>
-            )}
-            {/* Ellipsis button to toggle more actions */}
-            <button
-              className="ellipsis-button"
-              onClick={toggleMoreActions}
-              aria-label="More actions"
+            </div>
+          )}
+          {/* Ellipsis button to toggle more actions */}
+          <button
+            className="ellipsis-button"
+            onClick={toggleMoreActions}
+            aria-label="More actions"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                className="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4z"></path>
-              </svg>
-            </button>
-          </div>
-          <p className="tenant-property">Property: {propertyName}</p>
-          <p className={`tenant-rent-due ${rentDueColorClass}`}>
-            {rentDueText} on {tenant.rentDueDate}
-          </p>
-          {statusBadge && <div className="mt-2">{statusBadge}</div>}{" "}
-          {/* Render the appropriate status badge */}
-        </div>
-
-        {/* Tenant Actions Section */}
-        <div className="tenant-actions">
-          {/* Always visible buttons */}
-          <button
-            className="action-button button-secondary"
-            onClick={() => onViewDetails(tenant)}
-            aria-label={`View details for ${tenant.name}`}
-          >
-            View Details
-          </button>
-          <button
-            className="action-button button-primary"
-            onClick={() => onContactTenant(tenant)}
-            aria-label={`Contact ${tenant.name}`}
-          >
-            Contact
+              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4zm0 8a2 2 0 110-4 2 2 0 010 4z"></path>
+            </svg>
           </button>
         </div>
+        <p className="tenant-property">Property: {propertyName}</p>
+        <p className={`tenant-rent-due ${rentDueColorClass}`}>
+          {rentDueText} on {tenant.rentDueDate}
+        </p>
+        {statusBadge && <div className="mt-2">{statusBadge}</div>}{" "}
+        {/* Render the appropriate status badge */}
       </div>
-    </>
+
+      {/* Tenant Actions Section */}
+      <div className="tenant-actions">
+        {/* Always visible buttons */}
+        <button
+          className="action-button button-secondary"
+          onClick={() => onViewDetails(tenant)}
+          aria-label={`View details for ${tenant.name}`}
+        >
+          View Details
+        </button>
+        <button
+          className="action-button button-primary"
+          onClick={() => onContactTenant(tenant)}
+          aria-label={`Contact ${tenant.name}`}
+        >
+          Contact
+        </button>
+      </div>
+    </div>
   );
 };
 

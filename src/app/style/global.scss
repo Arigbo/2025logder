@@ -20,6 +20,16 @@ img{
   display: flex;
   flex-direction: column;
 }
+textarea{
+  width: 100%;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  &::placeholder{
+  font-weight: 400;
+  color: var(--text-secondary);
+  opacity: 1; /* Ensures placeholder is fully opaque */
+}
+}
 input::placeholder{
   font-weight: 400;
   color: var(--text-secondary);
