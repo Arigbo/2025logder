@@ -2,8 +2,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Chart from "chart.js/auto"; // Import Chart.js
 import { DashboardContext } from "@/app/landlords/layout"; // Import the context from the layout file
-import Modal from "@/app/component/modal"; // Assuming this path is correct for your Modal component
-
 // --- Load external scripts for PDF generation ---
 // This ensures jspdf and jspdf-autotable are available globally when needed.
 // This block should ideally be placed outside the component or managed with a custom hook

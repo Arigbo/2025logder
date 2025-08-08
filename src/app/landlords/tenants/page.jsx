@@ -5,8 +5,8 @@
 
 import React, { useState, useContext, useEffect } from "react";
 import { DashboardContext } from "@/app/landlords/layout"; // Import the context
-import Modal from "@/app/component/modal"; // Import your generic Modal component
-import TenantCard from "@/app/component/tenantCard"; // Import the new TenantCard component
+import Modal from "@/app/component/landlord/modal"; // Import your generic Modal component
+import TenantCard from "@/app/component/landlord/tenantCard"; // Import the new TenantCard component
 
 // New Contact Options Modal Component
 function ContactOptionsModal({ isOpen, onClose, tenant, showMessage }) { // Pass showMessage

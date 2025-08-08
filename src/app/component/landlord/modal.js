@@ -1,19 +1,19 @@
-// A generic modal component for displaying content on top of the main page.
-export default function Modal({ isOpen, onClose, title, children }) {
-  if (!isOpen) return null; // Don't render if the modal is not open
+export default function Modal({ isOpen, onClose, title, children, size = "md" }) {
+  if (!isOpen) return null;
+  const sizeClass = size === "lg" ? "modal-content-lg" : "";
 
   return (
-    // Overlay to dim the background and close modal on click outside content
     <div
       className={isOpen ? "modal-overlay show" : "modal-overlay"}
       onClick={onClose}
     >
-      {/* Modal content area, prevents closing when clicking inside */}
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        className={`modal-content ${sizeClass}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="modal-content-inner">
           <div className="modal-header">
             <h3 className="modal-title">{title}</h3>
-            {/* Close button with an SVG icon */}
             <button className="modal-close-button" onClick={onClose}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +25,6 @@ export default function Modal({ isOpen, onClose, title, children }) {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="lucide-x-icon"
               >
                 <path d="M18 6 6 18" />
                 <path d="m6 6 12 12" />

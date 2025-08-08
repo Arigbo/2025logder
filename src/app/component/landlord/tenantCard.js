@@ -8,7 +8,6 @@ const TenantCard = ({
   tenant,
   propertyName,
   onViewDetails,
-  onEditTenant,
   onContactTenant,
   onEndLease,
   onRemoveTenant,
