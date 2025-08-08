@@ -71,7 +71,8 @@ export default function LandlordSidebar({
         </div>
       </div>
       <nav className="sidebar-nav">
-        {navItems.map((item) => (
+  <div className="sidebar-nav-inner">
+          {navItems.map((item) => (
           <Link
             key={item.id}
             href={item.href} // Use href for actual routing
@@ -99,6 +100,7 @@ export default function LandlordSidebar({
             </div>
           </Link>
         ))}
+  </div>
       </nav>
       <button
         className="toggle-sidebar-button"
