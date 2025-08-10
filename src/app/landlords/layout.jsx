@@ -862,7 +862,19 @@ export default function DashboardLayout({ children }) {
             </div>
           </>
         )}
-
+<Modal
+isOpen={isUserModal}
+onClose={()=>{setIsUserModal(false)}}
+title={"Landlord"}
+>
+  <div className="usermodal">
+    <h1>name</h1>
+    <h1>email</h1>
+    <h1>phone number</h1>
+    <h1>address</h1>
+    <i className="fas fa-bell"></i>
+  </div>
+</Modal>
         {isLoggedIn && (
           <>
             {/* Pass tenants and properties to NotificationDetailsModal */}
