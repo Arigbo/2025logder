@@ -1,4 +1,4 @@
-import modal from "@/app/component/landlord/modal"; // Import your generic Modal component
+import Modal from "@/app/component/landlord/modal"; // Import your generic Modal component
 export default function ContactOptionsModal({ isOpen, onClose, tenant, showMessage }) { // Pass showMessage
   if (!isOpen || !tenant) return null;
 

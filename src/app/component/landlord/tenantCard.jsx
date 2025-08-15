@@ -1,9 +1,18 @@
 "use client";
-
-import fa from "fontawesome";
 import React, { useState } from "react";
 
-// TenantCard component displays individual tenant information and provides action buttons.
+/**
+ * TenantCard component displays individual tenant information and provides action buttons.
+ * @param {object} props
+ * @param {object} props.tenant - The tenant data object.
+ * @param {string} props.propertyName - The name of the property.
+ * @param {boolean} props.isLeaseDue - Indicates if the lease is due.
+ * @param {Function} props.onViewDetails - Handler for viewing tenant details.
+ * @param {Function} props.onContactTenant - Handler for contacting the tenant.
+ * @param {Function} props.onEndLease - Handler for ending the lease.
+ * @param {Function} props.onRemoveTenant - Handler for removing the tenant.
+ * @param {Function} props.onEndRent - New handler for ending the rent calculation.
+ */
 const TenantCard = ({
   tenant,
   propertyName,
@@ -12,6 +21,7 @@ const TenantCard = ({
   onContactTenant,
   onEndLease,
   onRemoveTenant,
+  onEndRent, // New prop for the end rent button
 }) => {
   // State to manage the visibility of additional action buttons
   const [showMoreActions, setShowMoreActions] = useState(false);
@@ -41,8 +51,12 @@ const TenantCard = ({
   // New logic: Check if both lease and rent are overdue
   const isLeaseAndRentOverdue =
     isLeaseDue && tenant.paymentStatus === "overdue";
+
+  // Condition for showing the new 'End Rent' button
   const showEndRent =
-  isLeaseDue === false && tenant.paymentStatus === "due" ||  tenant.paymentStatus === "part_payment";
+    isLeaseDue === false &&
+    (tenant.paymentStatus === "due" || tenant.paymentStatus === "part_payment");
+
   // Function to toggle the visibility of more actions
   const toggleMoreActions = () => {
     setShowMoreActions(!showMoreActions);
@@ -73,10 +87,18 @@ const TenantCard = ({
                     End Lease
                   </button>
                 )}
-                {showEndRent ? (
-                  <button className="action-button">End Rent</button>
-                ) : (
-                  ""
+                {/* Conditionally render the new 'End Rent' button */}
+                {showEndRent && (
+                  <button
+                    className="action-button"
+                    onClick={() => {
+                      onEndRent(tenant);
+                      setShowMoreActions(false); // Close menu after action
+                    }}
+                    aria-label={`End rent for ${tenant.name}`}
+                  >
+                    End Rent
+                  </button>
                 )}
                 {/* Show 'Remove Tenant' only if the tenant is overdue */}
                 {tenant.paymentStatus === "overdue" ? (

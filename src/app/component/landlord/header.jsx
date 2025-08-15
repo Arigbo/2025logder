@@ -1,5 +1,8 @@
 
-export default function Header({ toggleSidebarOpen, getGreeting, user }) {
+export default function Header({  setIsSideBarOpen,getGreeting, user }) {
+  const toggleSidebarOpen=()=>{
+    setIsSideBarOpen(true)
+  }
   return (
     <header className="header">
       <div className="header-inner">
@@ -26,7 +29,7 @@ export default function Header({ toggleSidebarOpen, getGreeting, user }) {
             </svg>
           </button>
           <h2 className="header-title">
-            {getGreeting()}, {user ? user.email.split("@")[0] : "Guest"}!
+            {getGreeting()}, {user ? user.name: "Guest"}!
           </h2>
         </div>
       </div>

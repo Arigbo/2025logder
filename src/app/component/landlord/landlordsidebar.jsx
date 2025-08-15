@@ -1,10 +1,9 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useState } from "react";
 export default function LandlordSidebar({
   closeSideBar,
-  isSidebarOpen,
-  isSidebarCollapsed,
-  toggleSidebarCollapse,
+  isSideBarOpen,
   user,
   isLoggedIn,
   handleUSerModal,
@@ -13,6 +12,13 @@ export default function LandlordSidebar({
   handleViewRemindersClick,
   hasUpcomingReminders,
 }) {
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState();
+  const toggleSidebarCollapse = () => {
+    setIsSidebarCollapsed(true);
+    if (isSidebarCollapsed) {
+      setIsSidebarCollapsed(false);
+    }
+  };
   const navItems = [
     {
       id: "overview",
@@ -60,7 +66,7 @@ export default function LandlordSidebar({
   const pathname = usePathname();
   return (
     <aside
-      className={`sidebar ${isSidebarOpen ? "open" : ""} ${
+      className={`sidebar ${isSideBarOpen ? "open" : ""} ${
         isSidebarCollapsed ? "collapsed" : ""
       }`}
     >
@@ -126,7 +132,7 @@ export default function LandlordSidebar({
         <div className="user-profile" onClick={handleUSerModal}>
           <div className="user-avatar">
             {isLoggedIn && user ? (
-              user.email.charAt(0).toUpperCase()
+              user.name
             ) : (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -145,7 +151,7 @@ export default function LandlordSidebar({
           {!isSidebarCollapsed && (
             <div className="user-info">
               <span className="user-name">
-                {isLoggedIn && user ? user.email.split("@")[0] : "Guest"}
+                {isLoggedIn && user ? user.name : "Guest"}
               </span>
               <span className="user-status">
                 {isLoggedIn ? "Landlord" : "Not Logged In"}
