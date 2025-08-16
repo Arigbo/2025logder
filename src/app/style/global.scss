@@ -5,6 +5,9 @@
 @import "./overview.scss";
 @import "./tenants.scss";
 @import "./notification.scss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 :root {
   --sidebar-width: 20rem;
   --sidebar-width-collapsed: 80px;
