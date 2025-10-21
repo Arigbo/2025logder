@@ -1,22 +1,47 @@
-"use client"
+"use client";
 import { usePathname } from "next/navigation";
 
-export default function DiscoverSidebar({isSidebarCollapsed, setIsSidebarCollapsed}) {
+export default function DiscoverSidebar({
+  isSidebarCollapsed,
+  setIsSidebarCollapsed,
+}) {
   const navLink = [
     {
       name: "Home",
       link: "/discover",
-      icon: "🔍",
+      icon: "fas fa-home",
     },
-    {},
+    {
+      name: "Bookmark",
+      link: "/bookmark",
+      icon: "fas fa-bookmark",
+    },
+    {
+      name: "Bookmark",
+      link: "/bookmark",
+      icon: "fas fa-bookmark",
+    },
+    {
+      name: "Bookmark",
+      link: "/bookmark",
+      icon: "fas fa-bookmark",
+    },
+    {
+      name: "Bookmark",
+      link: "/bookmark",
+      icon: "fas fa-bookmark",
+    },
   ];
   const path = usePathname();
   return (
     <aside className="app-sidebar">
-      <a href="#" className="navbar-brand">
-     <img src="/favicon.ico" alt="" />
+      <div className="navbar-brand">
+        <div className="logo-icon">
+          {" "}
+          <img src="/favicon.ico" alt="" />
+        </div>
         <span className="link-text">Lodger</span>
-      </a>
+      </div>
       <div className="nav-links">
         {navLink.map((link) => {
           return (
@@ -24,31 +49,25 @@ export default function DiscoverSidebar({isSidebarCollapsed, setIsSidebarCollaps
               href={link.link}
               className={`nav-link ${path === link.link ? "active" : ""}`}
             >
-              <span className="icon">{link.icon}</span>{" "}
+              <i className={link.icon}></i>
               <span className="link-text">{link.name}</span>
             </a>
           );
         })}
       </div>
-      <button
-        className="sidebar-toggle-button"
-        onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-      >
-        <svg
-          className="icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M9 5L16 12L9 19"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
+      <div className="toogle-container">
+        {isSidebarCollapsed ? (
+          <i
+            className="fas fa-chevron-right toogle"
+            onClick={() => setIsSidebarCollapsed(false)}
+          ></i>
+        ) : (
+          <i
+            className="fas fa-chevron-left toogle"
+            onClick={() => setIsSidebarCollapsed(true)}
+          ></i>
+        )}
+      </div>
     </aside>
   );
 }

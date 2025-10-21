@@ -1,0 +1,130 @@
+
+/* --- Login Modal Specific Styles --- */
+.login-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2003; /* Highest z-index */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.login-modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+.login-modal-content {
+  background-color: white;
+  padding: 30px;
+  width: 90%;
+  max-width: 400px;
+  transform: translateY(30px);
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.login-modal-overlay.show .login-modal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+.login-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-light);
+}
+.login-modal-header h3 {
+  margin: 0;
+  font-size: 1.4em;
+  color: var(--text-dark);
+}
+.login-modal-close-button {
+  background: none;
+  border: none;
+  font-size: 1.8em;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+.login-modal-close-button:hover {
+  color: var(--text-dark);
+  transform: rotate(90deg);
+}
+.login-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+.login-tab-button {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--text-medium);
+  cursor: pointer;
+  transition: color 0.2s ease, border-bottom 0.2s ease;
+  border-bottom: 3px solid transparent;
+}
+.login-tab-button.active {
+  color: var(--primary-color);
+  border-bottom: 3px solid var(--primary-color);
+}
+.login-tab-button:hover {
+  color: var(--primary-dark);
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.login-error-message {
+  color: #d32f2f;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 10px;
+}
+.login-success-message {
+  color: var(--primary-dark);
+  font-weight: 600;
+  text-align: center;
+  margin-top: 10px;
+}
+.login-submit-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 12px 20px;
+  border-radius: var(--border-radius-md);
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px var(--shadow-subtle);
+  margin-top: 10px;
+}
+.login-submit-button:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-medium);
+}
+.login-submit-button:disabled {
+  background-color: #b0b0b0;
+  cursor: not-allowed;
+}
