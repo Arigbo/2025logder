@@ -1,0 +1,106 @@
+/* --- Sidebar Navigation --- */
+.app-sidebar {
+  grid-column: 1;
+  padding: 20px;
+
+  display: none; /* Hidden by default for mobile, shown on desktop */
+  flex-direction: column;
+  gap: 30px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-light);
+  overflow-y: auto;
+  transition: width 0.3s ease, padding 0.3s ease;
+  position: relative;
+}
+.app-sidebar .navbar-brand {
+  font-size: 1.8em;
+  font-weight: 800;
+  color: var(--primary-color);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  justify-content: flex-start;
+}
+.app-sidebar .navbar-brand .logo-icon {
+  font-size: 1.2em;
+}
+.app-sidebar .nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.app-sidebar .nav-link {
+  text-decoration: none;
+  color: var(--text-medium);
+  font-weight: 500;
+  font-size: 1.1em;
+  padding: 10px 0;
+  transition: color 0.2s ease, transform 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.app-sidebar .nav-link:hover {
+  color: var(--primary-color);
+  transform: translateX(5px);
+}
+.app-sidebar .nav-link.active {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+.app-sidebar .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+.app-sidebar .nav-link:hover::after,
+.app-sidebar .nav-link.active::after {
+  width: 100%;
+}
+.app-sidebar .nav-link .link-text {
+  transition: opacity 0.3s ease, width 0.3s ease;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle-button {
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
+  background-color: transparent;
+  color: var(--text-medium);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+.sidebar-toggle-button:hover {
+  background-color: var(--border-light);
+  color: var(--primary-color);
+  transform: scale(1.1);
+}
+.sidebar-toggle-button .icon {
+  font-size: 1.2em;
+  transition: transform 0.3s ease;
+}
