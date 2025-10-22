@@ -2,7 +2,8 @@
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { ContactAgentModal } from "../../component/discover/contact";
-
+import { ShareModal } from "../../component/discover/share";
+import saveBookmark from "../../../utils/savebookmark";
 const apartments = {
   1: {
     id: "1",
@@ -384,7 +385,9 @@ export default function SingleApartment() {
   function onApplyNowClick() {}
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isBookmarked, setIsBookmarked] = useState();
-  const [contact, setContact]=useState()
+  const [contact, setContact] = useState();
+  const [copy, setCopy] = useState();
+  const apartmentUrl = `http://localhost:3000/apt/${apartment.id}`;
   const handlePrevImage = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === 0 ? apartment.images.length - 1 : prevIndex - 1
@@ -396,10 +399,6 @@ export default function SingleApartment() {
       prevIndex === apartment.images.length - 1 ? 0 : prevIndex + 1
     );
   };
-
-  // Construct a dummy URL for the apartment (in a real app, this would be a real URL)
-  const apartmentShareUrl = `${window.location.origin}/apartments/${apartment.id}`;
-
   return (
     <div className="apartment-page">
       <header className="apartment-header">
@@ -457,7 +456,7 @@ export default function SingleApartment() {
           <button
             className={`icon-button ${isBookmarked ? "bookmarked" : ""}`}
             aria-label="Bookmark apartment"
-            onClick={() => onToggleBookmark(apartment.id)}
+            onClick={() => {saveBookmark(apartment.id)}}
           >
             <svg
               viewBox="0 0 24 24"
@@ -470,7 +469,7 @@ export default function SingleApartment() {
           <button
             className="icon-button"
             aria-label="Share apartment"
-            onClick={() => setShowShareModal(true)}
+            onClick={() => setCopy(true)}
           >
             <svg
               viewBox="0 0 24 24"
@@ -655,7 +654,7 @@ export default function SingleApartment() {
         <div className="action-buttons-group">
           <button
             className="apartment-details-contact-button"
-            onClick={onContactAgentClick}
+            onClick={() => setContact(true)}
           >
             Contact Agent
           </button>
@@ -694,11 +693,18 @@ export default function SingleApartment() {
       </div>
       {contact && (
         <ContactAgentModal
-        contact={contact}
+          setContact={setContact}
           agentImage={apartment.agentImage}
           agentName={apartment.agentName}
           agentPhone={apartment.agentPhone}
           apartmentName={apartment.name}
+        />
+      )}
+      {copy && (
+        <ShareModal
+          setCopy={setCopy}
+          apartmentName={apartment.name}
+          apartmentUrl={apartmentUrl}
         />
       )}
     </div>

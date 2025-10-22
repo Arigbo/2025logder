@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export const ContactAgentModal = ({
   apartmentName,
-  contact,
+  setContact,
   userName,
   userEmail,
   userPhone,
@@ -67,7 +67,7 @@ export const ContactAgentModal = ({
   return (
     <div
       className="contact-modal-overlay show"
-      onClick={contact}
+      onClick={()=>setContact(false)}
       role="dialog"
       aria-modal="true"
       aria-labelledby="contact-modal-title"
@@ -80,7 +80,7 @@ export const ContactAgentModal = ({
           <h3 id="contact-modal-title">Contact Agent for {apartmentName}</h3>
           <button
             className="contact-modal-close-button"
-            onClick={contact}
+            onClick={()=>setContact(false)}
             aria-label="Close contact form"
           >
             &#x2715;

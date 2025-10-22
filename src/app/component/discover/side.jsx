@@ -15,7 +15,7 @@ export default function DiscoverSidebar({
     },
     {
       name: "Bookmark",
-      link: "/bookmark",
+      link: "/discover/bookmark",
       icon: "fas fa-bookmark",
     },
     {
