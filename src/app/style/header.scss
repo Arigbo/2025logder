@@ -4,48 +4,19 @@
   grid-row: 1;
   background-color: white;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   z-index: 1000;
   flex-shrink: 0;
   height: 4.5rem;
+  &-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+  }
 }
 
-/* Hamburger menu and title always visible on smaller screens */
-.responsive-header .mobile-only {
-  display: flex;
-}
-.responsive-header .app-header-title {
-  font-size: 1.4em;
-  font-weight: 700;
-  color: var(--primary-color);
-  margin: 0;
-  flex-grow: 1;
-  text-align: center;
-}
-.responsive-header .hamburger-menu {
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: var(--border-radius-sm);
-  transition: background-color 0.2s ease;
-  margin-right: 15px;
-}
-.responsive-header .hamburger-menu:hover {
-  background-color: var(--border-light);
-}
-.responsive-header .hamburger-menu .bar {
-  width: 25px;
-  height: 3px;
-  background-color: var(--text-dark);
-  border-radius: 2px;
-  transition: all 0.3s ease;
-}
-
-.responsive-header .desktop-header-content {
-  display: none; /* Hidden by default on mobile/tablet */
-}
 /* --- User Status & Dropdown --- */
 .nav-user-status {
   background-color: var(--bg-main);

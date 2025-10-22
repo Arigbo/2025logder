@@ -1,25 +1,41 @@
 /* Mobile (Default styles, up to 640px) */
 @media (max-width: 640px) {
   .responsive-header {
-    padding: 10px 15px;
-  }
-  .responsive-header .app-header-title {
-    font-size: 1.2em;
-  }
-  .responsive-header .hamburger-menu {
-    margin-right: 10px;
-  }
-  .nav-user-status {
-    padding: 5px 10px;
-    font-size: 0.8em;
-  }
-  .nav-user-status img {
-    width: 20px;
-    height: 20px;
+    .app-header-title {
+      font-size: 1.2em;
+      display: none;
+    }
+    .nav-user-status {
+      padding: 5px 10px;
+      font-size: 0.8em;
+    }
+    .nav-user-status img {
+      width: 20px;
+      height: 20px;
+    }
   }
 
-  .main-content {
-    padding: 15px;
+  .app-sidebar {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    top: 0;
+    z-index: 99999;
+    transition: all 0.5s ease;
+    justify-content: start;
+    gap: 3rem;
+    .navbar-brand {
+      width: 90%;
+      justify-content: space-between;
+    }
+    &.close {
+      right: 100%;
+      left: -100%;
+    }
+    .toogle-container {
+      display: none;
+    }
   }
   .controls-section {
     padding: 15px;
@@ -116,23 +132,12 @@
   .amenities-checkbox-grid {
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   }
-
-  /* Apartment details full page on mobile */
-  .apartment-details-page-overlay {
-    width: 100vw;
-    height: 100vh;
-    overflow-x: hidden; /* Prevent horizontal scroll */
-  }
-  .apartment-details-page-content {
-    width: 100%; /* Ensure it takes full width */
-    max-width: 100%; /* Prevent it from exceeding viewport width */
-    padding: 15px;
-    gap: 10px;
-    display: flex;
-    flex-direction: column;
+  .apartment-header {
+    h1 {
+      font-size: 24px;
+    }
   }
   .apartment-image-slider {
-    width: 100%; /* Ensure slider takes full width */
     aspect-ratio: 16 / 9; /* Ensure aspect ratio is maintained */
   }
   .apartment-details-title {
@@ -415,21 +420,48 @@
 
 /* Tablet (641px to 1024px) */
 @media (min-width: 641px) and (max-width: 1024px) {
-  /* Hamburger menu and title are visible on tablet */
-  .responsive-header .mobile-only {
-    display: flex;
+  .responsive-header {
+    grid-row: 1;
+    width: 100%;
+    &-inner {
+      justify-content: space-between;
+    }
+    .app-header-title {
+      font-size: 1.5em;
+    }
+    .nav-user-status {
+      padding: 5px 10px;
+      font-size: 0.8em;
+    }
+    .nav-user-status img {
+      width: 20px;
+      height: 20px;
+    }
   }
-  .responsive-header .desktop-header-content {
-    display: none; /* Hide desktop header elements on tablet */
-  }
+
   .app-sidebar {
-    display: none; /* Sidebar still hidden on tablet by default */
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    top: 0;
+    z-index: 99999;
+    transition: all 0.5s ease;
+    justify-content: start;
+    gap: 3rem;
+    .navbar-brand {
+      width: 90%;
+      justify-content: space-between;
+    }
+    &.close {
+      right: 100%;
+      left: -100%;
+    }
+    .toogle-container {
+      display: none;
+    }
   }
-  .main-content {
-    grid-column: 1;
-    grid-row: 2;
-    padding: 25px;
-  }
+
   .grid {
     grid-template-columns: repeat(
       auto-fill,
@@ -442,10 +474,6 @@
   .compare-button-main {
     display: flex; /* Always show filter button on tablet */
   }
-  .apartment-details-modal-content {
-    max-width: 600px; /* Tablet modal size */
-    padding: 25px;
-  }
   .apartment-image-slider {
     min-height: 250px; /* Ensure image is visible on tablet */
   }
@@ -457,23 +485,6 @@
   }
   .apartment-details-price {
     font-size: 1.3em;
-  }
-
-  /* Tablet specific adjustments for mobile menu */
-  .mobile-menu-content {
-    max-width: 350px; /* Slightly wider for tablets */
-    padding: 40px; /* More padding */
-  }
-  .mobile-nav-link {
-    font-size: 1.2em; /* Slightly larger text */
-    padding: 15px 20px;
-  }
-  .mobile-nav-user-status {
-    padding: 12px 18px;
-  }
-  .mobile-nav-user-actions button {
-    font-size: 1.1em;
-    padding: 12px 18px;
   }
   .compare-grid {
     grid-template-columns: repeat(2, 1fr); /* Two columns on tablet */
@@ -494,7 +505,7 @@
           width: 75%;
           border-radius: 0.5rem;
           .logo-icon {
-       width: 2.3rem;
+            width: 2.3rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -535,18 +546,12 @@
   }
 
   .responsive-header {
-  }
-  .responsive-header .mobile-only {
-    display: none; /* Hide mobile elements on desktop */
-  }
-  .responsive-header .desktop-header-content {
-    display: flex; /* Show desktop elements */
-    flex-grow: 1;
-    justify-content: center;
-  }
-  .responsive-header .app-header-title {
-    text-align: center;
-    margin-left: 0;
+    i {
+      display: none;
+    }
+    h1 {
+      font-size: 22px;
+    }
   }
   .responsive-header .nav-user-status {
     margin-left: auto;
@@ -554,6 +559,11 @@
 
   .app-sidebar {
     display: flex;
+    .navbar-brand {
+      i {
+        display: none;
+      }
+    }
   }
   .main-content {
     grid-column: 2;

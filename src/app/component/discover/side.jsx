@@ -1,9 +1,11 @@
 "use client";
 import { usePathname } from "next/navigation";
 
+
 export default function DiscoverSidebar({
   isSidebarCollapsed,
   setIsSidebarCollapsed,
+  setSidebar, sidebar
 }) {
   const navLink = [
     {
@@ -34,18 +36,19 @@ export default function DiscoverSidebar({
   ];
   const path = usePathname();
   return (
-    <aside className="app-sidebar">
+    <aside className={`app-sidebar ${sidebar ? "close" : ""}`}>
       <div className="navbar-brand">
         <div className="logo-icon">
-          {" "}
           <img src="/favicon.ico" alt="" />
+          <span className="link-text">Lodger</span>
         </div>
-        <span className="link-text">Lodger</span>
+        <i className="fas fa-x" onClick={() => setSidebar(true)}></i>
       </div>
       <div className="nav-links">
         {navLink.map((link) => {
           return (
             <a
+              key={link.name}
               href={link.link}
               className={`nav-link ${path === link.link ? "active" : ""}`}
             >

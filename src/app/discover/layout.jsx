@@ -4,6 +4,7 @@ import DiscoverHeader from "../component/discover/header";
 import DiscoverSidebar from "../component/discover/side";
 
 export default function DiscoverLayout({ children }) {
+  const [sidebar, setSidebar] = useState(true);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
@@ -21,6 +22,7 @@ export default function DiscoverLayout({ children }) {
       }`}
     >
       <DiscoverHeader
+        setSidebar={setSidebar}
         isLoggedIn={isLoggedIn}
         showMobileMenu={showMobileMenu}
         userAvatar={userAvatar}
@@ -33,7 +35,12 @@ export default function DiscoverLayout({ children }) {
         setUserAvatar={setUserAvatar}
         setUserStatus={setUserStatus}
       />
-      <DiscoverSidebar isSidebarCollapsed={isSidebarCollapsed} setIsSidebarCollapsed={setIsSidebarCollapsed}/>
+      <DiscoverSidebar
+        sidebar={sidebar}
+        setSidebar={setSidebar}
+        isSidebarCollapsed={isSidebarCollapsed}
+        setIsSidebarCollapsed={setIsSidebarCollapsed}
+      />
       {children}
     </div>
   );
