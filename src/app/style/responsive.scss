@@ -157,23 +157,14 @@
     padding: 10px 20px;
     font-size: 1em;
   }
-  .apartment-details-back-button {
-    font-size: 1em;
-    padding: 8px 0;
-  }
   .advanced-details-grid {
     grid-template-columns: 1fr;
-    padding: 10px;
     gap: 5px;
   }
   .detail-item {
     font-size: 0.85em;
   }
-  .apartment-amenities,
-  .apartment-features,
-  .apartment-additional-info {
-    padding: 10px;
-  }
+
   .apartment-amenities h4,
   .apartment-features h4,
   .apartment-additional-info h4 {

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ContactAgentModal } from "../../component/discover/contact";
 import { ShareModal } from "../../component/discover/share";
 import saveBookmark from "../../../utils/savebookmark";
+import { isBookmarked as checkIsBookmarked } from "../../../utils/savebookmark";
 const apartments = {
   1: {
     id: "1",
@@ -381,10 +382,7 @@ export default function SingleApartment() {
   const { id } = useParams();
   const apartment = apartments[id];
   if (!apartment) return null;
-  function onContactAgentClick() {}
-  function onApplyNowClick() {}
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isBookmarked, setIsBookmarked] = useState();
   const [contact, setContact] = useState();
   const [copy, setCopy] = useState();
   const apartmentUrl = `http://localhost:3000/apt/${apartment.id}`;
@@ -398,6 +396,20 @@ export default function SingleApartment() {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === apartment.images.length - 1 ? 0 : prevIndex + 1
     );
+  };
+  const [isBookmarked, setIsBookmarked] = useState(
+    checkIsBookmarked(apartment.id)
+  );
+
+  const handleBookmarkToggle = () => {
+    // 2. Call the utility function to update localStorage
+    saveBookmark(apartment.id);
+
+    // 3. Immediately update the component's state to re-render the icon
+    setIsBookmarked((prev) => !prev);
+
+    // NOTE: This assumes saveBookmark reliably updates localStorage,
+    // and the toggle logic in saveBookmark is correct.
   };
   return (
     <div className="apartment-page">
@@ -454,14 +466,16 @@ export default function SingleApartment() {
         {/* Bookmark and Share Icons */}
         <div className="apartment-action-icons">
           <button
+            // 4. Use the state variable (isBookmarked) to conditionally apply the class
             className={`icon-button ${isBookmarked ? "bookmarked" : ""}`}
-            aria-label="Bookmark apartment"
-            onClick={() => {saveBookmark(apartment.id)}}
+            aria-label={isBookmarked ? "Remove bookmark" : "Bookmark apartment"}
+            onClick={handleBookmarkToggle}
           >
             <svg
               viewBox="0 0 24 24"
-              fill={isBookmarked ? "var(--primary-color)" : "currentColor"}
               xmlns="http://www.w3.org/2000/svg"
+              // 5. Use the state variable to change the SVG fill color
+              fill="currentColor"
             >
               <path d="M17 3H7C5.89543 3 5 3.89543 5 5V21L12 18L19 21V5C19 3.89543 18.1046 3 17 3Z" />
             </svg>
@@ -498,21 +512,23 @@ export default function SingleApartment() {
 
         {/* New Advanced Details */}
         <div className="advanced-details-grid">
-          {apartment.petPolicy && (
-            <div className="detail-item">
-              <strong>Pet Policy:</strong> {apartment.petPolicy}
-            </div>
-          )}
-          {apartment.furnishingStatus && (
-            <div className="detail-item">
-              <strong>Furnishing:</strong> {apartment.furnishingStatus}
-            </div>
-          )}
-          {apartment.leaseTerm && (
-            <div className="detail-item">
-              <strong>Lease Term:</strong> {apartment.leaseTerm}
-            </div>
-          )}
+          <div className="advanced-details-grid-inner">
+            {apartment.petPolicy && (
+              <div className="detail-item">
+                <strong>Pet Policy:</strong> {apartment.petPolicy}
+              </div>
+            )}
+            {apartment.furnishingStatus && (
+              <div className="detail-item">
+                <strong>Furnishing:</strong> {apartment.furnishingStatus}
+              </div>
+            )}
+            {apartment.leaseTerm && (
+              <div className="detail-item">
+                <strong>Lease Term:</strong> {apartment.leaseTerm}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Amenities List */}
@@ -520,49 +536,51 @@ export default function SingleApartment() {
         (apartment.buildingAmenities &&
           apartment.buildingAmenities.length > 0) ? (
           <div className="apartment-amenities">
-            <h4>Amenities:</h4>
-            <ul>
-              {apartment.amenities &&
-                apartment.amenities.map((amenity, index) => (
-                  <li key={`gen-amenity-${index}`}>
-                    <svg
-                      className="amenity-check-icon"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M5 13l4 4L19 7"
-                      ></path>
-                    </svg>
-                    {amenity}
-                  </li>
-                ))}
-              {apartment.buildingAmenities &&
-                apartment.buildingAmenities.map((amenity, index) => (
-                  <li key={`bldg-amenity-${index}`}>
-                    <svg
-                      className="amenity-check-icon"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M5 13l4 4L19 7"
-                      ></path>
-                    </svg>
-                    {amenity} (Building)
-                  </li>
-                ))}
-            </ul>
+            <div className="apartment-amenities-inner">
+              <h4>Amenities:</h4>
+              <ul>
+                {apartment.amenities &&
+                  apartment.amenities.map((amenity, index) => (
+                    <li key={`gen-amenity-${index}`}>
+                      <svg
+                        className="amenity-check-icon"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
+                      </svg>
+                      {amenity}
+                    </li>
+                  ))}
+                {apartment.buildingAmenities &&
+                  apartment.buildingAmenities.map((amenity, index) => (
+                    <li key={`bldg-amenity-${index}`}>
+                      <svg
+                        className="amenity-check-icon"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
+                      </svg>
+                      {amenity} (Building)
+                    </li>
+                  ))}
+              </ul>
+            </div>
           </div>
         ) : null}
 
@@ -570,28 +588,30 @@ export default function SingleApartment() {
         {apartment.propertyFeatures &&
           apartment.propertyFeatures.length > 0 && (
             <div className="apartment-features">
-              <h4>Property Features:</h4>
-              <ul>
-                {apartment.propertyFeatures.map((feature, index) => (
-                  <li key={`prop-feature-${index}`}>
-                    <svg
-                      className="amenity-check-icon"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M5 13l4 4L19 7"
-                      ></path>
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+              <div className="apartment-features-inner">
+                <h4>Property Features:</h4>
+                <ul>
+                  {apartment.propertyFeatures.map((feature, index) => (
+                    <li key={`prop-feature-${index}`}>
+                      <svg
+                        className="amenity-check-icon"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
+                      </svg>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           )}
 
@@ -600,27 +620,29 @@ export default function SingleApartment() {
         (apartment.accessibilityFeatures &&
           apartment.accessibilityFeatures.length > 0) ? (
           <div className="apartment-additional-info">
-            {apartment.proximity && apartment.proximity.length > 0 && (
-              <div>
-                <h4>Proximity:</h4>
-                <ul>
-                  {apartment.proximity.map((item, index) => (
-                    <li key={`proximity-${index}`}>🗺️ {item}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {apartment.accessibilityFeatures &&
-              apartment.accessibilityFeatures.length > 0 && (
+            <div className="apartment-additional-info-inner">
+              {apartment.proximity && apartment.proximity.length > 0 && (
                 <div>
-                  <h4>Accessibility:</h4>
+                  <h4>Proximity:</h4>
                   <ul>
-                    {apartment.accessibilityFeatures.map((item, index) => (
-                      <li key={`access-${index}`}>♿ {item}</li>
+                    {apartment.proximity.map((item, index) => (
+                      <li key={`proximity-${index}`}>🗺️ {item}</li>
                     ))}
                   </ul>
                 </div>
               )}
+              {apartment.accessibilityFeatures &&
+                apartment.accessibilityFeatures.length > 0 && (
+                  <div>
+                    <h4>Accessibility:</h4>
+                    <ul>
+                      {apartment.accessibilityFeatures.map((item, index) => (
+                        <li key={`access-${index}`}>♿ {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+            </div>
           </div>
         ) : null}
 
@@ -658,12 +680,7 @@ export default function SingleApartment() {
           >
             Contact Agent
           </button>
-          <button
-            className="apartment-details-apply-button"
-            onClick={onApplyNowClick}
-          >
-            Apply Now
-          </button>
+          <button className="apartment-details-apply-button">Apply Now</button>
         </div>
 
         {/* Reviews Section (Conceptual) */}
