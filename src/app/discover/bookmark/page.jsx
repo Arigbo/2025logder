@@ -1,5 +1,5 @@
 // --- BookmarksPage Component ---
-const BookmarksPage = ({
+export const BookmarksPage = ({
   bookmarkedApartmentIds,
   allApartments,
   onBackToListings,
