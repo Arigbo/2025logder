@@ -165,21 +165,20 @@
     font-size: 0.85em;
   }
 
-  .apartment-amenities h4,
-  .apartment-features h4,
-  .apartment-additional-info h4 {
-    font-size: 1em;
+  .apartment-amenities,
+  .apartment-features,
+  .apartment-additional-info {
+    h4 {
+      font-size: 1em;
+    }
+    ul {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      li {
+        font-size: 0.85em;
+      }
+    }
   }
-  .apartment-amenities ul,
-  .apartment-features ul,
-  .apartment-additional-info ul {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  }
-  .apartment-amenities li,
-  .apartment-features li,
-  .apartment-additional-info li {
-    font-size: 0.85em;
-  }
+
   .tour-buttons {
     flex-direction: column;
     gap: 10px;
@@ -326,20 +325,6 @@
     padding: 10px 15px;
     font-size: 1em;
   }
-
-  /* Bookmarks Page on Mobile */
-  .bookmarks-page-container {
-    padding: 15px;
-  }
-  .bookmarks-back-button {
-    font-size: 1em;
-    margin-bottom: 15px;
-  }
-  .bookmarks-page-title {
-    font-size: 1.5em;
-    margin-bottom: 20px;
-  }
-
   /* Compare Modal on Mobile */
   .compare-modal-content {
     padding: 20px;
@@ -572,10 +557,6 @@
   .search-bar-container {
     flex-direction: row;
     justify-content: space-between;
-  }
-  /* Desktop specific modal image height fix */
-  .apartment-details-modal-content .apartment-image-slider {
-    min-height: 350px; /* Ensure image is visible on desktop */
   }
   .compare-grid {
     grid-template-columns: repeat(3, 1fr); /* Three columns on desktop */
